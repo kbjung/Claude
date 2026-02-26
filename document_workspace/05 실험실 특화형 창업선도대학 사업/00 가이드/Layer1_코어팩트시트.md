@@ -20,7 +20,7 @@
 ### 1-2. 기술 기전 (Mechanism)
 
 **원천 기술 구조:**
-- Eosinophil cationic protein(ECP)의 cell penetrating peptide(CPP) 시퀀스에 적절한 조합의 소수성/방향족 아미노산들을 연결한 새로운 양친매성 피부투과 펩타이드를 개발함
+- Eosinophil cationic protein의 Cell Penetrating Peptide 시퀀스에 소수성/방향족 아미노산들을 결합해 치료 물질을 경피 전달하는 펩타이드 기반 나노 운반체 기술을 개발함
 - 이 펩타이드는 소수성 물질을 내부에 담지하는 수십 나노미터 크기 수준의 나노입자를 균일하게 형성함
 - 아미노산 조성에 따른 물리화학적 특성과 세포 당단백질들과의 상호작용을 바탕으로 물질을 효과적으로 표피와 진피 상부 영역으로 운반함
 
