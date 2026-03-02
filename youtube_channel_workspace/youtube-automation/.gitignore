@@ -1,0 +1,22 @@
+# Output files (generated videos, audio, images)
+**/output/
+
+# API keys and secrets
+**/config/*.env
+**/config/*secret*
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
