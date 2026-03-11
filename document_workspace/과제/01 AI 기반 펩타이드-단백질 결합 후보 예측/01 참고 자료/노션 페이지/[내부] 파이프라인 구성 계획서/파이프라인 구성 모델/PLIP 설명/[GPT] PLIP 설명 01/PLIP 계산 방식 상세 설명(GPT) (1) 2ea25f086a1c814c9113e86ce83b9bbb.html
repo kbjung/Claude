@@ -1,0 +1,714 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>PLIP 계산 방식 상세 설명(GPT) (1)</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-814c-9113-e86ce83b9bbb" class="page sans"><header><h1 class="page-title" dir="auto">PLIP 계산 방식 상세 설명(GPT) (1)</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c3-bd6d-e80480903ed2" class="">PLIP은 “pdb 안에 있는 원자 좌표 + 원자 타입/잔기 타입 정보”만 가지고 어떤 상호작용이 있는지 계산하는 도구야.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81fd-b875-f66e80b18860" class="">머신러닝 모델이 아니라, “기하학 + 규칙 기반(rule-based)”으로 결합 종류/개수를 판정하는 방식이라고 보면 돼.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8138-8a43-dae2265e137f" class="">조금 더 구체적으로 단계별로 보면:</p></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8176-93b3-e34346c2658d" class="numbered-list" start="1"><li>구조 읽기 &amp; 결합 부위 인식<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816a-9e24-f4b0fdd26292" class="bulleted-list"><li style="list-style-type:disc">PDB에서 단백질(보통 ATOM)과 리간드/펩타이드(보통 HETATM이나 다른 체인) 구분</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81fc-87b7-f83af7e42a50" class="bulleted-list"><li style="list-style-type:disc">리간드/펩타이드 주변 일정 거리 내에 있는 단백질 잔기들을 모아서 “binding site(결합 부위)”로 정의</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814c-8c30-f93931e08f36" class="bulleted-list"><li style="list-style-type:disc">우리가 보고 있는 report.xml의 <code>&lt;bindingsite&gt;</code> 블록이 딱 이 부분</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81a0-83d2-db3c221c5025" class="numbered-list" start="2"><li>원자 타입/기능 그룹 인식<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8199-82d3-cf78b0415549" class="bulleted-list"><li style="list-style-type:disc">각 원자에 대해:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-819e-9681-e1f3a0a95c89" class="bulleted-list"><li style="list-style-type:circle">이게 산소/질소/탄소/황인지</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d0-8d67-fc991d7d2928" class="bulleted-list"><li style="list-style-type:circle">이 잔기가 Lys/Arg 같은 양전하성인지, Asp/Glu 같은 음전하성인지</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ff-a532-f4fa54ce2711" class="bulleted-list"><li style="list-style-type:circle">이 원자가 H-bond donor/acceptor인지</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810f-ba01-c1cb026c3556" class="bulleted-list"><li style="list-style-type:circle">이 잔기가 방향족 고리(Trp/Phe/Tyr, 히스티딘 일부 등)를 갖는지</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811b-8597-c9cfb2ddd637" class="bulleted-list"><li style="list-style-type:disc">이런 걸 규칙으로 태깅해서 “이 원자는 어떤 상호작용에 참여할 수 있는 후보인가?”를 먼저 정함</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-813f-ad0c-d9f508795a01" class="numbered-list" start="3"><li>거리 + 각도 기준으로 상호작용 판정<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8159-b68c-e5878fbdd427" class="bulleted-list"><li style="list-style-type:disc">그 다음에 단백질–리간드 사이의 모든 “가능한 쌍”을 검사해서,<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-812d-acc9-ea45c2683f47" class="">미리 정의된 cutoff(거리/각도 조건)를 만족하면 해당 상호작용이 있다고 기록해.</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81de-9ef2-f60f7b095a45" class="bulleted-list"><li style="list-style-type:disc">대표적인 기준들을 간단히 정리하면:</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81cb-a79f-c5bcd6d9cad4" class="bulleted-list"><li style="list-style-type:disc">Hydrophobic interaction<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8145-a695-d6dfd75a4a09" class="bulleted-list"><li style="list-style-type:circle">둘 다 비극성/탄소 계열 원자 (예: 알킬체인, 방향족 고리의 탄소 등)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8138-9658-f62d111bdd90" class="bulleted-list"><li style="list-style-type:circle">원자 간 거리 일정 이하 (대략 4~5 Å 근처)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81bf-b593-c06b4dacaefd" class="bulleted-list"><li style="list-style-type:circle">주변에 강한 극성 상호작용이 없는 비극성 접촉</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81db-9b68-f172892a7632" class="bulleted-list"><li style="list-style-type:disc">Hydrogen bond<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ac-9191-f2c428bc565d" class="bulleted-list"><li style="list-style-type:circle">Donor–acceptor 쌍 (예: N–H … O, O–H … N 등)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-815f-8320-db1169668c10" class="bulleted-list"><li style="list-style-type:circle">Donor–acceptor 거리 ≤ ~3.5 Å</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e2-9aa8-d337ffc6e5da" class="bulleted-list"><li style="list-style-type:circle">D–H–A 각도 ≥ 일정 값(120° 이상 등)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8150-aa47-c2a0f173a08a" class="">→ 단순히 거리만 가까운 게 아니라, “각도도 H-bond 스러운 방향”인지 보고 판정</p></div></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8194-9942-de7a11814d05" class="bulleted-list"><li style="list-style-type:disc">Salt bridge<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818e-ac26-d43c48a5403d" class="bulleted-list"><li style="list-style-type:circle">Lys/Arg 같은 양이온성 그룹 – Asp/Glu 같은 음이온성 그룹</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b3-af59-cf3818e92491" class="bulleted-list"><li style="list-style-type:circle">중심간 거리 ≤ ~4 Å<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81cf-b15c-cf0dbb14331d" class="">→ 전하를 가진 두 그룹이 충분히 가깝게 붙어 있으면 salt bridge로 카운트</p></div></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e8-ad63-d5dcbd331d28" class="bulleted-list"><li style="list-style-type:disc">Water bridge<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8135-a535-ee32bdf62ac5" class="bulleted-list"><li style="list-style-type:circle">단백질–물–리간드 이렇게 물 분자가 가운데 들어가서 각각과 H-bond를 형성하는 경우</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a5-aece-c89a3cff3436" class="bulleted-list"><li style="list-style-type:circle">같은 물 분자와 형성된 두 개의 H-bond를 하나의 water bridge로 본다고 생각하면 됨</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814e-83f4-d530ea354908" class="bulleted-list"><li style="list-style-type:disc">π-stacking<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ae-8a81-f3605da8546e" class="bulleted-list"><li style="list-style-type:circle">방향족 고리–방향족 고리 상호작용</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8187-943e-e42f437eb6c4" class="bulleted-list"><li style="list-style-type:circle">두 고리의 중심 거리, 평면 간 각도, 평행/슬립트 등 조건을 보고 “face-to-face / edge-to-face” 여부 판단</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813f-9206-feeaab6bdcba" class="bulleted-list"><li style="list-style-type:disc">π-cation interaction<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c8-9947-e26055d0155d" class="bulleted-list"><li style="list-style-type:circle">방향족 고리 중심 – 양전하성 원자(보통 Lys/Arg의 N) 거리/방향 조건 보고 판정</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818a-9ee7-e19bc8c5d167" class="bulleted-list"><li style="list-style-type:disc">Halogen bond<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8107-92a7-cb1f1b5c21fa" class="bulleted-list"><li style="list-style-type:circle">Cl/Br/I 같은 할로젠 원자 – 전자쌍을 가진 O/N 등의 acceptor 사이 거리/각도 조건</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8105-b197-ffb4873afe37" class="bulleted-list"><li style="list-style-type:disc">Metal complex<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8169-bf8b-f2ea74f98445" class="bulleted-list"><li style="list-style-type:circle">금속 이온(Mg²⁺, Zn²⁺ 등)을 중심으로, 주변 donor 원자(O/N/S 등)의 배치가 금속 배위 조건을 만족하는지 확인</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c2-bc3a-f0969eebb3e8" class="">→ 이런 식으로 “각 상호작용 타입마다 정해진 거리/각도 기준”을 적용해서, 조건을 만족하면</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8124-9f65-ebb1bbdf39bd" class="">report.xml 안의 <code>&lt;hydrophobic_interaction&gt;</code>, <code>&lt;hydrogen_bond&gt;</code> 같은 태그 하나가 추가되는 구조라고 보면 돼.</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81c5-a0c4-c672fbac0787" class="numbered-list" start="4"><li>개수 세기 = 우리가 파이프라인에서 하는 일<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8186-8872-dc92f65cf979" class="bulleted-list"><li style="list-style-type:disc">PLIP가 이렇게 규칙 기반으로 상호작용을 다 찾아서 xml로 기록해놓으면,</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81fc-85b1-f6d031b3ffa3" class="bulleted-list"><li style="list-style-type:disc">우리는 단순히:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8135-b084-e077b18702c3" class="bulleted-list"><li style="list-style-type:circle">hydrophobic_interactions 안에 hydrophobic_interaction 태그 몇 개 있냐</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8111-aa31-dac9c23c2b54" class="bulleted-list"><li style="list-style-type:circle">hydrogen_bonds 안에 hydrogen_bond 태그 몇 개 있냐</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8189-a636-ce0fe03630a7" class="bulleted-list"><li style="list-style-type:circle">…</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b7-86f0-dd5e759d0147" class="bulleted-list"><li style="list-style-type:circle">전부 합쳐서 PLIP_total_interactions</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8140-898e-e142e0e3658a" class="bulleted-list"><li style="list-style-type:disc">이런 식으로 “기하학적으로 검출된 상호작용 수”를 지표로 쓰고 있는 거고.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8150-b6ee-f43f26ba6cf5" class="">정리하면:</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8102-83bc-e4a7c7af25e2" class="bulleted-list"><li style="list-style-type:disc">PLIP은 “PDB 좌표 + 화학타입 정보”를 입력으로 받는, 규칙 기반 상호작용 탐지기다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814f-b94d-d9015699f982" class="bulleted-list"><li style="list-style-type:disc">각 상호작용 타입마다 거리/각도 cutoff가 정해져 있고, 이 기준을 만족하면 “해당 상호작용 1개”로 카운트한다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816a-930a-df0c35119518" class="bulleted-list"><li style="list-style-type:disc">우리는 그 결과를 그냥 종류별/총합 개수로만 가져다가 점수에 쓰고 있는 것.</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8194-9b4d-c6f9634ea0af" class="">그래서 PLIP 쪽에서 학습이나 파라미터 튜닝을 하는 건 아니고,</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-811a-b3ca-dd3569156e36" class="">우리가 손댈 수 있는 쪽은 “PLIP가 뽑아준 상호작용 개수를 파이프라인에서 어떻게 가중치 줄지” 쪽이라고 보면 돼.</p></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81c3-8514-edd6657bc61a" class="">PLIP 기본 설정 범위(참고용)</h3></div><div style="display:contents" dir="ltr"><table id="2ea25f08-6a1c-8123-b194-c07c5e7dbf0e" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8197-9b45-c8e0e108956e"><th id="FWdO" class="simple-table-header-color simple-table-header" style="width:155.390625px">상호작용 타입</th><th id="`gOh" class="simple-table-header-color simple-table-header" style="width:170.46875px">주요 거리 기준 (대략)</th><th id="O|po" class="simple-table-header-color simple-table-header" style="width:154.375px">주요 각도 기준 (대략)</th><th id="wTpg" class="simple-table-header-color simple-table-header" style="width:249.65625px">PLIP 상수 예시</th><th id="Jsc?" class="simple-table-header-color simple-table-header" style="width:437px">설명/주의점</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81b1-a92f-db26d7fa46bb"><td id="FWdO" class="" style="width:155.390625px">Hydrophobic interaction (소수성)</td><td id="`gOh" class="" style="width:170.46875px">단백질 C–리간드 C 사이 거리 ≤ 4.0</td><td id="O|po" class="" style="width:154.375px">각도 조건 없음</td><td id="wTpg" class="" style="width:249.65625px">HYDROPH_DIST_MAX = 4.0</td><td id="Jsc?" class="" style="width:437px">C 원자가 주변에 C/H만 이웃하고, 서로 4 Å 이내이면 hydrophobic contact로 판정.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81c9-b123-c97fe568396b"><td id="FWdO" class="" style="width:155.390625px">Hydrogen bond (수소 결합)</td><td id="`gOh" class="" style="width:170.46875px">Donor–Acceptor 거리 ≤ 4.1 (일부 설정에선 3.5)</td><td id="O|po" class="" style="width:154.375px">D–H–A 각도 ≥ 100</td><td id="wTpg" class="" style="width:249.65625px">HBOND_DIST_MAX ≈ 3.5–4.1, HBOND_DON_ANGLE_MIN = 100</td><td id="Jsc?" class="" style="width:437px">Donor·Acceptor 타입이 맞고, D–H–A 각도가 충분히 직선에 가까울 때만 H-bond로 카운트.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81a3-bdcb-f342f1df4c04"><td id="FWdO" class="" style="width:155.390625px">Water bridge (물-매개 수소결합)</td><td id="`gOh" class="" style="width:170.46875px">물 O–리간드/단백질 polar 원자 거리 2.5–4.1</td><td id="O|po" class="" style="width:154.375px">ω(물-중심각) 71–140, θ ≥ 100</td><td id="wTpg" class="" style="width:249.65625px">WATER_BRIDGE_MINDIST = 2.5, WATER_BRIDGE_MAXDIST = 4.1, WATER_BRIDGE_OMEGA_MIN = 71, WATER_BRIDGE_OMEGA_MAX = 140, WATER_BRIDGE_THETA_MIN = 100</td><td id="Jsc?" class="" style="width:437px">하나의 물 분자가 단백질·리간드 양쪽과 수소결합을 동시에 형성해야 water bridge 1개로 셈.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8152-9a3e-d85802e35f03"><td id="FWdO" class="" style="width:155.390625px">π–stacking (방향족 π–π)</td><td id="`gOh" class="" style="width:170.46875px">두 고리 중심 거리 ≤ 5.5–6.0</td><td id="O|po" class="" style="width:154.375px">평행/수직 방향에서 ±30 이내</td><td id="wTpg" class="" style="width:249.65625px">PISTACK_DIST_MAX ≈ 5.5–6.0, PISTACK_ANG_DEV = 30, PISTACK_OFFSET_MAX = 2.0</td><td id="Jsc?" class="" style="width:437px">중심 거리 + 평면 각도 + 고리 간 offset(≤ 2 Å) 조건을 함께 만족해야 π–stacking으로 인식.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8176-96e5-ed13f9e82b5b"><td id="FWdO" class="" style="width:155.390625px">π–cation (π–양이온)</td><td id="`gOh" class="" style="width:170.46875px">양전하 중심–고리 중심 거리 ≤ 6.0</td><td id="O|po" class="" style="width:154.375px">(일부 구현에서 tertiary amine 등에 추가 각도 조건)</td><td id="wTpg" class="" style="width:249.65625px">PICATION_DIST_MAX = 6.0</td><td id="Jsc?" class="" style="width:437px">Lys/Arg 양전하 or 양이온 중심과 방향족 고리 중심이 6 Å 이내이면 π–cation 상호작용으로 카운트.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-810e-90b6-f221ce524195"><td id="FWdO" class="" style="width:155.390625px">Salt bridge (염다리)</td><td id="`gOh" class="" style="width:170.46875px">두 전하 중심 거리 ≈ 4.0–5.5</td><td id="O|po" class="" style="width:154.375px">각도 조건 없음</td><td id="wTpg" class="" style="width:249.65625px">SALTBRIDGE_DIST_MAX ≈ 4.0–5.5</td><td id="Jsc?" class="" style="width:437px">양이온성 (Lys/Arg 등) – 음이온성 (Asp/Glu 등) 그룹의 전하 중심이 이 범위 안에 있으면 salt bridge. 버전에 따라 기본값이 4.0 또는 5.5 Å 근처로 세팅된 사례가 있음.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-819e-88e5-dc5bf795df6a"><td id="FWdO" class="" style="width:155.390625px">Halogen bond (할로젠 결합)</td><td id="`gOh" class="" style="width:170.46875px">Halogen–Acceptor 거리 ≤ 4.0</td><td id="O|po" class="" style="width:154.375px">Donor–X···Acc ~165 ±30, R–X···Acc ~120 ±30</td><td id="wTpg" class="" style="width:249.65625px">HALOGEN_DIST_MAX = 4.0, HALOGEN_DON_ANGLE = 165, HALOGEN_ACC_ANGLE = 120, HALOGEN_ANGLE_DEV = 30</td><td id="Jsc?" class="" style="width:437px">Cl/Br/I 등 할로젠과 전자쌍(주로 O/N)이 거리·각도 조건을 만족하면 halogen bond. 방향성이 꽤 강하게 반영됨.(<a href="https://pubs.rsc.org/en/content/articlehtml/2024/cp/d3cp03492e?utm_source=chatgpt.com">RSC 출판</a>)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8116-b2bb-c7d3c7ae4727"><td id="FWdO" class="" style="width:155.390625px">Metal complex (금속 배위 결합)</td><td id="`gOh" class="" style="width:170.46875px">금속–O/N/S 거리 ≤ 3.0 (inner sphere) / ≤ 5.0 (outer sphere)</td><td id="O|po" class="" style="width:154.375px">각도는 금속 종류·배위에 따라 별도 규칙</td><td id="wTpg" class="" style="width:249.65625px">(config에 직접 상수 노출 X, 구현 내부 규칙)</td><td id="Jsc?" class="" style="width:437px">금속 이온 주변 3 Å 이내 O/N/S 원자는 직접 배위(inner sphere)로, 3–5 Å는 outer sphere로 취급하는 예가 보고됨. PLIP 내부에서 금속 종류별로 세부 규칙을 적용.(<a href="https://www.researchgate.net/publication/335514951_Cobalt_II_cations_binding_by_proteins?utm_source=chatgpt.com">ResearchGate</a>)</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816f-b370-c6155c86810c" class="bulleted-list"><li style="list-style-type:disc">버전 차이/사용자 튜닝 때문에 HBOND_DIST_MAX, PISTACK_DIST_MAX, SALTBRIDGE_DIST_MAX 같은 값은 논문마다 0.5–1.5 Å 정도 차이가 날 수 있음</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-811c-8c8d-fef0e4bf924e" class="">추가로 전체에 공통으로 쓰이는 전역 컷오프도 있어:</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8124-b6f8-edf047b5c56d" class="bulleted-list"><li style="list-style-type:disc">BS_DIST ≈ 7.5–10.0 Å: 리간드 주변 몇 Å까지를 “binding site 잔기 후보”로 볼지 결정하는 거리.</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8150-8e4c-c642f7c1ebe4" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
