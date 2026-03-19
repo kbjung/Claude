@@ -11,7 +11,7 @@
 - **제목**: AI 기반 단백질 결합 펩타이드 후보 예측 시스템
 - **목표**: 타겟 단백질에 특이적으로 결합하는 펩타이드 후보군을 AI 파이프라인으로 자동 도출
 - **담당자**: 김범중 (대학원생), 주영님 (박사 과정), 김동혁 교수님 (지도교수)
-- **코드**: `pepbind05.py` (4,572줄, conda env: `pepbind_openmm`, Python 3.11)
+- **코드**: `pepbind06.py` (pepbind05.py 기반, Vina score_only 적용. conda env: `pepbind_openmm`, Python 3.11)
 - **실행 환경**: i7-12700 / RTX 3070 8GB / 32GB RAM / WSL2 Ubuntu 22.04.5 LTS
 
 ---
@@ -115,3 +115,5 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | 2026.03.10 | PLIP → 보조 지표 전환 확정 (교수님 승인) | PLIP_분석_보고서_20260304_1646.docx |
 | 2026.03.10 | ADCP 도입 검토 시작 (주영님 제안) | - |
 | 2026.03.10 | 폴더 정리: CLAUDE.md 루트 이동, `10 PRD` → `08`에 통합, `04 데이터 설명서` 삭제 | CLAUDE.md |
+| 2026.03.20 | Vina score_only 모드로 변경 (도킹 탐색 제거, 스코어링만 수행) | pepbind06.py |
+| 2026.03.20 | 노션 새 페이지 구조 생성 (내부/외부), 6개 모델 설명 코드 기반 검증 및 수정 | 노션 |
