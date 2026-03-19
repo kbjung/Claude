@@ -111,8 +111,18 @@ COLABFOLD_CMD   = os.environ.get("COLABFOLD_CMD", "colabfold_batch").strip()
 VINA_CMD        = os.environ.get("VINA_CMD", "vina").strip()
 PLIP_CMD        = os.environ.get("PLIP_CMD", "plip").strip()          # 기본값도 plip으로
 PRODIGY_SCRIPT  = os.environ.get("PRODIGY_SCRIPT", "prodigy").strip()
+ADCP_CMD        = os.environ.get("ADCP_CMD", "runADCP.py").strip()
 
 OBABEL_CMD = shutil.which("obabel") or "obabel"
+
+# ADCP 설정 (AutoDock CrankPep - 펩타이드 전용 도킹)
+#   - 비교 평가용 보조 지표 (FinalScore 미반영)
+#   - MOE GBVI 값과 비교하여 상관성 평가 목적
+#   - RUN_ADCP = False로 설정하면 ADCP 단계를 건너뜀
+RUN_ADCP = bool(int(os.environ.get("RUN_ADCP", "0")))  # 기본: 비활성화 (설치 후 1로 변경)
+ADCP_NUM_STEPS  = int(os.environ.get("ADCP_NUM_STEPS", "2500000"))   # MC 시뮬레이션 단계 수
+ADCP_NB_RUNS    = int(os.environ.get("ADCP_NB_RUNS", "50"))          # 도킹 실행 횟수
+ADCP_MAX_CORES  = int(os.environ.get("ADCP_MAX_CORES", "4"))         # 최대 사용 CPU 코어
 
 # 6) ColabFold 자원/안전 관련 설정
 #    - COLABFOLD_MAX_MSA: MSA 깊이 제한 (메모리 부족 시 더 낮게 조정, 기본: 32:64)
@@ -161,9 +171,10 @@ PLIP_WEIGHT_SALTBRIDGE  = 3.0   # 염다리(이온 결합) 가중치
 
 # 11) 최종 점수 가중치 (정규화된 지표에 곱해 FinalScore 계산)
 #     - 권장: 합이 1.0이 되도록 설정
-W_PRODIGY = 0.50   # PRODIGY_dG 정규화 점수 가중치
-W_VINA    = 0.25   # Vina_score 정규화 점수 가중치
-W_PLIP    = 0.15   # PLIP_weighted_total 정규화 점수 가중치
+#     - PLIP은 FinalScore에서 제외 (2026.03.10 교수님 승인)
+#       보조 지표로만 활용 (엑셀 결과에는 값 기록 유지)
+W_PRODIGY = 0.60   # PRODIGY_dG 정규화 점수 가중치
+W_VINA    = 0.30   # Vina_score 정규화 점수 가중치
 W_IPTM    = 0.10   # ipTM 정규화 점수 가중치
 
 # 12) 실패 복합체 재시도 설정 (pepbind05 신규)
@@ -231,6 +242,7 @@ RANK_TABLE_HEADERS = [
     "PLIP_saltbridge",
     "ipTM",
     "GBSA_bind",
+    "ADCP_score(kcal/mol)",
 ]
 
 ALL_METRICS_HEADERS = [
@@ -255,6 +267,7 @@ ALL_METRICS_HEADERS = [
     "GBSA_E_receptor(kcal/mol)",
     "GBSA_E_peptide(kcal/mol)",
     "GBSA_bind",
+    "ADCP_score(kcal/mol)",
 ]
 
 NORM_DEBUG_HEADERS = [
@@ -264,15 +277,15 @@ NORM_DEBUG_HEADERS = [
     "norm_ipTM",
     "norm_PRODIGY_dG",
     "norm_Vina_score",
-    "norm_PLIP_weighted_total",
+    "norm_PLIP_weighted_total(참고)",  # PLIP은 보조 지표 (FinalScore 미반영)
     "w_ipTM",
     "w_PRODIGY",
     "w_Vina",
-    "w_PLIP",
+    "w_PLIP(미적용)",  # PLIP 가중치 미적용 표시
     "contrib_ipTM",
     "contrib_PRODIGY",
     "contrib_Vina",
-    "contrib_PLIP",
+    "contrib_PLIP(미적용)",  # PLIP 기여도 미적용 표시
     "FinalScore",
     "GBSA_bind",
 ]
@@ -2631,6 +2644,206 @@ def run_vina_on_rank1(rank1_pdbs, vina_dir: Path):
 
 
 # =====================================================================
+# === STEP 4b: ADCP (AutoDock CrankPep) 펩타이드 도킹 ================
+# =====================================================================
+
+ADCP_SUMMARY_COLS = ["complex", "adcp_score", "adcp_status", "log_file"]
+
+
+def parse_adcp_best_energy(log_text: str):
+    """
+    ADCP 출력에서 best target energy(kcal/mol)를 파싱.
+    ADCP는 'best target energy' 문자열 뒤에 에너지 값을 출력하며,
+    내부적으로 0.59219 변환계수를 적용하여 kcal/mol 단위로 변환됨.
+    """
+    import re
+    # 패턴 1: "best energy" 또는 "best target energy" 줄에서 숫자 추출
+    for line in log_text.splitlines():
+        if "best" in line.lower() and "energy" in line.lower():
+            numbers = re.findall(r"[-+]?\d*\.?\d+", line)
+            if numbers:
+                try:
+                    return float(numbers[-1])
+                except ValueError:
+                    continue
+
+    # 패턴 2: "Score" 또는 "SCORE" 줄에서 추출 (summary.dlg 형식)
+    for line in log_text.splitlines():
+        s = line.strip()
+        if s.startswith("SCORE") or s.startswith("Score"):
+            numbers = re.findall(r"[-+]?\d*\.?\d+", s)
+            if numbers:
+                try:
+                    return float(numbers[0])
+                except ValueError:
+                    continue
+    return None
+
+
+def run_adcp_on_rank1(rank1_pdbs, adcp_dir: Path, target_trg: Path = None):
+    """
+    ADCP (AutoDock CrankPep) 펩타이드 도킹 실행 + 요약 로그 기록.
+
+    - 비교 평가용 보조 지표 (FinalScore에는 반영하지 않음)
+    - MOE GBVI 값과 비교하여 ADCP 유용성 평가 목적
+    - .trg 타겟 파일이 필요 (AGFR로 사전 준비)
+
+    adcp_summary.xlsx 컬럼:
+        complex, adcp_score, adcp_status, log_file
+    """
+    print("\n" + "=" * 80)
+    print("STEP 4b: ADCP (AutoDock CrankPep) 펩타이드 도킹")
+    print("=" * 80)
+
+    if not RUN_ADCP:
+        print("[INFO] ADCP 비활성화 상태 (RUN_ADCP=0). 건너뜁니다.")
+        print("[INFO] ADCP를 활성화하려면 환경변수 RUN_ADCP=1로 설정하세요.")
+        return
+
+    if not rank1_pdbs:
+        print("[WARN] ADCP 실행할 rank_001 PDB가 없습니다.")
+        return
+
+    if not shutil.which(ADCP_CMD) and not shutil.which("adcp_Linux-x86_64"):
+        print(f"[WARN] ADCP 실행 파일을 찾을 수 없습니다. ('{ADCP_CMD}' 또는 'adcp_Linux-x86_64')")
+        print("[INFO] ADCP 설치 후 다시 실행하세요: https://ccsb.scripps.edu/adcp/")
+        return
+
+    if target_trg is None or not target_trg.exists():
+        print("[WARN] ADCP 타겟 파일(.trg)이 지정되지 않았거나 존재하지 않습니다.")
+        print("[INFO] AGFR로 타겟 파일을 먼저 준비해야 합니다.")
+        return
+
+    adcp_dir.mkdir(parents=True, exist_ok=True)
+    summary_rows = []
+
+    for complex_pdb in rank1_pdbs:
+        base = complex_pdb.stem
+        complex_out_dir = adcp_dir / base
+        complex_out_dir.mkdir(parents=True, exist_ok=True)
+        log_file = complex_out_dir / f"{base}_adcp_stdout.txt"
+
+        row_data = {
+            "complex": base,
+            "adcp_score": None,
+            "adcp_status": "",
+            "log_file": log_file.name,
+        }
+
+        print(f"\n[INFO] ADCP 준비: {complex_pdb.name}")
+
+        # 펩타이드 체인 추출 (B 체인 가정)
+        try:
+            lig_lines = []
+            with open(complex_pdb, "r") as f:
+                for line in f:
+                    if line.startswith(("ATOM", "HETATM")) and len(line) > 21:
+                        chain = line[21]
+                        if chain == "B":
+                            lig_lines.append(line)
+            if not lig_lines:
+                row_data["adcp_status"] = "스킵: 펩타이드 체인(B) 없음"
+                print(f"[WARN] {base}: {row_data['adcp_status']}")
+                summary_rows.append(row_data)
+                continue
+
+            # 펩타이드 서열 추출 (ATOM 레코드에서)
+            residues = {}
+            for line in lig_lines:
+                resnum = line[22:26].strip()
+                resname = line[17:20].strip()
+                residues[resnum] = resname
+
+            # 3문자 → 1문자 아미노산 변환
+            aa3to1 = {
+                "ALA": "A", "CYS": "C", "ASP": "D", "GLU": "E", "PHE": "F",
+                "GLY": "G", "HIS": "H", "ILE": "I", "LYS": "K", "LEU": "L",
+                "MET": "M", "ASN": "N", "PRO": "P", "GLN": "Q", "ARG": "R",
+                "SER": "S", "THR": "T", "VAL": "V", "TRP": "W", "TYR": "Y",
+            }
+            pep_seq = "".join(
+                aa3to1.get(rn, "X")
+                for _, rn in sorted(residues.items(), key=lambda x: int(x[0]))
+            )
+            print(f"[INFO] 펩타이드 서열: {pep_seq} ({len(pep_seq)}mer)")
+
+        except Exception as e:
+            row_data["adcp_status"] = f"스킵: 펩타이드 서열 추출 실패({e})"
+            print(f"[WARN] {base}: {row_data['adcp_status']}")
+            summary_rows.append(row_data)
+            continue
+
+        # ADCP 실행
+        adcp_cmd = (
+            f"{ADCP_CMD} "
+            f"-t {target_trg} "
+            f"-s {pep_seq} "
+            f"-n {ADCP_NUM_STEPS} "
+            f"-N {ADCP_NB_RUNS} "
+            f"-c {ADCP_MAX_CORES} "
+            f"-o {complex_out_dir / base}"
+        )
+
+        print(f"[RUN] {adcp_cmd}")
+        try:
+            result = subprocess.run(
+                adcp_cmd,
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=3600,  # 1시간 타임아웃
+            )
+        except subprocess.TimeoutExpired:
+            row_data["adcp_status"] = "실패: 타임아웃 (1시간 초과)"
+            print(f"[ERROR] {base}: {row_data['adcp_status']}")
+            summary_rows.append(row_data)
+            continue
+
+        # 로그 저장
+        with open(log_file, "w", encoding="utf-8") as lf:
+            lf.write("=== STDOUT ===\n")
+            lf.write(result.stdout or "")
+            lf.write("\n\n=== STDERR ===\n")
+            lf.write(result.stderr or "")
+
+        if result.returncode != 0:
+            row_data["adcp_status"] = f"실패: ADCP 실행 에러(code={result.returncode})"
+            print(f"[ERROR] {base}: {row_data['adcp_status']}")
+        else:
+            # 점수 파싱
+            all_output = (result.stdout or "") + "\n" + (result.stderr or "")
+            best_score = parse_adcp_best_energy(all_output)
+            if best_score is None:
+                row_data["adcp_status"] = "파싱실패: 에너지 값을 찾을 수 없음"
+                print(f"[WARN] {base}: {row_data['adcp_status']}")
+            else:
+                row_data["adcp_score"] = best_score
+                row_data["adcp_status"] = "정상"
+                print(f"[INFO] {base} ADCP best score: {best_score} kcal/mol")
+
+        summary_rows.append(row_data)
+
+    # 요약 엑셀 저장
+    if summary_rows:
+        df_new = pd.DataFrame(summary_rows)
+        df_new = df_new[ADCP_SUMMARY_COLS]
+        xlsx_path = adcp_dir / "adcp_summary.xlsx"
+        if xlsx_path.exists():
+            try:
+                df_existing = pd.read_excel(xlsx_path)
+                new_complexes = set(df_new["complex"].tolist())
+                df_existing = df_existing[~df_existing["complex"].isin(new_complexes)]
+                df_merged = pd.concat([df_existing, df_new], ignore_index=True)
+                df_merged.to_excel(xlsx_path, index=False)
+                print(f"\n✅ ADCP 요약 엑셀 업데이트: {xlsx_path} (총 {len(df_merged)}개)")
+            except Exception:
+                df_new.to_excel(xlsx_path, index=False)
+                print(f"\n✅ ADCP 요약 엑셀 저장: {xlsx_path} ({len(df_new)}개)")
+        else:
+            df_new.to_excel(xlsx_path, index=False)
+            print(f"\n✅ ADCP 요약 엑셀 저장: {xlsx_path} ({len(df_new)}개)")
+
+
 # === STEP 5: PLIP 상호작용 분석 =====================================
 # =====================================================================
 
@@ -3548,22 +3761,22 @@ def build_and_save_final_table(
         plip_ok    = is_status_ok(plip_st)    and has_valid_value(plip_total)
 
         # 가중치 (사용자 설정 영역)
+        # PLIP은 FinalScore에서 제외 (보조 지표로만 활용)
         w_prodigy = W_PRODIGY
         w_vina    = W_VINA
-        w_plip    = W_PLIP
         w_iptm    = W_IPTM
 
         # 최종 점수 계산 조건:
         #  - 단일체가 아니고
-        #  - Vina / PLIP / PRODIGY status가 모두 정상이고
+        #  - Vina / PRODIGY status가 모두 정상이고
         #  - 해당 값이 실제로 존재할 때만 계산
-        if (len(chain_counts) == 1) or not (vina_ok and plip_ok and prodigy_ok):
+        #  - PLIP은 FinalScore 계산에서 제외 (보조 지표)
+        if (len(chain_counts) == 1) or not (vina_ok and prodigy_ok):
             final_score = None
         else:
             final_score = (
                 w_prodigy * prodigy_norm.get(base, 0.0) +
                 w_vina    * vina_norm.get(base, 0.0) +
-                w_plip    * plip_norm.get(base, 0.0) +
                 w_iptm    * iptm_norm.get(base, 0.0)
             )
 
@@ -3590,9 +3803,24 @@ def build_and_save_final_table(
             "gbsa_bind":        gbsa_bind,
             "retry_round":      retry_round,  # Option 3: 재시도 라운드 기록
             "complex_stem":     base,
+            "adcp_score":       None,  # ADCP 점수 (비교 평가용, ADCP 실행 시 후처리에서 채움)
 
         })
 
+
+    # ADCP 점수 병합 (adcp_summary.xlsx가 존재하면 읽어서 rows에 채움)
+    adcp_summary_path = base_dir / "adcp" / "adcp_summary.xlsx"
+    if adcp_summary_path.exists():
+        try:
+            df_adcp = pd.read_excel(adcp_summary_path)
+            adcp_map = dict(zip(df_adcp["complex"], df_adcp["adcp_score"]))
+            for r in rows:
+                stem = r.get("complex_stem", "")
+                if stem in adcp_map and adcp_map[stem] is not None:
+                    r["adcp_score"] = adcp_map[stem]
+            print(f"[INFO] ADCP 점수 병합 완료 ({len(adcp_map)}개)")
+        except Exception as e:
+            print(f"[WARN] ADCP 점수 병합 실패: {e}")
 
     # FinalScore 기준으로 내림차순 정렬
     # - final_score가 None 인 경우는 가장 아래로 보내고
@@ -3634,6 +3862,7 @@ def build_and_save_final_table(
         "PLIP_saltbridge": lambda r, idx: r["plip_salt"],
         "ipTM": lambda r, idx: r["iptm"],
         "GBSA_bind": lambda r, idx: r.get("gbsa_bind"),
+        "ADCP_score(kcal/mol)": lambda r, idx: r.get("adcp_score"),
     }
 
     for idx, r in enumerate(rows, start=1):
@@ -3641,7 +3870,7 @@ def build_and_save_final_table(
 
     # dG/에너지 컬럼 표시 형식
     for col_idx, header in enumerate(headers, start=1):
-        if any(k in header for k in ("dG", "score", "GBSA")):
+        if any(k in header for k in ("dG", "score", "GBSA", "ADCP")):
             col_letter = get_column_letter(col_idx)
             for cell in ws_rank[col_letter]:
                 if isinstance(cell.value, (int, float)):
@@ -3676,13 +3905,14 @@ def build_and_save_final_table(
         "GBSA_E_receptor(kcal/mol)": lambda r, idx: r.get("gbsa_e_receptor"),
         "GBSA_E_peptide(kcal/mol)": lambda r, idx: r.get("gbsa_e_peptide"),
         "GBSA_bind": lambda r, idx: r.get("gbsa_bind"),
+        "ADCP_score(kcal/mol)": lambda r, idx: r.get("adcp_score"),
     }
 
     for idx, r in enumerate(rows, start=1):
         ws_all.append([value_map_all[h](r, idx) for h in headers_all])
 
     for col_idx, header in enumerate(headers_all, start=1):
-        if any(k in header for k in ("dG", "score", "GBSA")):
+        if any(k in header for k in ("dG", "score", "GBSA", "ADCP")):
             col_letter = get_column_letter(col_idx)
             for cell in ws_all[col_letter]:
                 if isinstance(cell.value, (int, float)):
@@ -3707,7 +3937,8 @@ def build_and_save_final_table(
         c_iptm    = (W_IPTM    * n_iptm)    if isinstance(n_iptm, (int, float)) else None
         c_prodigy = (W_PRODIGY * n_prodigy) if isinstance(n_prodigy, (int, float)) else None
         c_vina    = (W_VINA    * n_vina)    if isinstance(n_vina, (int, float)) else None
-        c_plip    = (W_PLIP    * n_plip)    if isinstance(n_plip, (int, float)) else None
+        # PLIP은 보조 지표 (FinalScore 미반영), 정규화 값만 참고용으로 기록
+        c_plip    = None
 
         row_vals = {
             "candidate_id": r["candidate_id"],
@@ -3716,15 +3947,15 @@ def build_and_save_final_table(
             "norm_ipTM": n_iptm,
             "norm_PRODIGY_dG": n_prodigy,
             "norm_Vina_score": n_vina,
-            "norm_PLIP_weighted_total": n_plip,
+            "norm_PLIP_weighted_total(참고)": n_plip,
             "w_ipTM": W_IPTM,
             "w_PRODIGY": W_PRODIGY,
             "w_Vina": W_VINA,
-            "w_PLIP": W_PLIP,
+            "w_PLIP(미적용)": 0.0,
             "contrib_ipTM": c_iptm,
             "contrib_PRODIGY": c_prodigy,
             "contrib_Vina": c_vina,
-            "contrib_PLIP": c_plip,
+            "contrib_PLIP(미적용)": c_plip,
             "FinalScore": round(r["final_score"], 4) if r["final_score"] is not None else None,
             "GBSA_bind": r.get("gbsa_bind"),
         }
@@ -4255,6 +4486,24 @@ def main():
         now = datetime.now()
         print("\n[INFO] RUN_VINA=False → Vina 단계 스킵")
         print_step_timing("STEP 4: AutoDock Vina 도킹 (스킵)", now, now)
+
+    # STEP 4b: ADCP (AutoDock CrankPep) - 비교 평가용 보조 지표
+    if RUN_ADCP and rank1_pdbs:
+        step4b_start = datetime.now()
+        # ADCP 타겟 파일(.trg) 경로: 프로젝트 폴더에 사전 준비 필요
+        adcp_trg = folders["base"] / "target.trg"
+        adcp_out_dir = folders["base"] / "adcp"
+        run_adcp_on_rank1(rank1_pdbs, adcp_out_dir, target_trg=adcp_trg)
+        step4b_end = datetime.now()
+        print_step_timing("STEP 4b: ADCP 펩타이드 도킹", step4b_start, step4b_end)
+    elif RUN_ADCP and not rank1_pdbs:
+        now = datetime.now()
+        print("\n[INFO] rank_001 PDB 없음 → ADCP 단계 스킵")
+        print_step_timing("STEP 4b: ADCP (스킵: PDB 없음)", now, now)
+    else:
+        now = datetime.now()
+        if not RUN_ADCP:
+            pass  # RUN_ADCP=False면 메시지 없이 조용히 스킵
 
     # STEP 5: PLIP
     if RUN_PLIP:
