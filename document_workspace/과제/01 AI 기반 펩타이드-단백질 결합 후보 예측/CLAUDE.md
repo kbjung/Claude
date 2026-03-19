@@ -117,3 +117,5 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | 2026.03.10 | 폴더 정리: CLAUDE.md 루트 이동, `10 PRD` → `08`에 통합, `04 데이터 설명서` 삭제 | CLAUDE.md |
 | 2026.03.20 | Vina score_only 모드로 변경 (도킹 탐색 제거, 스코어링만 수행) | pepbind06.py |
 | 2026.03.20 | 노션 새 페이지 구조 생성 (내부/외부), 6개 모델 설명 코드 기반 검증 및 수정 | 노션 |
+| 2026.03.20 | PLIP FinalScore 제외 코드 반영 (가중치: PRODIGY 60%, Vina 30%, ipTM 10%) | pepbind06.py |
+| 2026.03.20 | ADCP(AutoDock CrankPep) STEP 4b로 코드 추가 (비교 평가용, 기본 비활성화) | pepbind06.py |
