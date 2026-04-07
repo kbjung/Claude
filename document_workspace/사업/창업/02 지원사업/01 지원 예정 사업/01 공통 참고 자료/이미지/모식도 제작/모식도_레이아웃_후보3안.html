@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #f5f5f5; padding: 30px; }
+  h1 { text-align: center; font-size: 22px; margin-bottom: 10px; color: #1a1a2e; }
+  .subtitle { text-align: center; font-size: 13px; color: #666; margin-bottom: 30px; }
+  .layout-card { background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .layout-title { font-size: 17px; font-weight: bold; color: #1a1a2e; margin-bottom: 4px; }
+  .layout-desc { font-size: 12px; color: #888; margin-bottom: 18px; }
+  .wireframe { border: 2px solid #ddd; border-radius: 8px; overflow: hidden; background: #fafafa; }
+
+  /* === Layout A === */
+  .la-header { background: #16213e; color: #fff; text-align: center; padding: 12px 16px; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+  .la-top { display: flex; gap: 0; }
+  .la-top-left, .la-top-right { flex: 1; padding: 14px 16px; }
+  .la-top-left { background: #fce4ec; border-right: 2px dashed #ccc; }
+  .la-top-right { background: #e3f2fd; }
+  .la-top-label { font-size: 11px; font-weight: bold; color: #c62828; margin-bottom: 8px; }
+  .la-top-right .la-top-label { color: #1565c0; }
+  .la-icon-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .la-icon-item { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 6px 8px; font-size: 9px; color: #555; text-align: center; flex: 1; min-width: 70px; }
+  .la-icon-item .icon { font-size: 16px; display: block; margin-bottom: 3px; }
+  .la-mid { background: #16213e; color: #e0e0e0; text-align: center; padding: 8px; font-size: 11px; font-weight: bold; letter-spacing: 2px; }
+  .la-bottom { display: flex; gap: 0; }
+  .la-step { flex: 1; padding: 14px 12px; text-align: center; border-right: 2px dashed #ccc; position: relative; }
+  .la-step:last-child { border-right: none; }
+  .la-step-num { display: inline-block; background: #16213e; color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; font-size: 10px; font-weight: bold; margin-bottom: 6px; }
+  .la-step-title { font-size: 11px; font-weight: bold; color: #16213e; margin-bottom: 4px; }
+  .la-step-detail { font-size: 9px; color: #666; line-height: 1.4; }
+  .la-step-img { background: #e8eaf6; border: 1px dashed #9fa8da; border-radius: 4px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #5c6bc0; margin-top: 6px; }
+  .la-arrow { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #16213e; z-index: 1; }
+  .la-foot { display: flex; gap: 0; background: #e8eaf6; }
+  .la-foot-item { flex: 1; text-align: center; padding: 8px; font-size: 10px; color: #3949ab; font-weight: bold; border-right: 1px solid #c5cae9; }
+  .la-foot-item:last-child { border-right: none; }
+
+  /* === Layout B === */
+  .lb-header { background: #0d47a1; color: #fff; text-align: center; padding: 12px 16px; font-size: 14px; font-weight: bold; }
+  .lb-body { display: flex; gap: 0; min-height: 280px; }
+  .lb-left { width: 28%; background: #ffebee; padding: 14px; border-right: 2px solid #ef9a9a; }
+  .lb-center { width: 44%; background: #fff; padding: 14px; border-right: 2px solid #90caf9; }
+  .lb-right { width: 28%; background: #e8f5e9; padding: 14px; }
+  .lb-section-title { font-size: 11px; font-weight: bold; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 2px solid currentColor; }
+  .lb-left .lb-section-title { color: #c62828; }
+  .lb-center .lb-section-title { color: #1565c0; }
+  .lb-right .lb-section-title { color: #2e7d32; }
+  .lb-item { font-size: 9px; color: #555; margin-bottom: 6px; padding-left: 10px; position: relative; line-height: 1.4; }
+  .lb-item::before { content: '▸'; position: absolute; left: 0; color: #999; }
+  .lb-img-placeholder { background: #f3e5f5; border: 1px dashed #ce93d8; border-radius: 4px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #8e24aa; margin: 8px 0; }
+  .lb-arrow-col { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 6px; font-size: 24px; color: #1565c0; }
+  .lb-foot { background: #e3f2fd; padding: 10px 16px; display: flex; justify-content: center; gap: 20px; }
+  .lb-foot-badge { background: #0d47a1; color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 10px; font-weight: bold; }
+
+  /* === Layout C === */
+  .lc-header { background: linear-gradient(135deg, #1a237e, #283593); color: #fff; text-align: center; padding: 14px 16px; font-size: 14px; font-weight: bold; }
+  .lc-row1 { display: flex; gap: 0; }
+  .lc-problem { flex: 1; padding: 14px 16px; background: #fff3e0; }
+  .lc-arrow-mid { display: flex; align-items: center; justify-content: center; padding: 0 8px; font-size: 24px; color: #1a237e; background: #f5f5f5; }
+  .lc-need { flex: 1; padding: 14px 16px; background: #e8eaf6; }
+  .lc-label { font-size: 11px; font-weight: bold; margin-bottom: 8px; }
+  .lc-problem .lc-label { color: #e65100; }
+  .lc-need .lc-label { color: #283593; }
+  .lc-pill { display: inline-block; background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 3px 10px; font-size: 9px; color: #555; margin: 2px; }
+  .lc-divider { background: #1a237e; color: #fff; text-align: center; padding: 8px; font-size: 11px; font-weight: bold; letter-spacing: 3px; }
+  .lc-row2 { display: flex; gap: 0; }
+  .lc-tech-main { flex: 2; padding: 16px; background: #fff; }
+  .lc-tech-side { flex: 1; padding: 16px; background: #f3e5f5; border-left: 2px solid #ce93d8; }
+  .lc-tech-title { font-size: 12px; font-weight: bold; color: #1a237e; margin-bottom: 8px; }
+  .lc-feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .lc-feature-card { background: #e8eaf6; border-radius: 6px; padding: 8px; text-align: center; }
+  .lc-feature-card .num { font-size: 10px; font-weight: bold; color: #283593; }
+  .lc-feature-card .desc { font-size: 8px; color: #555; margin-top: 2px; }
+  .lc-side-title { font-size: 11px; font-weight: bold; color: #6a1b9a; margin-bottom: 6px; }
+  .lc-side-item { font-size: 9px; color: #555; margin-bottom: 4px; }
+  .lc-row3 { display: flex; gap: 0; background: #e3f2fd; padding: 10px 16px; }
+  .lc-pipeline { flex: 1; text-align: center; }
+  .lc-pipeline-label { font-size: 10px; font-weight: bold; color: #0d47a1; }
+  .lc-pipeline-sub { font-size: 8px; color: #666; }
+
+  .tag { display: inline-block; background: #ffe082; color: #333; padding: 1px 6px; border-radius: 3px; font-size: 8px; font-weight: bold; margin-top: 4px; }
+  .tag-ai { background: #c8e6c9; }
+  .tag-photo { background: #bbdefb; }
+  .legend { margin-top: 10px; display: flex; gap: 12px; justify-content: center; }
+  .legend-item { font-size: 10px; color: #666; }
+</style>
+</head>
+<body>
+
+<h1>기술 모식도 레이아웃 후보 3안</h1>
+<p class="subtitle">창업선도대학(제이콥) — "연구개발 대상 기술·제품의 필요성" 섹션용 | 펩타이드 기반 경피 전달 탈모/피부암 치료 기술</p>
+
+<div class="legend">
+  <span class="legend-item"><span class="tag tag-ai">AI 생성</span> = AI 이미지 생성 영역</span>
+  <span class="legend-item"><span class="tag tag-photo">실제 사진/그래프</span> = 기존 데이터·이미지 삽입 영역</span>
+  <span class="legend-item"><span class="tag">PPT 편집</span> = PPT에서 텍스트/도형 편집</span>
+</div>
+
+<!-- ============ Layout A ============ -->
+<div class="layout-card">
+  <div class="layout-title">안 A — 예시 이미지와 유사한 구조 (상단 한계/필요성 + 하단 3단계 솔루션)</div>
+  <div class="layout-desc">예시 이미지(HYPER-PURE Lab)와 동일한 2행 구조. 상단에서 "왜 필요한가", 하단에서 "어떻게 해결하는가"를 보여줌. 가장 안정적이고 심사위원에게 익숙한 형태.</div>
+
+  <div class="wireframe">
+    <div class="la-header">펩타이드 기반 이중기능 경피 전달 탈모/피부암 치료 기술</div>
+
+    <div class="la-top">
+      <div class="la-top-left">
+        <div class="la-top-label">❌ 기존 치료제의 한계 (Limitations)</div>
+        <div class="la-icon-row">
+          <div class="la-icon-item"><span class="icon">💊</span>경구 Finasteride<br><b>전신 부작용</b><br>(성기능 저하 등)<br><span class="tag tag-ai">AI 생성</span></div>
+          <div class="la-icon-item"><span class="icon">💧</span>Minoxidil 외용<br><b>DHT 미억제</b><br>(중단 시 소실)<br><span class="tag tag-ai">AI 생성</span></div>
+          <div class="la-icon-item"><span class="icon">🧴</span>핀쥬베(국소 Fin)<br><b>표면 체류만</b><br>(모낭 심부 X)<br><span class="tag tag-ai">AI 생성</span></div>
+        </div>
+      </div>
+      <div class="la-top-right">
+        <div class="la-top-label" style="color:#1565c0">✅ 보유 기술 도입의 필요성 (Necessity)</div>
+        <div class="la-icon-row">
+          <div class="la-icon-item"><span class="icon">🎯</span>모낭 심부<br><b>직접 전달</b><br><span class="tag tag-ai">AI 생성</span></div>
+          <div class="la-icon-item"><span class="icon">🛡️</span>전신 부작용<br><b>구조적 최소화</b><br><span class="tag tag-ai">AI 생성</span></div>
+          <div class="la-icon-item"><span class="icon">🔬</span>운반체 자체<br><b>항염 치료능</b><br><span class="tag tag-ai">AI 생성</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="la-mid">▼ 한계 극복 및 필요성 충족을 위한 솔루션 ▼</div>
+
+    <div class="la-bottom">
+      <div class="la-step">
+        <div class="la-step-num">1</div>
+        <div class="la-step-title">경피 전달 (Delivery)</div>
+        <div class="la-step-detail">피부투과 펩타이드가<br>Finasteride를 가용화해<br>모낭 심부까지 직접 전달</div>
+        <div class="la-step-img"><span class="tag tag-photo">실제 사진/그래프</span><br>피부투과 형광 이미지</div>
+        <div class="la-arrow">➤</div>
+      </div>
+      <div class="la-step">
+        <div class="la-step-num">2</div>
+        <div class="la-step-title">이중기능 (Dual-function)</div>
+        <div class="la-step-detail">운반체 펩타이드 자체가<br>항염 치료 활성 발휘<br>→ Finasteride와 시너지</div>
+        <div class="la-step-img"><span class="tag tag-photo">실제 사진/그래프</span><br>모유두 세포 내부 전달 확인</div>
+        <div class="la-arrow">➤</div>
+      </div>
+      <div class="la-step">
+        <div class="la-step-num">3</div>
+        <div class="la-step-title">치료 효능 (Efficacy)</div>
+        <div class="la-step-detail">경구 대비 1/40 투여량<br>Minoxidil 동등 이상 효능<br>+ 피부암 적응증 확장</div>
+        <div class="la-step-img"><span class="tag tag-photo">실제 사진/그래프</span><br>모발 성장 효능 비교 그래프</div>
+      </div>
+    </div>
+
+    <div class="la-foot">
+      <div class="la-foot-item">🧬 탈모 치료제 (핵심 파이프라인)</div>
+      <div class="la-foot-item">🧫 피부암 치료제 (플랫폼 확장)</div>
+      <div class="la-foot-item">🧴 비의약 두피케어 (보조 수익)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Layout B ============ -->
+<div class="layout-card">
+  <div class="layout-title">안 B — 좌→우 3칸 흐름 (문제 → 핵심기술 → 기대효과)</div>
+  <div class="layout-desc">좌측에서 우측으로 자연스럽게 읽히는 3칸 구성. 가운데에 기술 모식도(실제 이미지)를 크게 배치해 기술 자체를 부각. 심사위원이 한 눈에 "문제→기술→효과"를 파악 가능.</div>
+
+  <div class="wireframe">
+    <div class="lb-header">펩타이드 기반 이중기능 경피 전달 탈모/피부암 치료 기술</div>
+
+    <div class="lb-body">
+      <div class="lb-left">
+        <div class="lb-section-title">🔴 기존 치료제 한계</div>
+        <div class="lb-item"><b>경구 Fin/Dut</b><br>5αR 억제 효과 ↑<br>전신 부작용 우려 ↑</div>
+        <div class="lb-item"><b>Minoxidil 외용</b><br>DHT 미억제, 비기전적<br>중단 시 효과 소실</div>
+        <div class="lb-item"><b>핀쥬베(국소 Fin)</b><br>고분자 표면 체류<br>자체 전달·치료능 없음</div>
+        <div style="margin-top:10px; padding-top:8px; border-top: 1px dashed #ef9a9a;">
+          <div class="lb-section-title" style="color: #e65100; border-color: #e65100; font-size:10px;">미충족 수요</div>
+          <div class="lb-item" style="font-size:9px; font-weight:bold; color: #c62828;">전신 부작용 없이<br>모낭 심부까지 약물을<br>전달하는 국소 치료제 부재</div>
+        </div>
+      </div>
+
+      <div class="lb-center">
+        <div class="lb-section-title">🔵 보유 핵심 기술</div>
+        <div class="lb-img-placeholder" style="height:100px;">
+          <div style="text-align:center">
+            <span class="tag tag-photo">실제 이미지</span><br><br>
+            <b>이중기능 펩타이드 경피전달 기술 모식도</b><br>
+            (피부투과 + 세포내 전달 + 항염)
+          </div>
+        </div>
+        <div style="margin-top:8px;">
+          <div class="lb-item"><b>① 경피 전달</b>: 펩타이드가 Fin을 모낭 심부까지 직접 전달</div>
+          <div class="lb-item"><b>② 세포내 전달</b>: 모유두 세포 내부까지 약물 운반</div>
+          <div class="lb-item"><b>③ 항염 시너지</b>: 운반체 자체 항염 → Fin과 치료적 시너지</div>
+        </div>
+        <div class="lb-img-placeholder" style="height:45px;">
+          <span class="tag tag-photo">실제 그래프</span>&nbsp; 모발 성장 효능 비교
+        </div>
+      </div>
+
+      <div class="lb-right">
+        <div class="lb-section-title">🟢 기대 효과</div>
+        <div class="lb-item"><b>경구 대비 1/40</b><br>약물 투여량 → 전신 부작용 대폭 감소</div>
+        <div class="lb-item"><b>Minoxidil 동등↑ 효능</b><br>기전 기반 DHT 억제 + 항염</div>
+        <div class="lb-item"><b>Carrier-free</b><br>운반체 = 치료제 (이중기능)</div>
+        <div style="margin-top:10px; padding-top:8px; border-top: 1px dashed #a5d6a7;">
+          <div class="lb-section-title" style="color: #1b5e20; border-color: #1b5e20; font-size:10px;">플랫폼 확장</div>
+          <div class="lb-item">🧬 탈모 치료제 (핵심)</div>
+          <div class="lb-item">🧫 피부암 치료제 (확장)</div>
+          <div class="lb-item">🧴 비의약 두피케어 (보조)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lb-foot">
+      <span class="lb-foot-badge">논문 3편 (IF 19.0 포함)</span>
+      <span class="lb-foot-badge">특허 12건 등록</span>
+      <span class="lb-foot-badge">정부 연구비 30억 수주</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Layout C ============ -->
+<div class="layout-card">
+  <div class="layout-title">안 C — 상하 3행 구조 (한계/필요성 → 핵심기술+차별점 → 파이프라인)</div>
+  <div class="layout-desc">상단에서 문제-필요성을 병렬 배치하고, 중단에 기술 상세(메인) + 차별점(사이드)을 넓게, 하단에 파이프라인 확장성을 보여줌. 기술 깊이와 플랫폼 확장성을 동시에 부각할 때 적합.</div>
+
+  <div class="wireframe">
+    <div class="lc-header">펩타이드 기반 이중기능 경피 전달 플랫폼 기술</div>
+
+    <div class="lc-row1">
+      <div class="lc-problem">
+        <div class="lc-label">❌ 기존 치료제의 구조적 한계</div>
+        <div>
+          <span class="lc-pill">경구 Fin → 전신 부작용</span>
+          <span class="lc-pill">Minoxidil → DHT 미억제</span>
+          <span class="lc-pill">핀쥬베 → 표면 체류만</span>
+          <span class="lc-pill">장기 순응도 제한</span>
+        </div>
+        <div style="margin-top:6px; font-size:9px; color:#bf360c; font-weight:bold;">
+          → 모낭 심부 직접 전달 + 전신 부작용 최소화 가능한 국소 치료제 부재
+        </div>
+      </div>
+      <div class="lc-arrow-mid">➤</div>
+      <div class="lc-need">
+        <div class="lc-label">✅ 차세대 치료 기술의 요건</div>
+        <div>
+          <span class="lc-pill">🎯 모낭 심부 약물 전달</span>
+          <span class="lc-pill">🛡️ 전신 노출 최소화</span>
+          <span class="lc-pill">🔬 기전 기반 DHT 억제</span>
+          <span class="lc-pill">💪 장기 사용 안전성</span>
+        </div>
+        <div style="margin-top:6px; font-size:9px; color:#1a237e; font-weight:bold;">
+          → 이중기능 펩타이드 경피 전달 기술이 모든 요건을 동시 충족
+        </div>
+      </div>
+    </div>
+
+    <div class="lc-divider">▼ 보유 핵심 기술 ▼</div>
+
+    <div class="lc-row2">
+      <div class="lc-tech-main">
+        <div class="lc-tech-title">이중기능 펩타이드 경피 전달 플랫폼</div>
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1;">
+            <div class="lb-img-placeholder" style="height:90px; background:#e8eaf6; border-color:#7986cb;">
+              <div style="text-align:center">
+                <span class="tag tag-photo">실제 이미지</span><br><br>
+                <b>경피전달 기술 모식도</b><br>
+                피부투과 → 모낭 심부 → 세포내
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;">
+            <div class="lc-feature-grid">
+              <div class="lc-feature-card"><div class="num">① 경피 전달</div><div class="desc">펩타이드가 Fin을<br>모낭 심부까지 운반</div></div>
+              <div class="lc-feature-card"><div class="num">② 세포내 전달</div><div class="desc">모유두 세포 내부<br>약물 직접 전달</div></div>
+              <div class="lc-feature-card"><div class="num">③ 항염 시너지</div><div class="desc">운반체 자체 항염<br>Fin과 치료적 시너지</div></div>
+              <div class="lc-feature-card"><div class="num">④ 극소량 투여</div><div class="desc">경구 대비 1/40<br>핀쥬베 대비 1/4.6</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="lb-img-placeholder" style="height:40px; margin-top:8px; background:#e8f5e9; border-color:#81c784;">
+          <span class="tag tag-photo">실제 그래프</span>&nbsp; 전임상 모발 성장 효능 비교 (Minoxidil 동등↑)
+        </div>
+      </div>
+      <div class="lc-tech-side">
+        <div class="lc-side-title">차별적 경쟁력</div>
+        <div class="lc-side-item">✓ Carrier-free delivery<br><span style="font-size:8px;color:#888;">(운반체 = 치료제)</span></div>
+        <div class="lc-side-item" style="margin-top:6px;">✓ 전신 노출 구조적 최소화<br><span style="font-size:8px;color:#888;">(경피 + 극소량)</span></div>
+        <div class="lc-side-item" style="margin-top:6px;">✓ 다적응증 플랫폼<br><span style="font-size:8px;color:#888;">(탈모 → 피부암 → 아토피)</span></div>
+        <div style="margin-top:10px; padding-top:8px; border-top:1px dashed #ce93d8;">
+          <div class="lc-side-title" style="font-size:10px;">검증 실적</div>
+          <div class="lc-side-item">• 논문 3편 (AFM IF19)</div>
+          <div class="lc-side-item">• 특허 12건 등록</div>
+          <div class="lc-side-item">• 연구비 30억 수주</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lc-row3">
+      <div class="lc-pipeline" style="border-right:1px solid #90caf9;">
+        <div class="lc-pipeline-label">🧬 핵심 파이프라인: 탈모 치료제</div>
+        <div class="lc-pipeline-sub">펩타이드+Finasteride → 전임상 → 임상 → 기술이전</div>
+      </div>
+      <div class="lc-pipeline" style="border-right:1px solid #90caf9;">
+        <div class="lc-pipeline-label">🧫 플랫폼 확장: 피부암 치료제</div>
+        <div class="lc-pipeline-sub">동일 플랫폼 → 항암제 경피 전달 → 전임상 검증</div>
+      </div>
+      <div class="lc-pipeline">
+        <div class="lc-pipeline-label">🧴 보조 파이프라인: 두피케어</div>
+        <div class="lc-pipeline-sub">펩타이드 단독 → 비의약 제품 → 초기 매출</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; margin-top:20px; font-size:12px; color:#999;">
+  ※ 위 레이아웃은 와이어프레임입니다. 선택 후 PPT에서 배치하고, 각 파트별 AI 이미지를 생성해 삽입합니다.
+</div>
+
+</body>
+</html>
