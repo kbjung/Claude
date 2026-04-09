@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BIO AI 핵심뉴스 — 2026.04.09</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0b0f1a;
+      --surface: #111827;
+      --card: #1a2236;
+      --border: #1e2d42;
+      --accent1: #00d4ff;
+      --accent2: #7c3aed;
+      --accent3: #10b981;
+      --accent4: #f59e0b;
+      --accent5: #ef4444;
+      --text-primary: #f0f4f8;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0b0f1a 0%, #0d1b2e 50%, #0b0f1a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 60px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: 40px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.25);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--accent1);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .header-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent1);
+      border-radius: 50%;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #f0f4f8 0%, var(--accent1) 60%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    header .subtitle {
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 400;
+    }
+    .header-meta {
+      margin-top: 24px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .meta-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent1);
+    }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 40px 80px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      margin-top: 52px;
+    }
+    .section-header:first-child { margin-top: 0; }
+    .section-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .section-header .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+    }
+
+    /* ── SUMMARY GRID ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 768px) { .summary-grid { grid-template-columns: 1fr; } }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .summary-card.blue::before { background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
+    .summary-card.green::before { background: linear-gradient(90deg, var(--accent3), #06b6d4); }
+    .summary-card.amber::before { background: linear-gradient(90deg, var(--accent4), var(--accent5)); }
+
+    .summary-card .label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .summary-card .value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .summary-card.blue .value { color: var(--accent1); }
+    .summary-card.green .value { color: var(--accent3); }
+    .summary-card.amber .value { color: var(--accent4); }
+    .summary-card .desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* ── NEWS CARDS ── */
+    .news-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 30px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .news-card:hover { border-color: rgba(0,212,255,0.3); }
+
+    .news-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .news-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .tag-deal { background: rgba(0,212,255,0.12); color: var(--accent1); border: 1px solid rgba(0,212,255,0.2); }
+    .tag-model { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.25); }
+    .tag-tech { background: rgba(16,185,129,0.12); color: var(--accent3); border: 1px solid rgba(16,185,129,0.2); }
+    .tag-trend { background: rgba(245,158,11,0.12); color: var(--accent4); border: 1px solid rgba(245,158,11,0.2); }
+    .tag-platform { background: rgba(239,68,68,0.12); color: #fc8181; border: 1px solid rgba(239,68,68,0.2); }
+
+    .news-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .news-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+    .news-card .body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .news-card .body strong { color: var(--text-primary); font-weight: 600; }
+
+    /* ── KEY POINTS ── */
+    .key-points {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .key-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+    .key-point::before {
+      content: '▸';
+      color: var(--accent1);
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 11px;
+    }
+    .kp-green::before { color: var(--accent3); }
+    .kp-amber::before { color: var(--accent4); }
+    .kp-purple::before { color: #a78bfa; }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead tr {
+      background: rgba(0,212,255,0.06);
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      text-align: left;
+      padding: 13px 18px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    td {
+      padding: 12px 18px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    td strong { color: var(--text-primary); font-weight: 600; }
+    .badge-cell {
+      display: inline-block;
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(124,58,237,0.06));
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+    }
+    .highlight-box .hl-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent1);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-box .hl-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .highlight-box .hl-body strong { color: var(--text-primary); }
+
+    /* ── SOURCES ── */
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 30px;
+      margin-top: 60px;
+    }
+    .sources-section h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 20px;
+    }
+    @media (max-width: 640px) { .sources-grid { grid-template-columns: 1fr; } }
+    .source-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .source-num {
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 20px;
+      margin-top: 1px;
+    }
+    .source-item a {
+      color: var(--accent1);
+      text-decoration: none;
+      line-height: 1.5;
+    }
+    .source-item a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-badge">Live Intelligence</div>
+  <h1>BIO AI 핵심뉴스</h1>
+  <p class="subtitle">생명공학 × 인공지능 — 신약개발·단백질 구조·펩타이드 AI 동향 요약</p>
+  <div class="header-meta">
+    <div class="meta-item"><div class="meta-dot"></div>발행일 2026년 4월 9일 (목)</div>
+    <div class="meta-item"><div class="meta-dot"></div>주요 뉴스 5건</div>
+    <div class="meta-item"><div class="meta-dot"></div>출처 12개 크로스체크</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- 주요 지표 -->
+  <div class="summary-grid">
+    <div class="summary-card blue">
+      <div class="label">최대 빅딜</div>
+      <div class="value">$2.75B</div>
+      <div class="desc">Eli Lilly × Insilico Medicine AI 신약 계약</div>
+    </div>
+    <div class="summary-card green">
+      <div class="label">Anthropic 인수</div>
+      <div class="value">$400M</div>
+      <div class="desc">Coefficient Bio 바이오테크 AI 스타트업 인수</div>
+    </div>
+    <div class="summary-card amber">
+      <div class="label">펩타이드 생성 속도</div>
+      <div class="value">150,000/3분</div>
+      <div class="desc">LigandForge — 기존 대비 100만 배 빠른 속도</div>
+    </div>
+  </div>
+
+  <!-- 섹션 1: 빅딜·투자 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(0,212,255,0.1);">💰</div>
+    <h2>빅딜 &amp; 투자</h2>
+    <div class="line"></div>
+  </div>
+
+  <!-- 뉴스 1 -->
+  <div class="news-card">
+    <div class="news-card-header">
+      <span class="news-tag tag-deal">🤝 대형 계약</span>
+      <span class="news-date">2026.03.29</span>
+    </div>
+    <h3>Eli Lilly × Insilico Medicine — AI 신약 $2.75억 글로벌 상업화 계약</h3>
+    <div class="body">
+      홍콩 기반 AI 신약 개발사 <strong>Insilico Medicine</strong>이 글로벌 제약사 <strong>Eli Lilly</strong>와 최대 <strong>27억 5,000만 달러</strong> 규모의 협력 계약을 체결했다. Insilico는 생성형 AI 플랫폼 <strong>Pharma.AI</strong>로 28개 이상의 신약을 개발했으며, 절반가량이 임상 단계에 진입했다.
+    </div>
+    <div class="key-points">
+      <div class="key-point">선급금 <strong>$1억 1,500만</strong> 지급, 잔여 $26억은 규제·상업 마일스톤 달성 시 지급</div>
+      <div class="key-point">Pharma.AI: 타깃 발굴 → 분자 구조 생성 → 임상 예측까지 End-to-End 자동화</div>
+      <div class="key-point">Lilly는 구강 투여 전임상 신약 포트폴리오 전 세계 개발·판매권 확보</div>
+      <div class="key-point">계약 발표 직후 Insilico 주가 <strong>15% 급등</strong></div>
+    </div>
+  </div>
+
+  <!-- 뉴스 2 -->
+  <div class="news-card">
+    <div class="news-card-header">
+      <span class="news-tag tag-deal">🧬 인수합병</span>
+      <span class="news-date">2026.04.03</span>
+    </div>
+    <h3>Anthropic, AI 신약 스타트업 Coefficient Bio $4억 달러에 인수</h3>
+    <div class="body">
+      <strong>Anthropic</strong>이 창립 8개월 만의 스텔스 바이오텍 스타트업 <strong>Coefficient Bio</strong>를 약 <strong>4억 달러(주식 거래)</strong> 규모로 인수했다. 창업자 Samuel Stanton과 Nathan C. Frey는 Genentech Prescient Design 출신의 계산 신약개발 전문가로, 범용 AI의 바이오 적용이 아닌 <strong>바이오 특화 아키텍처 모델</strong> 구축에 특화되어 있다.
+    </div>
+    <div class="key-points">
+      <div class="key-point kp-purple">직원 10명 미만의 소규모 기업에 $4억 프리미엄 — 기술력 선제 확보 전략</div>
+      <div class="key-point kp-purple">Anthropic Healthcare 팀에 합류, 신약 R&D 플랜 초안부터 임상 규제 전략까지 AI 자동화</div>
+      <div class="key-point kp-purple">Anthropic의 2026년 2월 Series G 기준 기업가치($3,800억) 대비 약 0.1% 희석 — 전략적 저비용 진입</div>
+      <div class="key-point kp-purple">Claude for Life Sciences(2025.10 출시) 이후 바이오 분야 투자 가속화</div>
+    </div>
+  </div>
+
+  <!-- 섹션 2: 단백질 구조 AI -->
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(124,58,237,0.12);">🔬</div>
+    <h2>단백질 구조 AI</h2>
+    <div class="line"></div>
+  </div>
+
+  <!-- 비교 테이블 -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>모델</th>
+          <th>운영 주체</th>
+          <th>라이선스</th>
+          <th>주요 특징</th>
+          <th>상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>AlphaFold 3</strong></td>
+          <td>Google DeepMind / Isomorphic Labs</td>
+          <td><span class="badge-cell" style="background:rgba(239,68,68,0.15);color:#fc8181;">제한적</span></td>
+          <td>단백질·소분자·핵산 복합체 예측, 결합 포즈 76% 정확도(2Å 이내)</td>
+          <td>학술 무료 / 산업 제한</td>
+        </tr>
+        <tr>
+          <td><strong>OpenFold 3</strong></td>
+          <td>Columbia대 AlQuraishi 연구소 + 컨소시엄</td>
+          <td><span class="badge-cell" style="background:rgba(16,185,129,0.15);color:#34d399;">Apache 2.0</span></td>
+          <td>AlphaFold3 수준 정확도, 단백질-핵산 벤치마크 동등, 상업 사용 가능</td>
+          <td>Preview 출시 (2025.10)</td>
+        </tr>
+        <tr>
+          <td><strong>AlphaFold DB</strong></td>
+          <td>EBI × DeepMind</td>
+          <td><span class="badge-cell" style="background:rgba(0,212,255,0.12);color:#67e8f9;">공개</span></td>
+          <td>2억 개 단백질 구조 예측 데이터베이스, 호모다이머 추가</td>
+          <td>2026 업데이트</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 뉴스 3: OpenFold3 -->
+  <div class="news-card">
+    <div class="news-card-header">
+      <span class="news-tag tag-model">🧪 오픈소스</span>
+      <span class="news-date">2025.10 → 2026 확산</span>
+    </div>
+    <h3>OpenFold3 — 완전 오픈소스 단백질 구조 예측 모델, 산업 활용 확대</h3>
+    <div class="body">
+      AlphaFold3의 완전 오픈소스 대안인 <strong>OpenFold3</strong>가 Apache 2.0 라이선스로 공개되어 바이오텍·제약사의 신약 파이프라인에 빠르게 채택되고 있다. 30만 개 공개 구조 + 1,300만 개 합성 데이터로 학습했으며 단백질·핵산·소분자 복합체를 동시에 예측한다.
+    </div>
+    <div class="key-points">
+      <div class="key-point kp-green">Novo Nordisk, Bayer Crop Science 이미 R&D 파이프라인에 도입</div>
+      <div class="key-point kp-green">AbbVie, BMS, J&J, Takeda 등 대형 제약사 컨소시엄 파인튜닝 진행 중</div>
+      <div class="key-point kp-green">NVIDIA NIM으로 배포 지원 — 엔터프라이즈 인프라 연동 간편화</div>
+      <div class="key-point kp-green">AlphaFold3 접근 제한(전 세계 50개 기관 미만 로컬 배포)의 대안으로 급부상</div>
+    </div>
+  </div>
+
+  <!-- 섹션 3: 펩타이드 AI -->
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(245,158,11,0.12);">🔗</div>
+    <h2>펩타이드 AI 모델</h2>
+    <div class="line"></div>
+  </div>
+
+  <!-- 뉴스 4: LigandForge -->
+  <div class="news-card">
+    <div class="news-card-header">
+      <span class="news-tag tag-platform">⚡ 플랫폼</span>
+      <span class="news-date">2026.03.28</span>
+    </div>
+    <h3>LigandForge — 3분에 펩타이드 후보물질 15만 개 생성, 기존 대비 100만 배 가속</h3>
+    <div class="body">
+      <strong>LigandForge(LigandAI)</strong>는 단일 패스 이산 확산(single-pass discrete diffusion) + DeltaForge 스코어링(r=0.83)을 결합해 초고속 펩타이드 결합체 설계를 구현했다. 초당 1,000개 이상의 펩타이드 결합 후보를 생성하며, 150개 이상의 타깃에 대한 예측 인터랙토믹스 기반 타깃 탐색 기능도 제공한다.
+    </div>
+    <div class="key-points">
+      <div class="key-point kp-amber">기존 방법 대비 <strong>1,000,000배</strong> 빠른 후보물질 생성</div>
+      <div class="key-point kp-amber">프리 티어(Free Tier) 제공 — 연구자·스타트업 접근성 개방</div>
+      <div class="key-point kp-amber">대사질환, 종양학, 의료 영상 분야 펩타이드 신약 가속화 기대</div>
+    </div>
+  </div>
+
+  <!-- 뉴스 5: RFpeptides & 생성형 AI 기반 펩타이드 설계 -->
+  <div class="news-card">
+    <div class="news-card-header">
+      <span class="news-tag tag-model">🏛️ 연구</span>
+      <span class="news-date">2025 ~ 2026</span>
+    </div>
+    <h3>생성형 AI 기반 펩타이드 설계 — RFpeptides·ESM2·확산 모델 주목</h3>
+    <div class="body">
+      IPD(워싱턴대 단백질 설계 연구소)가 개발한 <strong>RFpeptides</strong>가 <em>Nature Chemical Biology</em>에 게재되며 AI 기반 고리형 펩타이드(마크로사이클) 설계의 핵심 도구로 부상했다. 타깃 구조 또는 서열만으로 질환 관련 단백질에 결합하는 고리형 펩타이드를 자동 설계한다.
+    </div>
+    <div class="key-points">
+      <div class="key-point kp-purple"><strong>ESM2, GAN, 확산 모델, VAE</strong> 등 다양한 딥러닝 아키텍처가 펩타이드 서열 설계에 적용</div>
+      <div class="key-point kp-purple">EvoPepFold(유전 알고리즘 + 구조 예측): SARS-CoV-2 주요 프로테아제 억제 펩타이드 설계 검증</div>
+      <div class="key-point kp-purple">Transformer 기반 응집 예측 모델 — 오차율 6%로 최고 수준 정확도</div>
+      <div class="key-point kp-purple">발굴 타임라인 수년 → 수개월 단축, 고처리량 스크리닝과 자율 합성 접목 확산</div>
+    </div>
+  </div>
+
+  <!-- 섹션 4: 2026 트렌드 -->
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(16,185,129,0.1);">📊</div>
+    <h2>2026 BIO AI 핵심 트렌드</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="hl-title">⚙️ AI, 신약개발의 표준 인프라로 전환 중</div>
+    <div class="hl-body">
+      2026년의 가장 큰 변화는 AI가 신약개발의 <strong>'개별 도구'에서 전 주기를 지탱하는 표준 인프라</strong>로 자리 잡고 있다는 점이다. 단백질 구조 예측 사용률 73%, 도킹 모델 52%에 달하며, 임상시험 설계·환자 모집·바이오마커 세분화·실시간 제조 공정 제어까지 R&D 전 영역으로 확산 중이다.
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>트렌드</th>
+          <th>핵심 내용</th>
+          <th>영향</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Phase III 임상 결과</strong></td>
+          <td>AI 설계 신약의 대규모 임상 유효성 검증 — 2026년이 실질적 증명의 해</td>
+          <td><span class="badge-cell" style="background:rgba(0,212,255,0.12);color:#67e8f9;">매우 높음</span></td>
+        </tr>
+        <tr>
+          <td><strong>FDA AI 가이던스 확정</strong></td>
+          <td>고위험 AI 활용 시 신뢰성 평가 계획(Credibility Assessment) 의무화 예정</td>
+          <td><span class="badge-cell" style="background:rgba(245,158,11,0.12);color:#fcd34d;">규제 핵심</span></td>
+        </tr>
+        <tr>
+          <td><strong>오픈소스 AI 모델 확산</strong></td>
+          <td>OpenFold3 등 Apache 2.0 모델이 상업적 활용 장벽 제거</td>
+          <td><span class="badge-cell" style="background:rgba(16,185,129,0.12);color:#34d399;">생태계 확대</span></td>
+        </tr>
+        <tr>
+          <td><strong>빅테크의 생명과학 진입</strong></td>
+          <td>Anthropic, 바이오 특화 AI 인수로 제약·바이오 시장 직접 공략</td>
+          <td><span class="badge-cell" style="background:rgba(124,58,237,0.15);color:#a78bfa;">구조 변화</span></td>
+        </tr>
+        <tr>
+          <td><strong>아시아 투자 급증</strong></td>
+          <td>아시아 $2,670억 vs 미국 $1,217억 — Insilico(홍콩) 등 중화권 AI 바이오 급성장</td>
+          <td><span class="badge-cell" style="background:rgba(239,68,68,0.12);color:#fc8181;">지정학 이슈</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources-section">
+    <h3>📎 출처 및 참고 자료</h3>
+    <div class="sources-grid">
+      <div class="source-item"><span class="source-num">01</span><a href="https://www.cnbc.com/2026/03/29/eli-lilly-reaches-deal-to-bring-ai-developed-drugs-to-global-market.html" target="_blank">CNBC — Eli Lilly × Insilico $2.75B 계약 (2026.03.29)</a></div>
+      <div class="source-item"><span class="source-num">02</span><a href="https://www.statnews.com/2026/03/29/insilico-medicine-lilly-sign-ai-drug-commercialization-deal/" target="_blank">STAT News — Insilico Medicine & Lilly AI 신약 계약</a></div>
+      <div class="source-item"><span class="source-num">03</span><a href="https://hitconsultant.net/2026/03/30/insilico-medicine-and-eli-lilly-form-2-75b-ai-drug-discovery-collaboration/" target="_blank">HIT Consultant — $2.75B AI 신약 협력 상세</a></div>
+      <div class="source-item"><span class="source-num">04</span><a href="https://techcrunch.com/2026/04/03/anthropic-buys-biotech-startup-coefficient-bio-in-400m-deal-reports/" target="_blank">TechCrunch — Anthropic, Coefficient Bio 인수 (2026.04.03)</a></div>
+      <div class="source-item"><span class="source-num">05</span><a href="https://www.biospace.com/business/ai-giant-anthropic-leans-into-life-sciences-with-400m-coefficient-bio-catch" target="_blank">BioSpace — Anthropic의 생명과학 진입 전략 분석</a></div>
+      <div class="source-item"><span class="source-num">06</span><a href="https://www.healthcare.digital/single-post/biological-intelligence-strategic-rationale-for-anthropic-s-400-million-acquisition-of-coefficient-bio" target="_blank">Healthcare Digital — Anthropic $400M 인수 전략적 배경</a></div>
+      <div class="source-item"><span class="source-num">07</span><a href="https://www.synbiobeta.com/read/openfold-consortium-unveils-openfold3-a-game-changer-for-protein-structure-prediction" target="_blank">SynBioBeta — OpenFold3 공개 상세 분석</a></div>
+      <div class="source-item"><span class="source-num">08</span><a href="https://www.sandboxaq.com/openfold3" target="_blank">SandboxAQ — OpenFold3 오픈소스 정보</a></div>
+      <div class="source-item"><span class="source-num">09</span><a href="https://www.nature.com/articles/d41586-026-00787-3" target="_blank">Nature — AlphaFold 데이터베이스 단백질 페어링 업데이트</a></div>
+      <div class="source-item"><span class="source-num">10</span><a href="https://lifeboat.com/blog/2026/03/ai-designed-peptides-could-cure-everything-ligandforge-is-here" target="_blank">Lifeboat News — LigandForge AI 펩타이드 설계 (2026.03.28)</a></div>
+      <div class="source-item"><span class="source-num">11</span><a href="https://www.ipd.uw.edu/2024/11/introducing-rfpeptides-ai-for-cyclic-peptide-design/" target="_blank">IPD(워싱턴대) — RFpeptides 고리형 펩타이드 설계</a></div>
+      <div class="source-item"><span class="source-num">12</span><a href="https://www.drugtargetreview.com/article/192243/2026-the-year-ai-stops-being-optional-in-drug-discovery/" target="_blank">Drug Target Review — 2026 AI 필수화 트렌드 분석</a></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  BIO AI 핵심뉴스 · 2026년 4월 9일 발행 · 자동 생성 리포트
+</footer>
+
+</body>
+</html>
