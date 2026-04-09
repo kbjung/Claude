@@ -1,0 +1,714 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>[GPT] Prodigy 설명 01</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-8079-bdf5-d893be7f340c" class="page sans"><header><h1 class="page-title" dir="auto">[GPT] Prodigy 설명 01</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81f8-b45f-cb0112b8a158" class="">간략 설명</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b9-811d-dfa297e60a27" class="bulleted-list"><li style="list-style-type:disc">3D 복합체 구조를 기반으로 결합 친화도(Kd)와 결합 자유 에너지(ΔG)를 예측하는 머신러닝 모델.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8126-9f78-eea774284c4f" class="bulleted-list"><li style="list-style-type:disc">결합 부위의 잔기 수, 비극성 표면적 등 <strong>물리적으로 해석 가능한 구조적 특징</strong>을 분석하여 결합력을 예측.</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81f6-8e04-fc3f6b76086d"/></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f2-b541-e402f4f399ce" class="bulleted-list"><li style="list-style-type:disc">ΔG 값은 <strong>실험적 친화도 데이터와 회귀 학습된 근사값</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ee-929f-e1fcab73fd99" class="bulleted-list"><li style="list-style-type:disc">PRODIGY = 구조 기반 친화도 정밀 예측</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-816c-9ba6-ed3c91c772df" class=""><strong>파이프라인 적합성</strong></h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e2-a57a-e6cd0d7e2db9" class="bulleted-list"><li style="list-style-type:disc">ColabFold로 예측된 3D 구조를 직접 활용하여 논리적 일관성 확보.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8140-8753-d85daa2b3d06" class="bulleted-list"><li style="list-style-type:disc">예측 점수에 대한 근거 해석이 용이함.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8103-8766-fec9fd65a1c8" class="bulleted-list"><li style="list-style-type:disc">&#x27;왜 강하게 결합하는가&#x27;에 대한 높은 설명력 제공.</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8119-bdbc-e6d0a103b226" class=""><strong>신뢰도</strong></h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810b-a63c-d7885e466d83" class="bulleted-list"><li style="list-style-type:disc"><strong>신뢰도: 높음 (Respected ML Model) 📈</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8108-8add-e5d77b04b374" class="bulleted-list"><li style="list-style-type:disc">근거<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c8-8885-ce3225f20736" class="bulleted-list"><li style="list-style-type:circle">구조 기반의 단백질 상호작용 및 결합 친화도 예측 ML 모델.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8137-992d-db8ae99c6584" class="bulleted-list"><li style="list-style-type:circle">고비용 계산법(MM/GBSA)의 빠르고 신뢰도 높은 대안으로 인정.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e0-9903-cfe2a1cf237c" class="bulleted-list"><li style="list-style-type:circle">과학 저널(Bioinformatics)에 게재되어 검증 완료.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811c-a000-e016fbc2425c" class="bulleted-list"><li style="list-style-type:circle">관련 연구에서 꾸준히 채택 및 인용되는 신뢰도 높은 도구.</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8103-9a93-fd9ac89740ee"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8179-b11c-faf808099b7a" class="">인용 수 및 활용 빈도</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8148-a310-e7d36bbad92e" class="bulleted-list"><li style="list-style-type:disc">주요 논문(2016 Bioinformatics)의 인용 수: 약 <strong>1,272회</strong> <a href="https://academic.oup.com/bioinformatics/article/32/23/3676/2525629?utm_source=chatgpt.com">Oxford Academic</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8177-99e0-e9a7527dcc19" class="bulleted-list"><li style="list-style-type:disc">확장판 PRODIGY-LIG 논문의 인용도 있음 (작은 분자 리간드와의 결합 친화도 예측) <a href="https://academic.oup.com/bioinformatics/article/35/9/1585/5104338?utm_source=chatgpt.com">Oxford Academic</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810a-8fc3-ef5dba85ff4b" class="bulleted-list"><li style="list-style-type:disc">웹 서비스 사용 통계:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81bd-ae8a-e82e8a03dddc" class="bulleted-list"><li style="list-style-type:circle">PRODIGY 서버 (protein-protein) 지금까지 수십만 건(job)을 처리함 (2016년 7월 이후) <a href="https://rascar.science.uu.nl/prodigy/?utm_source=chatgpt.com">rascar.science.uu.nl</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e3-8830-fe33fb85193a" class="bulleted-list"><li style="list-style-type:circle">PRODIGY-LIG, PRODIGY-CRYSTAL 등도 사용량 존재함 <a href="https://rascar.science.uu.nl/prodigy/?utm_source=chatgpt.com">rascar.science.uu.nl</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81ec-9daa-fea47a2de95c"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-816a-9d02-d68b481ef540" class="">장점 / 한계</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81a8-85a2-c7f5b31ddee5" class=""><strong>장점</strong></p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8119-b478-e940698db7e2" class="bulleted-list"><li style="list-style-type:disc">구조적 특징을 사용하기 때문에 <strong>해석 가능성이 높음</strong>: 접촉 수, 비극성 표면적 등의 물리적 근거 제공됨 <a href="https://elifesciences.org/articles/07454?utm_source=chatgpt.com">eLife+1</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818c-ad83-d9f3ffe4e16a" class="bulleted-list"><li style="list-style-type:disc">빠르고 공개된 웹 툴 + 배치(batch) 입력 가능 → 실용적임 <a href="https://rascar.science.uu.nl/prodigy/?utm_source=chatgpt.com">rascar.science.uu.nl</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817a-8cee-e7456a2814d2" class="bulleted-list"><li style="list-style-type:disc">다양한 복합체(protein-protein, ligand-small molecule) 쪽으로 확장됨 <a href="https://academic.oup.com/bioinformatics/article/35/9/1585/5104338?utm_source=chatgpt.com">Oxford Academic+1</a></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81b0-b2e1-d8f5de16b87e" class=""><strong>한계</strong></p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a8-af4f-e4cda05d32aa" class="bulleted-list"><li style="list-style-type:disc">구조 입력이 정확해야 함: 예측 구조의 오차나 유연성(flexibility)이 크면 예측 정확도 떨어질 가능성 있음 <a href="https://elifesciences.org/articles/07454?utm_source=chatgpt.com">eLife</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8103-9a00-da564683b896" class="bulleted-list"><li style="list-style-type:disc">실험값과 비교 시 데이터의 다양성(측정 온도, 방법 등) 때문에 잡음(error) 존재함 <a href="https://elifesciences.org/articles/07454?utm_source=chatgpt.com">eLife+1</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816b-a1c5-fed300b0aede" class="bulleted-list"><li style="list-style-type:disc">단백질-펩타이드 복합체까지 모든 종류에 대해 최적화되어 있진 않음 (주로 단백질-단백질, 단백질-작은 리간드) <a href="https://academic.oup.com/bioinformatics/article/35/9/1585/5104338?utm_source=chatgpt.com">Oxford Academic+1</a></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8186-89b3-dd3f946a22f4"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81ef-b707-e07f495581d1" class="">요약</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c8-8ec0-fc135477db8f" class="">PRODIGY은 매우 <strong>널리 인용되고 활용되는</strong> 단백질 복합체 결합 친화도 예측 도구예요.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81a9-a4b3-ef01009204da" class="">특히 “상호작용 접촉(contact)”과 “비상호작용(non-interacting surface)” 같은 물리적, 구조적 특징을 기반으로 예측하고, ΔG 및 Kd 값도 제공하기 때문에 논문/후보군 평가 단계에서 신뢰할 만한 지표로 자주 사용됩니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8138-a945-c921c4ba00a9"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-810c-88b6-d7ddab0ec84f" class="">관련 논문</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c7-9565-c0199544ce18" class="bulleted-list"><li style="list-style-type:disc"><strong>Contacts-based prediction of binding affinity in protein-protein complexes</strong> (Vangone &amp; Bonvin, <em>eLife</em>, 2015)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8172-add4-e7c8e8e4b761" class="bulleted-list"><li style="list-style-type:circle"><a href="https://elifesciences.org/articles/07454">https://elifesciences.org/articles/07454</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8193-b1c8-d91f1d35b572" class="bulleted-list"><li style="list-style-type:disc"><strong>A web server for predicting the binding affinity of protein-protein complexes</strong> (Xue et al., <em>Bioinformatics</em>, 2016)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817e-9ac1-dcab8ddd378b" class="bulleted-list"><li style="list-style-type:circle"><a href="https://academic.oup.com/bioinformatics/article/32/23/3676/2525629">https://academic.oup.com/bioinformatics/article/32/23/3676/2525629</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810d-927e-d2fd55d6b46e" class="bulleted-list"><li style="list-style-type:disc"><strong>Large-scale prediction of binding affinity in protein-small ligand complexes: the PRODIGY-LIG web server</strong> (Vangone et al., <em>Bioinformatics</em>, 2019)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b3-836b-d672fd1d419b" class="bulleted-list"><li style="list-style-type:circle"><a href="https://academic.oup.com/bioinformatics/article/35/9/1585/5104338">https://academic.oup.com/bioinformatics/article/35/9/1585/5104338</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8120-b43c-f40dd14161ff" class="bulleted-list"><li style="list-style-type:disc"><strong>“A Web Tool for the Prediction and Optimization of Protein-Peptide and Protein-Protein Binding Affinity”</strong> (PPI-Affinity 논문의 비교 평가 부분)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81da-be88-ced512a80137" class="bulleted-list"><li style="list-style-type:circle">이 논문 안에서 PRODIGY도 성능 비교 대상으로 사용됨. 특히 protein-protein 예측 모델 vs protein-peptide 예측 모델 vs PRODIGY 비교함.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814c-b843-c4f32aa67979" class="bulleted-list"><li style="list-style-type:circle"><a href="https://pubs.acs.org/doi/10.1021/acs.jproteome.2c00020">https://pubs.acs.org/doi/10.1021/acs.jproteome.2c00020</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8112-89fd-cdbdc0e0dc7d" class="bulleted-list"><li style="list-style-type:disc"><strong>Binding affinity prediction for antibody–protein antigen</strong> (Yang et al., 2023)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-812a-b631-db9651ebf7b9" class="bulleted-list"><li style="list-style-type:circle">항체-항원(antibody-antigen) 복합체(binding complexes) 연구에서 PRODIGY 웹 서버를 이용해 결합 친화도 예측된 사례.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b7-93b1-df2e22e64af9" class="bulleted-list"><li style="list-style-type:circle"><a href="https://www.sciencedirect.com/science/article/pii/S1093326322002431?via%3Dihub">https://www.sciencedirect.com/science/article/pii/S1093326322002431?via%3Dihub</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-816f-a2f5-fd6043179087"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-813e-9e4d-e8d73e621fed" class="">GPT 曰</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-818b-8e73-c4cc15a95f0c" class="">PRODIGY는 **복합체 구조(PDB 좌표)**만을 입력으로 받아, 두 분자 사이의 **결합 자유에너지(ΔG)**와 그로부터 <strong>Kd</strong>를 <strong>경험적 통계 모델</strong>로 추정하는 도구입니다. 핵심은 <em>물리 시뮬레이션이나 에너지 최소화</em>가 아니라, <strong>계면(interface)의 접촉 특성</strong>을 정량화해 회귀식에 대입하는 방식입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-815f-97b2-d4570cb87ba6"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8172-91b1-c4d7932f35c2" class="">1. PRODIGY가 사용하는 핵심 정보</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8166-a845-d5f6e16300ab" class="">(1) Inter-residue contacts (IRCs)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811e-ac0b-ccb844868fe0" class="bulleted-list"><li style="list-style-type:disc">두 분자(예: 단백질–단백질, 단백질–펩타이드) 사이에서<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8178-94f5-f7c7ffb25474" class=""><strong>서로 다른 체인에 속한 잔기 쌍</strong>이</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81cf-be68-ffb37d289eb3" class="bulleted-list"><li style="list-style-type:disc"><strong>Cβ–Cβ 거리 ≤ 5.5 Å</strong><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-810c-87cd-c92edb2b822d" class="">(Glycine은 Cα 사용)</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81ca-a06c-f094f490c38c" class="">인 경우를 *접촉(contact)*으로 정의합니다.</p></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81e1-8eed-e8ec393bccf1" class="">→ 즉, <strong>결합 계면에서 실제로 맞닿아 있는 잔기 쌍의 개수와 종류</strong>가 가장 중요한 입력입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81f3-a923-d357a2cdaf98"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8122-b56b-f843e54cddc0" class="">(2) Residue type별 contact 분류</h3></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81fd-8b5d-e6ea8370622d" class="">모든 접촉을 단순히 “몇 개”로 세지 않고, 잔기의 성질에 따라 분류합니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811b-83bb-d0ae9c1a5138" class="bulleted-list"><li style="list-style-type:disc">Charged–Charged</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-815b-a489-f9526285c7f7" class="bulleted-list"><li style="list-style-type:disc">Charged–Polar</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814f-a659-fb51c3dfe1b4" class="bulleted-list"><li style="list-style-type:disc">Charged–Apolar</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8121-be8f-c7bdf1e8d637" class="bulleted-list"><li style="list-style-type:disc">Polar–Polar</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8184-aa1a-c1bc225cbf50" class="bulleted-list"><li style="list-style-type:disc">Polar–Apolar</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b1-8363-f31bbdc29a9a" class="bulleted-list"><li style="list-style-type:disc">Apolar–Apolar</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c1-88b3-f754d3709c47" class="">이렇게 <strong>화학적 성격별 접촉 수</strong>가 ΔG 예측의 핵심 피처(feature)입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81c2-8327-c84e7b9beaaf"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81ce-855d-ee710e422d40" class="">(3) Temperature (T)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814a-b753-cbb54e388f9b" class="bulleted-list"><li style="list-style-type:disc">기본값: <strong>25 °C (298 K)</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b0-979b-c8c78b94596d" class="bulleted-list"><li style="list-style-type:disc">ΔG → Kd 변환에 <strong>열역학 관계식</strong>을 쓰기 때문에 필요합니다.</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-811b-bfe5-d0daf051e7b6" class="">ΔG=RTln⁡Kd\Delta G = RT \ln K_d</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8182-987e-e05e695781d0" class="">ΔG=RTlnKd</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8125-aae0-f751baaec414"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81b3-a6e8-ce4094cfe77a" class="">2. ΔG 계산의 실제 형태 (개념식)</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81a1-be4d-d9380f886107" class="">PRODIGY의 ΔG 예측은 아래와 같은 <strong>선형 회귀 모델</strong>입니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8121-8ccd-c3a18c29a75e" class="">ΔGpred=∑iwi⋅Ni+b\Delta G_{\text{pred}} =<br/>\sum_i w_i \cdot N_i + b</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8172-865f-ff2ba6d5c3b4" class="">ΔGpred=i∑wi⋅Ni+b</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8136-bd3e-ed09a8e1a1f4" class="bulleted-list"><li style="list-style-type:disc">NiN_iNi: 특정 residue-type 접촉의 개수</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81fc-98c7-d5ecb592d08e" class="bulleted-list"><li style="list-style-type:disc">wiw_iwi: 학습 데이터로부터 얻은 가중치</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f0-a0f9-cd191473a24c" class="bulleted-list"><li style="list-style-type:disc">bbb: bias 항</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8190-a559-e03130024db3" class="">여기에는</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81db-9878-d1f991d75a5c" class="bulleted-list"><li style="list-style-type:disc">van der Waals 에너지</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813e-8420-d3bba18539e0" class="bulleted-list"><li style="list-style-type:disc">electrostatics</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8127-a7a4-c5f8c3816e99" class="bulleted-list"><li style="list-style-type:disc">solvation free energy<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81bf-8708-df9d20f83dbe" class="">같은 <strong>물리 항을 직접 계산하지 않습니다.</strong></p></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81ea-be18-c6b04314f558" class="">👉 *“이런 접촉 패턴을 가진 복합체는 대체로 이 정도의 ΔG를 가진다”*라는 <strong>구조–통계적 상관관계 모델</strong>입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81e2-b7d2-f5d6eb4a59ef"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-812a-b7a3-e8ec31f7751a" class="">3. Kd 계산 방식</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81a5-9d42-d1db47a3b039" class="">ΔG가 나오면, 열역학적 관계식을 그대로 사용합니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81fc-a122-d3c7cebf6cb1" class="">Kd=eΔGRTK_d = e^{\frac{\Delta G}{RT}}</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81e9-b98d-e97db14f450e" class="">Kd=eRTΔG</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813b-9fed-eeb6250d93f9" class="bulleted-list"><li style="list-style-type:disc">R: 기체상수</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8158-a84b-df81134a43ba" class="bulleted-list"><li style="list-style-type:disc">T: 절대온도 (K)</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-814f-8831-eed9cd16e6fa" class="">따라서 <strong>Kd는 완전히 ΔG의 후처리 결과</strong>이며,</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81e0-bbb2-cf4d19af7524" class="">독립적으로 예측되는 값은 아닙니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81a3-ac03-c502c42a6d13"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8144-97b3-d60edff44501" class="">4. PRODIGY의 해석적 한계 (중요)</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8140-b77a-f7307ba9c810" class="">연구 맥락에서 특히 중요한 점입니다.</p></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8113-99b8-e04089d9ad22" class="">잘하는 것</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810a-8699-f999893d1fd5" class="bulleted-list"><li style="list-style-type:disc"><strong>단백질–단백질</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813a-94ef-da840dbe5677" class="bulleted-list"><li style="list-style-type:disc"><strong>단백질–중간 길이 펩타이드</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8175-a503-dbc3c0f24f39" class="bulleted-list"><li style="list-style-type:disc">비교적 <strong>rigid한 결합 계면</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8171-a885-c6b3f90b404d" class="bulleted-list"><li style="list-style-type:disc">여러 모델 간 <strong>상대 비교(ranking)</strong></li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8161-b575-d1f11197c756" class="">약한 것</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a4-a169-ebdb3ef67293" class="bulleted-list"><li style="list-style-type:disc">유연한 펩타이드 (induced fit 큰 경우)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811e-9ccb-e964113239a4" class="bulleted-list"><li style="list-style-type:disc">실제 결합이 <strong>수소결합/π–π stacking 중심</strong>인데 접촉 수는 적은 경우</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-812d-8fca-de0fc5cd3dc9" class="bulleted-list"><li style="list-style-type:disc">water-mediated interaction</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8188-aefa-d5818a945fae" class="bulleted-list"><li style="list-style-type:disc">mutation으로 인한 미세한 ΔΔG</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8153-bf75-f2b29d19e1bd" class="">👉 그래서 PRODIGY는 <strong>절대 Kd 예측기라기보다</strong>,</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81b8-bed8-ddb2ab7ba049" class=""><strong>구조가 그럴듯한지 빠르게 걸러내는 필터</strong>로 쓰는 것이 정석입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-817d-ac94-c4327c47fb6e"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8196-88ac-dff0d758eef8" class="">5. 요약 한 문장</h2></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-8156-8fce-e6ff5b92469c" class="">PRODIGY는 결합 계면에서의 residue–residue 접촉 패턴을 통계적으로 정량화하여, 경험적 회귀 모델로 ΔG를 예측하고, 이를 열역학 식으로 Kd로 변환하는 구조 기반 통계 도구입니다.</blockquote></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81b1-a35a-dde9bb8b1b03"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-812d-9675-e8ac09487d33" class="">참고 문헌 (출처)</h2></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81bb-9ddb-d2081199f020" class="numbered-list" start="1"><li>Vangone A, Bonvin AMJJ.<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81d9-81a0-fa2070760246" class=""><em>Contacts-based prediction of binding affinity in protein–protein complexes.</em></p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8166-ae10-c4ebe3e4383c" class=""><strong>eLife</strong>, 2015, 4:e07454.</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8154-af71-deca054e59e6" class="numbered-list" start="2"><li>Xue LC et al.<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8157-80e2-c40f1b98dbbc" class=""><em>PRODIGY: a web server for predicting the binding affinity of protein–protein complexes.</em></p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81e5-aaf6-e9e9ce728658" class=""><strong>Bioinformatics</strong>, 2016, 32(23):3676–3678.</p></div></li></ol></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81d3-b712-dd0e86a20b8b" class="">원하시면, <strong>MD/PRODIGY/Vina/PRODIGY-ligand를 어떻게 조합하면 합리적인 ranking pipeline이 되는지</strong>도 정리해 드리겠습니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-804e-9bd9-e17b14136cd1" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

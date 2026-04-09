@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>[GPT] OpenMM 설명 02</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-8060-b38e-db36e1616b5d" class="page sans"><header><h1 class="page-title" dir="auto">[GPT] OpenMM 설명 02</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8061-8041-fd249aafb3f9" class="">3. 구조 튜닝</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80c9-a0d2-dee6d27f8410" class="bulleted-list"><li style="list-style-type:disc">도구/모델: OpenMM</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80a5-97be-de63908e7b1f" class="bulleted-list"><li style="list-style-type:disc">역할: ColabFold(AlphaFold-Multimer)로 만든 복합체 PDB를 물리 기반(force field) 에너지 함수로 “구조 정리/안정화”하여, 충돌(clash)·비정상 결합거리·비정상 각도 등으로 인해 후속 평가(Vina, MM-GBSA 등)가 깨지는 케이스를 줄임</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-807e-8d45-e49ed96ee310" class="bulleted-list"><li style="list-style-type:disc">입력:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8070-82ac-f2108bdbeea5" class="bulleted-list"><li style="list-style-type:circle">(필수) 복합체 PDB(단백질 체인 + 펩타이드 체인)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80ba-8f0f-e50327f39d97" class="bulleted-list"><li style="list-style-type:circle">(필수) Force field(예: AMBER 계열, CHARMM 계열 등 OpenMM XML) 및 비결합 상호작용 설정(PME/컷오프 등)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80f0-9786-c4bf3992a5f2" class="bulleted-list"><li style="list-style-type:circle">(선택) 수소 추가/프로토네이션(모델러 addHydrogens), 용매/이온(명시적 용매 박스), 제약조건(constraints), 짧은 평형화/MD 스텝</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80cc-8141-ff1eebb7b522" class="bulleted-list"><li style="list-style-type:disc">출력:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-805f-8beb-c08b199b0182" class="bulleted-list"><li style="list-style-type:circle">튜닝된(최소화/릴랙스된) 복합체 PDB</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80b1-b813-f3f0ab527406" class="bulleted-list"><li style="list-style-type:circle">(선택) 에너지/로그(최소화 전후 potential energy, 스텝 로그), 궤적(DCD 등)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8009-82ec-d5eaa2a841b8" class="bulleted-list"><li style="list-style-type:disc">파이프라인에서의 의미: “구조 평가/친화도 계산이 가능한 수준”으로 좌표를 정제해, 실패율(에러/폭주 에너지/비정상 GBSA)을 낮추는 전처리 단계 (<a href="https://docs.openmm.org/latest/userguide/application/02_running_sims.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-803a-8925-dc32d3e97f09"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-800e-a302-d03d03497741" class="">OpenMM 정리 (설명서용)</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8047-9581-f7d6b0e2e027" class="">1) OpenMM이 하는 일 (한 문장 정의)</h3></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-80d3-adcb-d260690f7dfc" class="">OpenMM은 분자역학(force field) 기반의 분자동역학(MD)·에너지 최소화·모델 편집을 위한 시뮬레이션 툴킷이며, GPU/CPU에서 고성능으로 동작하고 확장성이 높은 것이 특징이다. (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1005659&amp;utm_source=chatgpt.com">PLOS</a>)</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8000-a2df-ef12b29d9c59"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-801c-ace9-e132faf4f2cb" class="">2) 구조 튜닝이 실제로 “계산”하는 것</h3></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-80df-9e1b-f2d7df87cda7" class="">OpenMM 구조 튜닝에서 가장 핵심은 에너지 최소화(local energy minimization)입니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e6-8f59-cf480a42d8c2" class="bulleted-list"><li style="list-style-type:disc">좌표(원자 위치)를 force field 퍼텐셜 에너지 U(x)에서 “낮은 곳”으로 이동시키는 최적화 문제</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8026-b8ab-e2475d5af0bf" class="bulleted-list"><li style="list-style-type:disc">목적: PDB 좌표로부터 발생하는 매우 큰 힘(=큰 에너지 기울기)과 충돌을 줄여, 안정적인 초기 구조를 만든다</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80c7-8f12-c28f1e23e91d" class="bulleted-list"><li style="list-style-type:disc">OpenMM 예시 코드에서도 simulation.minimizeEnergy()를 “초기에 하는 것이 보통 좋다”고 명시합니다. (<a href="https://docs.openmm.org/latest/userguide/application/02_running_sims.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8015-af95-e3b5e22d5af9" class="">(설명서 문장 예시)</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-80bf-9553-f6439ec03d94" class="">“OpenMM 최소화는 force field 에너지 함수의 기울기를 따라 좌표를 조정해 비정상적 힘/충돌을 제거하며, 후속 도킹·GBSA 계산의 수치적 실패를 감소시킨다.” (<a href="https://docs.openmm.org/latest/userguide/application/02_running_sims.html?utm_source=chatgpt.com">docs.openmm.org</a>)</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8004-8a6e-cfeb28c79b78"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8012-8e02-dfbc47f68a02" class="">3) 파이프라인에서 OpenMM을 넣는 당위성 (왜 필요한가)</h3></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-808b-b067-d7a5143b3810" class="numbered-list" start="1"><li>ColabFold 출력의 ‘기하학적 문제’를 후속 단계 전에 정리<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8059-b132-ec11bf6d9614" class="">AlphaFold 계열 구조는 전반적으로 우수하지만, 특정 후보에서는 국소 충돌·비정상 접촉·루프/말단 불안정이 남을 수 있고, 이런 케이스가 도킹/GBSA에서 에러 또는 비정상 값(극단적 양수 등)을 유발합니다. 최소화는 이 실패 모드를 현실적으로 줄이는 “보험” 역할을 합니다. (<a href="https://docs.openmm.org/latest/userguide/application/02_running_sims.html?utm_source=chatgpt.com">docs.openmm.org</a>)</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8027-a6d8-ec55e3b74c9d" class="numbered-list" start="2"><li>MM-GBSA 같은 endpoint 계산은 초기 구조 품질에 민감<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-802d-921d-e0a5061cf326" class="">MM-GBSA는 구조 스냅샷의 에너지 항(분자역학 + 용매화)을 기반으로 하므로, 원자 충돌/비정상 좌표가 있으면 값이 폭주하거나 비교가 무의미해질 수 있습니다. 따라서 GBSA 전 최소화/릴랙스는 합리적인 전처리입니다. (MM(PB/GB)SA가 endpoint 에너지 기반이라는 점은 Amber 쪽 자료에서도 같은 맥락으로 설명됩니다.) (<a href="https://ambermd.org/tutorials/advanced/tutorial3/?utm_source=chatgpt.com">Amber MD</a>)</p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-80b4-8a22-cf016c2d7eb6" class="numbered-list" start="3"><li>구현/운영 측면: 파이썬으로 자동화가 쉽고, GPU 가속이 쉬움<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-80df-a269-e05bfd71efbb" class="">OpenMM은 파이썬 API에서 PDB 로드→수소 추가→(필요 시) 용매화→시스템 생성→최소화/MD를 일관된 코드로 자동화하기 쉽습니다. (<a href="https://docs.openmm.org/latest/userguide/application/03_model_building_editing.html?utm_source=chatgpt.com">docs.openmm.org</a>)</p></div></li></ol></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-80c0-a82b-e2740232bfb8"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-800d-9074-e0a01d32763a" class="">4) OpenMM 튜닝 단계에서 자주 쓰는 처리(설명서에 넣기 좋은 체크리스트)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80c6-86c0-edc3bbf928c3" class="bulleted-list"><li style="list-style-type:disc">모델 빌딩/정리<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8064-80d2-c3cb042ff69f" class="bulleted-list"><li style="list-style-type:circle">결측 수소 추가: modeller.addHydrogens() (<a href="https://docs.openmm.org/latest/userguide/application/03_model_building_editing.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80d5-b415-c6f7b300ed99" class="bulleted-list"><li style="list-style-type:circle">(필요 시) 용매 박스/이온 추가: modeller + force field로 시스템 구축 흐름 (<a href="https://docs.openmm.org/latest/userguide/application/03_model_building_editing.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8061-8b84-eb3e4f8d8fdf" class="bulleted-list"><li style="list-style-type:disc">에너지 최소화<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e7-b4fc-f81a14db7aec" class="bulleted-list"><li style="list-style-type:circle">simulation.minimizeEnergy()로 초기 충돌 제거 (<a href="https://docs.openmm.org/latest/userguide/application/02_running_sims.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80ad-8716-d5f8a19a7e63" class="bulleted-list"><li style="list-style-type:disc">(선택) 짧은 평형화/MD<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80f8-ac61-f056948bf942" class="bulleted-list"><li style="list-style-type:circle">Langevin integrator 기반 NVT 평형화 같은 표준 워크플로가 예제에 포함 (<a href="https://openmm.github.io/openmm-cookbook/latest/notebooks/tutorials/protein_in_water.html?utm_source=chatgpt.com">openmm.github.io</a>)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8052-863e-f0748f80a11b" class="bulleted-list"><li style="list-style-type:disc">출력<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e9-a9d9-ccebe5f1c96d" class="bulleted-list"><li style="list-style-type:circle">튜닝된 PDB와 로그/에너지 저장(재현성 확보)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8065-8a95-d4caeb2b88a4"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-808d-a5ef-d16af2505e51" class="">5) 한계/주의점 (짧게)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8021-8389-f8ed47fb5b0c" class="bulleted-list"><li style="list-style-type:disc">최소화는 “올바른 결합 포즈를 찾아주는 단계”가 아니라, 현재 포즈를 물리적으로 말이 되게 다듬는 단계입니다(큰 구조적 재배치는 기대하지 않음).</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80af-bc43-e4b4ec55592d" class="bulleted-list"><li style="list-style-type:disc">Force field/프로토네이션/용매 모델 선택에 따라 결과가 달라질 수 있으므로, 파이프라인에서는 “고정된 설정”으로 일관 비교하는 것이 핵심입니다. (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1005659&amp;utm_source=chatgpt.com">PLOS</a>)</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-80e9-8e20-f78db603f526"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-804f-93b7-d44be04ca138" class="">참고 문헌/리소스 (최소 세트)</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e7-b7de-f446f7f84b1c" class="bulleted-list"><li style="list-style-type:disc">OpenMM 대표 논문(2017): OpenMM 7: Rapid development of high performance algorithms for molecular dynamics (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1005659&amp;utm_source=chatgpt.com">PLOS</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8095-a078-c774fc86c8cd" class="bulleted-list"><li style="list-style-type:disc">OpenMM User Guide: 에너지 최소화(minimizeEnergy) 및 러닝 시뮬레이션 예시 (<a href="https://docs.openmm.org/latest/userguide/application/02_running_sims.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80c4-89bd-e8715a98c961" class="bulleted-list"><li style="list-style-type:disc">OpenMM User Guide/API: 모델 편집(수소 추가, 시스템 생성 흐름) (<a href="https://docs.openmm.org/latest/userguide/application/03_model_building_editing.html?utm_source=chatgpt.com">docs.openmm.org</a>)</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-801b-a738-f195bcf054fc" class="">원하면, 너희 pepbind 파이프라인에서 실제로 사용 중인 “OpenMM 튜닝 설정값(예: force field, constraints, minimize tolerance/max iterations, solvation 여부)”을 그대로 문서에 넣을 수 있게 “사용자 설정 영역 주석 템플릿” 형태로도 정리해줄게.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

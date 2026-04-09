@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>최종 평가 방법 정리</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-80c6-89a5-d6afe3736303" class="page sans"><header><h1 class="page-title" dir="auto">최종 평가 방법 정리</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80fe-a836-dcf38d972595" class="bulleted-list"><li style="list-style-type:disc">평가 방법 도입 로드맵<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8053-bf14-fa817277b87e" class="bulleted-list"><li style="list-style-type:circle">ipTM + Vina + PLIP + Pafnucy : 기존 조합 방식 (정확도 : B급)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8058-bf99-f9431d20dbd0" class="bulleted-list"><li style="list-style-type:circle">pTM + Vina + PLIP + PPI-Affinity : 개선된 방식 (정확도 : A급)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8021-bb93-d3b6ec91136c" class="bulleted-list"><li style="list-style-type:circle">[현재 방법] ipTM + Vina + PLIP + PRODIGY : 개선된 방식 (정확도 : A+급)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-800e-a97e-fe4a067c4552" class="bulleted-list"><li style="list-style-type:disc">여러 모델 조합방식은 흔함.<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80bd-85e3-d281f4673b98" class="bulleted-list"><li style="list-style-type:circle">동일한 구성은 드묾.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-805c-844a-d71efbb0dfd5" class="bulleted-list"><li style="list-style-type:circle">prodigy 비교적 최근에 많이 사용되기 시작함.<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80ef-b58f-cad3a3deb200" class="bulleted-list"><li style="list-style-type:square">2016~2018년까지는 연간 수십 건 인용 → 2020년 이후는 <strong>매년 수백 건 이상 인용</strong>으로 증가.</li></ul></div></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8077-a2a4-e0df775b9d99" class="bulleted-list"><li style="list-style-type:disc"><strong>도구/모델</strong> : <code>ipTM + vina + PLIP + PRODIGY</code></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80ed-b474-f8e30adece8a" class="bulleted-list"><li style="list-style-type:disc"><strong>전략</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8030-bb62-c94077352743" class="bulleted-list"><li style="list-style-type:circle">각 평가 점수를 <strong>정규화(normalization)</strong> 후 <strong>가중 합산</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8098-a336-e35f9686b3a9" class="bulleted-list"><li style="list-style-type:square">각 점수를 0~1 사이 고정 범위 스케일링(사전 정의된 최소/최대값 기준)으로 정규화한 후 가중 합산</li></ul></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2ea25f08-6a1c-808d-9de0-c389d72c42ee" class="code code-wrap"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">Final_Score = w1 × norm(PRODIGY Score) + w2 × norm(Vina Score) + w3 × norm(PLIP Total Interactions) + w4 × norm(ColabFold ipTM Score)</code></pre></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8041-996f-e26d3aea0617" class="bulleted-list"><li style="list-style-type:square">norm = 0~1 고정 범위 스케일링</li></ul></div><div style="display:contents" dir="ltr"><table id="2ea25f08-6a1c-8060-9ff7-fce201c08f6d" class="simple-table"><tbody><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8007-85cf-e8326bbc6eac"><td id="]D@k" class="" style="width:44.765625px">항목</td><td id="ADiX" class="" style="width:185.546875px">요소</td><td id="``j\" class="" style="width:57.640625px">가중치</td><td id="]Uo{" class="" style="width:186.6875px">설명</td><td id="|_wJ" class="" style="width:302.515625px">가중치 설정 설명</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-80ba-9947-cf64122a9ebd"><td id="]D@k" class="" style="width:44.765625px">w1</td><td id="ADiX" class="" style="width:185.546875px"><code><strong>PRODIGY Score</strong></code></td><td id="``j\" class="" style="width:57.640625px"><strong>50%</strong></td><td id="]Uo{" class="" style="width:186.6875px">구조 기반 친화도 예측</td><td id="|_wJ" class="" style="width:302.515625px">&#x27;결합 친화도&#x27;를 가장 직접적으로 예측하는 모델.<br/>가장 높은 가중치를 부여.</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-802b-a0ba-e906f63d6bbc"><td id="]D@k" class="" style="width:44.765625px">w2</td><td id="ADiX" class="" style="width:185.546875px"><code><strong>Vina Score</strong></code></td><td id="``j\" class="" style="width:57.640625px">25%</td><td id="]Uo{" class="" style="width:186.6875px">도킹 에너지 기반 결합 안정성</td><td id="|_wJ" class="" style="width:302.515625px">물리 법칙에 기반한 결합 안정성을 나타내는 지표. <br/>PRODIGY를 보조하는 핵심적인 물리 점수.</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8074-8637-f537a4137157"><td id="]D@k" class="" style="width:44.765625px">w3</td><td id="ADiX" class="" style="width:185.546875px"><code><strong>Total Interactions</strong></code><code>(PLIP)</code></td><td id="``j\" class="" style="width:57.640625px">15%</td><td id="]Uo{" class="" style="width:186.6875px">물리적 상호작용 수치화</td><td id="|_wJ" class="" style="width:302.515625px">도킹 구조 내 상호작용 정량 분석.<br/>보조 지표 가중치.</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-807c-9cda-ce6988cdd159"><td id="]D@k" class="" style="width:44.765625px">w4</td><td id="ADiX" class="" style="width:185.546875px"><code><strong>ipTM Score</strong></code><code>(ColabFold)</code></td><td id="``j\" class="" style="width:57.640625px">10%</td><td id="]Uo{" class="" style="width:186.6875px">구조 예측 신뢰도</td><td id="|_wJ" class="" style="width:302.515625px">입력 구조의 신뢰도 평가.<br/>ColabFold에서 이미 평가했기에 가중치 낮음.</td></tr></div></tbody></table></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80d8-8d7a-ec5f6d03c52f" class="toggle"><li><details open=""><summary>가중치 01</summary><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-804b-a2da-d45bd76109bd" class="bulleted-list"><li style="list-style-type:disc">현재 가중치 : 합리적인 출발점<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8037-b16b-fe3edf989622" class="bulleted-list"><li style="list-style-type:circle"><strong>PRODIGY (50%)</strong>: <strong>가장 높은 가중치. 타당합니다.</strong> 이 파이프라인의 최종 목표는 &#x27;결합 친화도&#x27;가 높은 펩타이드를 찾는 것이고, PRODIGY는 이 값을 가장 직접적으로 예측하는 모델입니다. 핵심 지표에 가장 높은 가중치를 부여하는 것은 논리적입니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-807e-9559-d092b53eca32" class="bulleted-list"><li style="list-style-type:circle"><strong>Vina (25%)</strong>: <strong>두 번째로 높은 가중치. 좋습니다.</strong> Vina의 결합 에너지는 물리 법칙에 기반한 결합 안정성을 나타내는 강력한 지표입니다. PRODIGY를 보조하는 핵심적인 물리 점수로서 적절한 비중입니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e0-9c55-d44c32b53aba" class="bulleted-list"><li style="list-style-type:circle"><strong>PLIP (15%)</strong>: <strong>보조적인 가중치. 적절합니다.</strong> 상호작용의 &#x27;개수&#x27;는 결합의 &#x27;질&#x27;을 완벽히 대변하지는 못합니다. 중요한 상호작용 몇 개가 약한 상호작용 여러 개보다 나을 수 있기 때문입니다. 따라서 결합의 타당성을 뒷받침하는 보조 지표로서 좋은 가중치입니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8021-9d76-cefb5204e832" class="bulleted-list"><li style="list-style-type:circle"><strong>ipTM (10%)</strong>: <strong>가장 낮은 가중치. 올바른 판단입니다.</strong> pTM은 결합력 자체가 아닌 &#x27;입력 구조의 신뢰도&#x27;를 의미합니다. 점수가 낮으면 다른 모든 평가가 무의미해지는 &#x27;기본 전제&#x27;와 같은 역할을 하므로, 필수적이지만 점수 비중이 높을 필요는 없습니다.</li></ul></div><div style="display:contents" dir="ltr"><table id="2ea25f08-6a1c-80c1-8278-ec052c37d7ae" class="simple-table"><tbody><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-800c-9e8b-f4f910fa86b7"><td id="m{iP" class="" style="width:114.22442626953125px">PRODIGY (50%)</td><td id="KJz:" class="" style="width:303.5208435058594px">&#x27;결합 친화도&#x27;를 가장 직접적으로 예측하는 모델.<br/>가장 높은 가중치를 부여.</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8024-b116-c9b9e9d464b6"><td id="m{iP" class="" style="width:114.22442626953125px">Vina (25%)</td><td id="KJz:" class="" style="width:303.5208435058594px">물리 법칙에 기반한 결합 안정성을 나타내는 지표. <br/>PRODIGY를 보조하는 핵심적인 물리 점수.</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8028-bcc0-f6313995d3c2"><td id="m{iP" class="" style="width:114.22442626953125px">PLIP (15%)</td><td id="KJz:" class="" style="width:303.5208435058594px">도킹 구조 내 상호작용 정량 분석.<br/>보조 지표 가중치.</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-800e-90ab-fb1664504c77"><td id="m{iP" class="" style="width:114.22442626953125px">ipTM (10%)</td><td id="KJz:" class="" style="width:303.5208435058594px">입력 구조의 신뢰도 평가.<br/>ColabFold에서 이미 평가했기에 가중치 낮음.</td></tr></div></tbody></table></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8025-9b29-d32c8aa4a8f7" class="bulleted-list"><li style="list-style-type:disc">최적의 가중치를 찾는 과학적인 방법 🎯<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8093-abfd-f76fab535f40" class="bulleted-list"><li style="list-style-type:circle">여기서 더 나아가 가중치에 대한 <strong>데이터 기반의 객관적인 근거</strong>를 만들고 싶으시다면, 이전에 설명해 드린 <strong>벤치마크 테스트</strong>를 활용하여 최적화를 진행할 수 있습니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-806a-8a46-f86943e6106b" class="bulleted-list"><li style="list-style-type:circle"><strong>목표</strong>: <code>Final_Score</code>와 <code>실제 실험값</code> 사이의 <strong>상관계수를 가장 높게 만드는 가중치 조합</strong>을 찾는다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8081-84e0-ea94e2650f16" class="bulleted-list"><li style="list-style-type:circle"><strong>방법</strong><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-805c-9f06-dff87a2d3106" class="numbered-list" start="1"><li><strong>데이터 준비</strong>: PDBbind와 같은 벤치마크 데이터셋에 대해 각 평가 모델(<code>Vina</code>, <code>PRODIGY</code>, <code>PLIP</code>, <code>ipTM</code>)의 점수를 모두 계산해 둡니다.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-806c-ae08-e68b24d80f6b" class="numbered-list" start="2"><li><strong>가중치 탐색 (Grid Search)</strong>: 모든 경우의 수를 테스트하는 <strong>&#x27;격자 탐색(Grid Search)&#x27;</strong> 방법을 사용합니다.<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e5-87f4-c6a2b3ec5656" class="bulleted-list"><li style="list-style-type:disc">예를 들어, 각 가중치를 0.1 단위로 변경하며 모든 조합을 테스트합니다. (단, 합은 1.0이 되도록)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8008-b8ba-c222c48fbdd7" class="bulleted-list"><li style="list-style-type:disc">(w1, w2, w3, w4) = (0.4, 0.3, 0.2, 0.1)일 때의 상관계수 계산</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-801a-904e-f16ea01d3f56" class="bulleted-list"><li style="list-style-type:disc">(w1, w2, w3, w4) = (0.5, 0.2, 0.2, 0.1)일 때의 상관계수 계산</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-801e-8eab-e197ebb58620" class="bulleted-list"><li style="list-style-type:disc">... (수많은 조합 반복)</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-803f-afce-dcaaa286f75f" class="numbered-list" start="3"><li><strong>최적 조합 선택</strong>: 위 과정을 통해 계산된 수많은 상관계수 중 <strong>가장 높은 값을 보인 가중치 조합</strong>을 최종적으로 선택합니다. 이것이 바로 우리 데이터셋에서 최고의 성능을 내는 &#x27;경험적으로 검증된&#x27; 최적의 가중치가 됩니다.</li></ol></div></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8099-87b0-d26a9ce68acb" class="bulleted-list"><li style="list-style-type:disc">결론 및 제안<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80d4-b2d4-c851c55884a4" class="bulleted-list"><li style="list-style-type:circle"><strong>옵션 1 (좋음)</strong>: <strong>현재 가중치를 그대로 사용합니다.</strong> 이미 논리적으로 충분히 타당하며, 파이프라인의 성능을 잘 대표할 가능성이 높습니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80dd-8d0f-e49601036117" class="bulleted-list"><li style="list-style-type:circle"><strong>옵션 2 (더 좋음)</strong>: <strong>벤치마크 테스트를 통해 최적의 가중치를 직접 찾습니다.</strong> 이 과정을 거치면 &quot;우리의 파이프라인은 이 데이터셋에서 상관계수 0.85를 달성했으며, 이때의 최적 가중치는 Vina 20%, PRODIGY 55%...입니다&quot; 와 같이 <strong>객관적인 근거를 바탕으로 파이프라인의 신뢰도를 주장</strong>할 수 있게 됩니다.</li></ul></div></li></ul></div></details></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-805d-8be0-c39e2ec165db" class="bulleted-list"><li style="list-style-type:circle">상위 N개 구조를 최종 후보로 선정</li></ul></div></li></ul></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

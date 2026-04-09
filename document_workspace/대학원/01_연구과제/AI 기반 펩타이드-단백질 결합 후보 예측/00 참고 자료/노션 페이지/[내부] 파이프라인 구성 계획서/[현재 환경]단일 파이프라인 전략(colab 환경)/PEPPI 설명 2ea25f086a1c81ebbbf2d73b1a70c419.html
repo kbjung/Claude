@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>PEPPI 설명</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-81eb-bbf2-d73b1a70c419" class="page sans"><header><h1 class="page-title" dir="auto">PEPPI 설명</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8138-b4b1-c411a8133601" class="">PEPPI(피피‑피), 즉 <em>Pipeline for the Extraction of Predicted Protein‑protein Interactions</em>는 **서열 유사성, 구조 유사성, 기능적 연관성 데이터, 그리고 머신러닝 예측 모델(나이브 베이즈 결합)**을 통합하여 전(whole) 프로테옴 수준에서 단백질‑단백질 상호작용(PPI)을 높은 정확도로 예측하는 파이프라인입니다 (<a href="https://zhanggroup.org/PEPPI/?utm_source=chatgpt.com">zhanggroup.org</a>).</p></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81c0-92be-e99442f51e10" class="">🔍 주요 개요</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f3-8491-ea8842e23262" class="bulleted-list"><li style="list-style-type:disc"><strong>통합 모듈 구성</strong><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81f9-9e0f-c360b7d8f62c" class="">PEPPI는 네 가지 독립적 예측 모듈을 운영합니다:</p></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8163-a291-e03de3190599" class="numbered-list" start="1"><li><strong>구조 유사성 기반 모듈 (SPRING/threading)</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8123-a014-da139c2f322f" class="numbered-list" start="2"><li><strong>서열 유사성 기반 모듈 (BLAST 기반 Interology 참고)</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81f2-90d7-e4f63cbe8a9b" class="numbered-list" start="3"><li><strong>STRING 데이터 기반 기능적 연관성</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-811b-81a0-ed43621dc1ae" class="numbered-list" start="4"><li><strong>신경망 기반 서열 특징 분류기 (classification)</strong><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-815c-b6aa-fba69831ebd7" class="">이 결과들을 <strong>나이브 베이즈 모델</strong>로 결합하여 최종 상호작용의 가능성을 나타내는 우도비(Likelihood Ratio)를 출력합니다 (<a href="https://www.aideepmed.com/papers/2022_5_support.pdf?utm_source=chatgpt.com">aideepmed.com</a>, <a href="https://zhanggroup.org/PEPPI/?utm_source=chatgpt.com">zhanggroup.org</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/35662463/?utm_source=chatgpt.com">PubMed</a>).</p></div></li></ol></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81dc-9d95-dca8c71950ad" class="bulleted-list"><li style="list-style-type:disc"><strong>성능</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8106-92cf-ecd93f010b4b" class="bulleted-list"><li style="list-style-type:circle">균형 데이터셋 기준으로 <strong>기존 기술 대비 약 4.5% 높은 AUROC</strong>를 달성함 (<a href="https://pubmed.ncbi.nlm.nih.gov/35662463/?utm_source=chatgpt.com">PubMed</a>).</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8122-a643-e211904a9231" class="bulleted-list"><li style="list-style-type:circle">SARS‑CoV‑2 바이러스와 인간 단백질 사이의 상호작용 예측에도 활용되어, 고신뢰성 상호작용 403개를 예측했고, PSICQUIC gold‑standard 데이터의 약 <strong>73%를 커버</strong>하면서 실험 데이터와 상호보완적 결과를 보였습니다 (<a href="https://pubmed.ncbi.nlm.nih.gov/35662463/?utm_source=chatgpt.com">PubMed</a>).</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814d-b830-dc7cbdc61568" class="bulleted-list"><li style="list-style-type:disc"><strong>제공 형식</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8147-9053-da7c21bba9d6" class="bulleted-list"><li style="list-style-type:circle"><strong>웹 서버</strong>: FASTA 서열 입력으로 쉽게 사용할 수 있으며, 결과는 이메일로 전송.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b8-ba95-f6d386d8c532" class="bulleted-list"><li style="list-style-type:circle"><strong>독립형 패키지 (standalone)</strong>: 전체 프로테옴 수준의 대규모 예측에 적합. (<a href="https://www.researchgate.net/publication/356777905_PEPPI_Whole-proteome_protein-protein_interaction_prediction_through_structure_and_sequence_similarity_functional_association_and_machine_learning?utm_source=chatgpt.com">ResearchGate</a>).</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81c5-9311-e65dc4c2f97a" class="">📊 PEPPI의 특징 요약</h2></div><div style="display:contents" dir="ltr"><table id="2ea25f08-6a1c-8186-880e-ce4faacf9f42" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8135-b16c-e519b5e5d0dc"><th id="|iqV" class="simple-table-header-color simple-table-header">항목</th><th id="GX?R" class="simple-table-header-color simple-table-header" style="width:537px">내용</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-813a-8335-c9338d7c7062"><td id="|iqV" class=""><strong>입력</strong></td><td id="GX?R" class="" style="width:537px">두 개의 단백질 서열 (FASTA)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8150-b6b1-ce52056ffc06"><td id="|iqV" class=""><strong>사용 데이터</strong></td><td id="GX?R" class="" style="width:537px">구조 템플릿 (threading), BLAST 기반 서열 유사성, STRING 연관성, 신경망 특징 분류</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81eb-b176-f1c8cba1733d"><td id="|iqV" class=""><strong>모델 구성</strong></td><td id="GX?R" class="" style="width:537px">네 모듈 → 나이브 베이즈 앙상블</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8178-9143-f9b68382d1b0"><td id="|iqV" class=""><strong>출력</strong></td><td id="GX?R" class="" style="width:537px">상호작용 likelihood ratio 또는 점수</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81ee-92b2-ef461d0dcf1c"><td id="|iqV" class=""><strong>성능</strong></td><td id="GX?R" class="" style="width:537px">기존 PPI 예측법 대비 AUROC 기반 성능 우수 (약 +4.5%)</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81a6-a2f5-ed085cf20529"><td id="|iqV" class=""><strong>확장성</strong></td><td id="GX?R" class="" style="width:537px">SARS‑CoV‑2 대 인간 interactome 예측 등 프로테옴 규모 대응</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81fa-a6a1-d5a876c4ec2d" class="">💡 활용 시나리오</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8102-9076-f320d1fb11ff" class="bulleted-list"><li style="list-style-type:disc"><strong>전 프로테옴 스케일 분석</strong>: 개별 실험 기반 PPI 데이터가 부족한 경우 예측 기반으로 상호작용 네트워크 구성.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8124-815b-efd06388c825" class="bulleted-list"><li style="list-style-type:disc"><strong>바이러스‑숙주 상호작용 분석</strong>: 예측된 SARS‑CoV‑2와 인간 단백질 간 상호작용 사례처럼, 신속한 인사이트 제공.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8168-b508-e89e8a0802eb" class="bulleted-list"><li style="list-style-type:disc"><strong>기존 experimental dataset 보완</strong>: 실험에 기반하지 않은 novel PPI 탐색에 유용.</li></ul></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81bd-96f2-feac4d809c61" class="">⚠️ 주의사항 및 한계</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8130-b5b4-d34fe22e3258" class="bulleted-list"><li style="list-style-type:disc"><strong>참고 기반 예측 한계</strong>: 구조/서열 유사성이나 STRING 연관성이 없는 경우 성능 저하 가능.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81de-9fb4-f9a9ee440538" class="bulleted-list"><li style="list-style-type:disc"><strong>데이터 편향</strong>: 기존 known interactions 기반으로 학습되었기 때문에 실험 데이터에 없는 novel 항목은 예측 어려울 수 있음.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81bd-9d2b-f89d12f61aa9" class="bulleted-list"><li style="list-style-type:disc"><strong>예측의 해석 제한</strong>: 상호작용 여부는 예측하지만, 인터페이스 위치(결합 부위)나 친화도 강도는 제공하지 않음.</li></ul></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-818b-8045-fe538c2af21c" class="">🧭 요약 정리</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8191-bf2c-c25ab18e5c25" class="">PEPPI는 다중 정보원을 결합하는 나이브 베이즈 기반 파이프라인으로, 구조·서열·기능 연관성을 아우르는 통합 접근을 통해 <strong>정확하고 스케일 확장 가능한 PPI 예측 도구</strong>입니다. 특히 프로테옴 스케일의 분석이나 바이러스‑숙주 상호작용 연구에서 효율적인 활용이 가능합니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

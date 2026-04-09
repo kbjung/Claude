@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>[GPT] PLIP 설명 01</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-8030-b559-d063b741e912" class="page sans"><header><h1 class="page-title" dir="auto">[GPT] PLIP 설명 01</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81de-aeca-ce0bd6a56df3" class="bulleted-list"><li style="list-style-type:disc">PDB 좌표 기반 규칙-기반 모델</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8176-9347-dfc712688948" class=""><strong>간략 설명</strong></h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8141-aed8-d65b99c37502" class="bulleted-list"><li style="list-style-type:disc">분자 간 결합 상호작용을 상세히 분석하는 툴.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8138-9933-e3e886286fd1" class="bulleted-list"><li style="list-style-type:disc">수소 결합, 소수성 상호작용 등 비공유 결합을 종류별로 식별. 식별된 상호작용의 개수를 정량적으로 파악.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8187-9834-fc9fdb96d169" class="bulleted-list"><li style="list-style-type:disc">3D 구조에서 수소결합/소수성/염다리 등 규칙(rule)과 거리 임계값으로 비공유성 상호작용을 탐지·분류하는 도구</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81c9-a69a-e01df99da22f" class=""><strong>파이프라인 적합성</strong></h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813b-b1c5-dc1e2ceb9692" class="bulleted-list"><li style="list-style-type:disc">Vina, PRODIGY의 점수를 보완하여 <strong>&#x27;왜 강하게 결합하는가&#x27;</strong>를 설명.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8131-a276-fbde1e5beb0e" class="bulleted-list"><li style="list-style-type:disc">결합의 핵심이 되는 특정 상호작용을 파악하는 데 도움.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8147-89fb-c593ee8f20f3" class="bulleted-list"><li style="list-style-type:disc">단순 점수를 넘어, 결합의 &#x27;질&#x27;을 평가하는 근거를 제공.</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8111-b440-c2d484abd92e" class="">신뢰도</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8172-94e6-e53e58e04103" class="bulleted-list"><li style="list-style-type:disc"><strong>신뢰도: 높음 (Standard Utility) 🛠️</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8177-9f55-e1a6522934d1" class="bulleted-list"><li style="list-style-type:disc"><strong>근거</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d5-aec4-fe3f25fbdc8a" class="bulleted-list"><li style="list-style-type:circle">구조 예측 후 결합 상호작용을 분석하는 필수 과정을 자동화.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e0-a335-d0ec9b2025a6" class="bulleted-list"><li style="list-style-type:circle">복잡한 비공유 결합(수소 결합 등)을 빠르고 정확하게 식별.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8176-822c-fac6516bbe31" class="bulleted-list"><li style="list-style-type:circle">결합 모드 분석 결과를 논문에 제시할 때 빈번하게 사용되는 유틸리티(2천회 이상 인용).</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-811f-8aa7-e9fc9a7b1169"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-814a-81d2-d663ac41b472" class="">PLIP의 평가 과정 (구조 분석 방식)</h2></div><div style="display:contents" dir="ltr"><figure id="2ea25f08-6a1c-814c-9113-e86ce83b9bbb" class="link-to-page"><a href="%5BGPT%5D%20PLIP%20%EC%84%A4%EB%AA%85%2001/PLIP%20%EA%B3%84%EC%82%B0%20%EB%B0%A9%EC%8B%9D%20%EC%83%81%EC%84%B8%20%EC%84%A4%EB%AA%85(GPT)%20(1)%202ea25f086a1c814c9113e86ce83b9bbb.html">PLIP 계산 방식 상세 설명(GPT) (1)</a></figure></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8140-96f4-f60593bb0877" class="numbered-list" start="1"><li><strong>입력</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c6-921b-eec82c8fb0df" class="bulleted-list"><li style="list-style-type:disc">단백질–리간드 복합체 구조 (<code>.pdb</code>, <code>.mol2</code> 등)</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81b2-88e9-c5e7fef1bb76" class="numbered-list" start="2"><li><strong>전처리</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8159-ad80-c44294f23e55" class="bulleted-list"><li style="list-style-type:disc">구조 내 단백질/리간드 분리</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-819a-b2aa-ee38ecbeb3d4" class="bulleted-list"><li style="list-style-type:disc">원자 좌표, 화학적 성질(극성/비극성, 전하 등) 인식</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81c7-bb38-ce372976d3b4" class="numbered-list" start="3"><li><strong>상호작용 탐색 (Interaction Detection)</strong><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8163-a35f-c38374bdfebb" class="">PLIP은 <strong>기하학적 기준(geometry-based rules)</strong>을 이용해 결합 여부를 판정합니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817a-9426-e7a01d97319b" class="bulleted-list"><li style="list-style-type:disc"><strong>수소 결합 (H-bonds)</strong>: 거리와 각도 기준 (예: H–A ≤ 3.5 Å, D–H–A 각도 ≥ 120°)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8104-99bd-f23c3e7f6514" class="bulleted-list"><li style="list-style-type:disc"><strong>소수성 상호작용 (Hydrophobic contacts)</strong>: 탄소 원자들 사이 거리 ≤ 4.0 Å</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f5-aa3f-fcf2b2a2ee76" class="bulleted-list"><li style="list-style-type:disc"><strong>π–π stacking</strong>: 방향성과 평행성을 고려한 방향/거리 기준</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8179-9663-d65a11eca7b6" class="bulleted-list"><li style="list-style-type:disc"><strong>π–카티온 상호작용 (π–cation)</strong>: 방향성 + 전하 고려</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ab-8850-f09838375d9a" class="bulleted-list"><li style="list-style-type:disc"><strong>Salt bridges (염다리)</strong>: 양이온–음이온 거리 ≤ 4 Å</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c0-bcd8-d62e58f432d2" class="bulleted-list"><li style="list-style-type:disc"><strong>Metal coordination (금속 배위)</strong>: 금속 이온과 리간드 원자 거리 기준</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8104-adce-e0d773c8fdc9" class="numbered-list" start="4"><li><strong>정량화 (Quantification)</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d0-886c-e8025e61741a" class="bulleted-list"><li style="list-style-type:disc">각 상호작용의 개수를 <strong>종류별로 카운팅</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813d-9b32-c0e328e08d7f" class="bulleted-list"><li style="list-style-type:disc">상호작용별 기여도를 단순 합산 (예: H-bond 3개, hydrophobic 5개)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8133-b821-c769bf1aa528" class="bulleted-list"><li style="list-style-type:disc">이때 PLIP 자체는 <strong>“총 점수”를 주진 않고</strong>, “종류별 개수 + 위치 정보”를 출력</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-812e-9df1-ebeeb40ffcc9" class="numbered-list" start="5"><li><strong>출력</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8193-a331-de617b111b83" class="bulleted-list"><li style="list-style-type:disc">표(텍스트/CSV): 상호작용 종류별 개수, 잔기 ID, 원자 좌표</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f0-a660-ca4ec0d0e792" class="bulleted-list"><li style="list-style-type:disc">XML/JSON: 기계 판독 가능한 상세 정보</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b4-8281-decd083bf2a0" class="bulleted-list"><li style="list-style-type:disc">시각화 이미지: PyMOL, 3Dmol.js 연동 가능</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81bb-88ef-c9ff9b6ef227" class="">최종 점수화 시 고려 방식</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-818a-ac6d-d3fe24547063" class="">PLIP이 직접 점수를 내주지 않기 때문에, <strong>연구자가 점수화 방식을 정의</strong>해야 합니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81bc-8c76-e7007aba827b" class="">예를 들어 파이프라인에서는 이렇게 할 수 있습니다:</p></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81cd-8d56-db1f92cecc1b" class="numbered-list" start="1"><li><strong>단순 합산 방식</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811c-8774-e58fff7b65cb" class="bulleted-list"><li style="list-style-type:disc">모든 상호작용 개수를 합산 → “총 결합 개수”</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811b-8413-e8af6bbe42ec" class="bulleted-list"><li style="list-style-type:disc">예: 4 + 7 + 1 + 2 = 14개 → 총 상호작용 14</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8132-a770-dd7893462cd9" class="numbered-list" start="2"><li><strong>가중치 기반 합산 방식</strong> (권장)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817a-ba80-c818825b0e38" class="bulleted-list"><li style="list-style-type:disc">결합 강도/중요도에 따라 가중치 부여</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81df-b2da-ce915942c958" class="bulleted-list"><li style="list-style-type:disc">예시 가중치:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8181-8f5d-cad0b014d29d" class="bulleted-list"><li style="list-style-type:circle">수소 결합: 1.0</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813b-99bc-fce7b3ef3130" class="bulleted-list"><li style="list-style-type:circle">소수성: 0.5</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a6-aa1d-c444c0fb0b82" class="bulleted-list"><li style="list-style-type:circle">Salt bridge: 1.5</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8123-8b64-e2301859f38a" class="bulleted-list"><li style="list-style-type:circle">π–π stacking: 1.0</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f2-a64a-d9e1fee8491c" class="bulleted-list"><li style="list-style-type:disc">계산식: <code>Score = (H-bond*1.0) + (Hydrophobic*0.5) + (Salt bridge*1.5) + …</code></li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-818f-bd8d-f4b9470657ab" class="numbered-list" start="3"><li><strong>다차원 지표로 활용</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811c-aeb7-fa3e91a1c4ca" class="bulleted-list"><li style="list-style-type:disc">PLIP 결과를 단일 점수로 합치지 않고, **“특징 벡터(feature vector)”**로 모델에 넣을 수도 있음.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8198-9ece-e09ed06946ae" class="bulleted-list"><li style="list-style-type:disc">예: [H-bond=4, Hydrophobic=7, Salt bridge=1, π–π=2 …]</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81cf-b2cf-cd06c45bcb9e" class="bulleted-list"><li style="list-style-type:disc">→ PRODIGY, Vina 점수와 함께 ML/통합 점수 모델의 입력으로 사용.</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81a1-8677-c84e622beb6b" class="">결론</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c9-97bc-f003801571c0" class="bulleted-list"><li style="list-style-type:disc">네, PLIP 결과물은 <strong>결합 종류별 개수</strong>가 나옵니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810d-a4e1-c716a91e93db" class="bulleted-list"><li style="list-style-type:disc">따라서 최종 점수 평가 단계에서는 여러 지표(결합 개수들)를 <strong>합치거나, 가중치를 두거나, 벡터로 활용</strong>하는 방식 중 하나를 선택해야 합니다.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8112-809b-f5435ed373a1" class="bulleted-list"><li style="list-style-type:disc">일반적으로는 <strong>“총 상호작용 개수 + 중요 결합(예: salt bridge, H-bond) 강조”</strong>하는 방식이 가장 많이 쓰입니다.</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81df-b023-fbfcad7624cf"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81d4-84c8-ce121c4dc4a7" class="">PLIP의 논문 내 활용 단계와 역할</h2></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81af-8518-f4f7e8b21c84" class="numbered-list" start="1"><li><strong>도킹 후 결과 해석 단계</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817b-adcc-cab87d661b95" class="bulleted-list"><li style="list-style-type:disc">AutoDock Vina, Glide, GOLD 등 도킹 툴이 도출한 복합체 포즈를 <strong>구조적으로 해석</strong>하는 역할</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81fb-8f80-d7fb9dcc637c" class="bulleted-list"><li style="list-style-type:disc">&quot;어떤 잔기와 수소 결합하는지&quot;, &quot;소수성 포켓에 들어갔는지&quot; 같은 **결합 모드(binding mode)**를 정량화</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8179-8438-db0b773c1fb8" class="numbered-list" start="2"><li><strong>상호작용 지표 제공</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818b-8641-d0919b55af9f" class="bulleted-list"><li style="list-style-type:disc">단순 ΔG 점수 외에, 결합을 안정화하는 <strong>구체적 상호작용 종류와 개수</strong>를 제시</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816d-b1fc-efa1002d7543" class="bulleted-list"><li style="list-style-type:disc">논문에서는 보통 &quot;리간드 X는 단백질의 Y 잔기와 3개의 수소결합, 5개의 소수성 상호작용을 형성했다&quot; 식으로 기술됨</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8139-a79b-e82f7f4d80fa" class="numbered-list" start="3"><li><strong>시각화 및 도식화</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8199-9f80-c9d685cb4d56" class="bulleted-list"><li style="list-style-type:disc">PyMOL/3Dmol.js와 연동해 <strong>결합 상호작용 그림</strong>을 자동 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8148-822b-ded96ac93726" class="bulleted-list"><li style="list-style-type:disc">리뷰어나 독자가 이해하기 쉬운 결합 근거 그림을 논문 Figure로 제시할 때 활용</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81b5-b0b6-cdae2e65dc0e" class="numbered-list" start="4"><li><strong>검증 단계</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8172-b0c5-f84cb2bddaa7" class="bulleted-list"><li style="list-style-type:disc">가상 스크리닝이나 AI 모델에서 선택된 상위 후보군을 <strong>구조적으로 검증</strong>하는 과정에 자주 사용</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e0-bac5-d5b46801d9cc" class="bulleted-list"><li style="list-style-type:disc">예: “AI가 뽑은 후보는 PLIP 분석 결과, 타겟 단백질의 활성부위와 강한 수소결합 네트워크를 형성했다.”</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-814b-aff9-efa7d4e0e5ab"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81c0-ace1-e9a91b1b22e4" class="">인용 수 및 활용 빈도</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818e-a42a-c70e1f4b5604" class="bulleted-list"><li style="list-style-type:disc"><strong>도구 논문</strong>:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8167-a036-ea800cdc7074" class="bulleted-list"><li style="list-style-type:circle">Salentin et al., 2015, <em>Nucleic Acids Research</em> (PLIP: fully automated protein–ligand interaction profiler)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811d-8080-df0e9054a7cc" class="bulleted-list"><li style="list-style-type:circle">Google Scholar 기준 <strong>2,000회 이상 인용 (2025년 현재)</strong></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f0-a466-ffbfa321ad4b" class="bulleted-list"><li style="list-style-type:disc"><strong>실제 활용 논문</strong>:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8154-84b0-d1b01240001d" class="bulleted-list"><li style="list-style-type:circle">분자 도킹, 약물 재창출, 천연물 기반 억제제 발굴, 항암제/항바이러스 후보군 연구 등 <strong>수천 편 이상의 연구에서 후처리 표준 툴로 사용</strong></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8160-9355-f62fd40f5395" class="bulleted-list"><li style="list-style-type:disc"><strong>위상</strong>:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8157-9960-e97929833671" class="bulleted-list"><li style="list-style-type:circle">AutoDock Vina가 &quot;결합 에너지 평가의 표준&quot;이라면,</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e1-a1d0-fa0a5702297b" class="bulleted-list"><li style="list-style-type:circle">PLIP은 &quot;도킹 후 결합 모드 해석의 표준&quot;으로 자리 잡음</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-812c-b323-c0ae49fdc842"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8134-a369-e200780db559" class="">요약</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818a-b787-c52cd1847a65" class="bulleted-list"><li style="list-style-type:disc"><strong>논문 내 위치</strong>: 도킹/구조 예측 이후, 결과 해석 및 시각화 단계</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ee-8999-ff7c340581b7" class="bulleted-list"><li style="list-style-type:disc"><strong>역할</strong>: 상호작용 종류별 개수와 위치를 분석해 **“왜 결합하는가”**를 설명</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813f-b5da-f5646a68bbaa" class="bulleted-list"><li style="list-style-type:disc"><strong>인용 수</strong>: 5,000+ (바이오인포매틱스 툴 중에서도 높은 편)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b6-8f1d-cd5cc1fcf230" class="bulleted-list"><li style="list-style-type:disc"><strong>활용도</strong>: 분자 도킹 연구에서 <strong>사실상 표준 후처리 유틸리티</strong></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81a8-b7fa-cc1130c9a584"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81f5-b388-d73e74c8fc80" class="">관련 논문</h3></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8183-8b0f-f25b75d8444f" class="numbered-list" start="1"><li>&quot;PLIP 2025: introducing protein–protein interactions to the protein–ligand interaction profiler&quot; (2025)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8126-a3fb-f9bcb3f3671b" class="">PLIP가 단백질-단백질 상호작용까지 분석하는 기능을 확장한 최신 연구입니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81a9-a246-d3c4eb06be39" class="">링크: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12230730/">https://pmc.ncbi.nlm.nih.gov/articles/PMC12230730/pmc.ncbi.nlm.nih</a></p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-814f-8b8d-d2246e2dc882" class="numbered-list" start="2"><li>&quot;[논문 리뷰] The structural basis of drugs targeting protein-protein interactions uncovered with the protein-ligand interaction profiler (PLIP)&quot; (2025)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8174-8d9a-eda8e8ad3390" class="">PLIP를 활용해 단백질-단백질 상호작용 및 약물 결합 기전을 분석한 연구 리뷰 논문입니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81cd-871f-c533d5e9e9d9" class="">링크: <a href="https://www.themoonlight.io/ko/review/biorxiv/the-structural-basis-of-drugs-targeting-protein-protein-interactions-uncovered-with-the-protein-ligand-interaction-profiler-plip">https://www.themoonlight.io/ko/review/biorxiv/the-structural-basis-of-drugs-targeting-protein-protein-interactions-uncovered-with-the-protein-ligand-interaction-profiler-plipthemoonlight</a></p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8171-98f0-d8d1a8b68738" class="numbered-list" start="3"><li>&quot;PLIP: fully automated protein-ligand interaction profiler&quot; (2025)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81d5-979e-f586bde6db1d" class="">완전 자동화된 PLIP 웹 서비스와 알고리즘을 소개한 논문입니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81f9-a1bf-f842e9f796fe" class="">링크: <a href="https://repositorio.utalca.cl/repositorio/items/64fd961a-1713-4694-a909-081311b48bc0">https://repositorio.utalca.cl/repositorio/items/64fd961a-1713-4694-a909-081311b48bc0repositorio.utalca</a></p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ed-ad72-ef435d5aab3c" class="numbered-list" start="4"><li>&quot;PLIP 2025: introducing protein-protein interactions to the ...&quot; (2025)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-811d-aedf-e694c33e6982" class="">PLIP의 신버전에서 단백질-단백질 상호작용 분석 기능 도입을 다룬 논문 (PMC)</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8199-9e6b-caf2ad836af5" class="">링크: <a href="https://pubmed.ncbi.nlm.nih.gov/40347107/">https://pubmed.ncbi.nlm.nih.gov/40347107/pubmed.ncbi.nlm.nih</a></p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8101-8fc3-f949d3c60844" class="numbered-list" start="5"><li>&quot;The structural basis of drugs targeting protein-protein interactions&quot; (2025)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-810d-8f63-d427ccc5141c" class="">PLIP를 사용해 여러 단백질 복합체의 결합 특성을 심도있게 분석한 논문입니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81f9-bd33-d6e043fa30eb" class="">링크: <a href="https://www.biorxiv.org/content/10.1101/2025.03.04.641378v1">https://www.biorxiv.org/content/10.1101/2025.03.04.641378v1biorxiv</a></p></div></li></ol></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-815b-adc5-cbadc3d2b88c" class="">위 논문들은 PLIP가 단백질-리간드 및 단백질-단백질 상호작용 분석에서 갖는 최신 연구 동향과 응용 예시들을 잘 보여줍니다.</p></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-818b-a60b-c42a43d6e27e" class="numbered-list" start="1"><li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12230730/">https://pmc.ncbi.nlm.nih.gov/articles/PMC12230730/</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-816a-8c14-eccdbd8f8e96" class="numbered-list" start="2"><li><a href="https://www.themoonlight.io/ko/review/biorxiv/the-structural-basis-of-drugs-targeting-protein-protein-interactions-uncovered-with-the-protein-ligand-interaction-profiler-plip">https://www.themoonlight.io/ko/review/biorxiv/the-structural-basis-of-drugs-targeting-protein-protein-interactions-uncovered-with-the-protein-ligand-interaction-profiler-plip</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-819f-88c1-e6da853e5936" class="numbered-list" start="3"><li><a href="https://repositorio.utalca.cl/repositorio/items/64fd961a-1713-4694-a909-081311b48bc0">https://repositorio.utalca.cl/repositorio/items/64fd961a-1713-4694-a909-081311b48bc0</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8182-a43b-d146f2a761cb" class="numbered-list" start="4"><li><a href="https://pubmed.ncbi.nlm.nih.gov/40347107/">https://pubmed.ncbi.nlm.nih.gov/40347107/</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8115-96b4-fd8fe9cd9427" class="numbered-list" start="5"><li><a href="https://www.biorxiv.org/content/10.1101/2025.03.04.641378v1">https://www.biorxiv.org/content/10.1101/2025.03.04.641378v1</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-811c-bde5-ce3e30a5c89d" class="numbered-list" start="6"><li><a href="https://mvje.tistory.com/261">https://mvje.tistory.com/261</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ff-99ed-f9d659c107ee" class="numbered-list" start="7"><li><a href="https://www.themoonlight.io/ko/review/linker-learning-interactions-between-functional-groups-and-residues-with-chemical-knowledge-enhanced-reasoning-and-explainability">https://www.themoonlight.io/ko/review/linker-learning-interactions-between-functional-groups-and-residues-with-chemical-knowledge-enhanced-reasoning-and-explainability</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ab-b438-ec3d12183aff" class="numbered-list" start="8"><li><a href="https://mvje.tistory.com/260">https://mvje.tistory.com/260</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-814b-bd08-d09d1d30cf42" class="numbered-list" start="9"><li><a href="https://kimjy99.github.io/%EB%85%BC%EB%AC%B8%EB%A6%AC%EB%B7%B0/blip-diffusion/">https://kimjy99.github.io/%EB%85%BC%EB%AC%B8%EB%A6%AC%EB%B7%B0/blip-diffusion/</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-811f-ad5f-e9bf65b983b4" class="numbered-list" start="10"><li><a href="https://seandoprep.tistory.com/5">https://seandoprep.tistory.com/5</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81a0-83fc-e236d3d4356d" class="numbered-list" start="11"><li><a href="https://www.themoonlight.io/ko/review/foundation-models-in-medical-imaging-a-review-and-outlook">https://www.themoonlight.io/ko/review/foundation-models-in-medical-imaging-a-review-and-outlook</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81f3-9a5c-cd652d0eb4fd" class="numbered-list" start="12"><li><a href="https://arsetstudium.tistory.com/337">https://arsetstudium.tistory.com/337</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-811b-80f9-ff116289feb1" class="numbered-list" start="13"><li><a href="https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART129331671">https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART129331671</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81a6-9ad9-c361b2984f2c" class="numbered-list" start="14"><li><a href="https://www.themoonlight.io/ko/review/biorxiv/learning-the-language-of-protein-protein-interactions">https://www.themoonlight.io/ko/review/biorxiv/learning-the-language-of-protein-protein-interactions</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-810b-b604-dc1dd0ca1a48" class="numbered-list" start="15"><li><a href="https://taeyuplab.tistory.com/16">https://taeyuplab.tistory.com/16</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-814d-8913-ef0fa5e7cb62" class="numbered-list" start="16"><li><a href="https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART125060631">https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART125060631</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ed-aa90-ee11fe150f7b" class="numbered-list" start="17"><li><a href="https://plip-tool.biotec.tu-dresden.de/plip-web/plip/index">https://plip-tool.biotec.tu-dresden.de/plip-web/plip/index</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8121-beed-d48f5fa8a1bd" class="numbered-list" start="18"><li><a href="https://wondev.tistory.com/265">https://wondev.tistory.com/265</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-810b-8bd6-e1783822aa71" class="numbered-list" start="19"><li><a href="https://hyunseo-fullstackdiary.tistory.com/429">https://hyunseo-fullstackdiary.tistory.com/429</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ca-8bf3-e48f329e8ac6" class="numbered-list" start="20"><li><a href="https://seandoprep.tistory.com/6">https://seandoprep.tistory.com/6</a></li></ol></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

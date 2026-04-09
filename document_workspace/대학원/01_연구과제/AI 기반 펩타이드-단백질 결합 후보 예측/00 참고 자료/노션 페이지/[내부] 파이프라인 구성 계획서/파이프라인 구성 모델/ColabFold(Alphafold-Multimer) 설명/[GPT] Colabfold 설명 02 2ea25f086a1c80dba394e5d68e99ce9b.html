@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>[GPT] Colabfold 설명 02</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-80db-a394-e5d68e99ce9b" class="page sans"><header><h1 class="page-title" dir="auto">[GPT] Colabfold 설명 02</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8035-b139-f1834e44d98e" class="">2. 구조 예측</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8069-9e98-eba81b0062e3" class="bulleted-list"><li style="list-style-type:disc">도구/모델: ColabFold (AlphaFold-Multimer)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e1-a220-f39415d604af" class="bulleted-list"><li style="list-style-type:disc">역할: 타겟 단백질–펩타이드 복합체의 3D 구조를 “공동 접힘(co-folding)” 방식으로 예측하고, 예측 신뢰도(구조/인터페이스)를 점수로 함께 제공</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80c4-b8ab-fe24676e3038" class="bulleted-list"><li style="list-style-type:disc">입력:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-806d-bb8c-f5f811ff6960" class="bulleted-list"><li style="list-style-type:circle">(필수) 단백질 서열(Chain A) + 펩타이드 서열(Chain B) (FASTA; 멀티체인)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80a8-8548-eba293a18623" class="bulleted-list"><li style="list-style-type:circle">(자동/내부 생성) MSA(다중서열정렬), (옵션) 템플릿</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80b5-b14a-e7fe8a9e34f5" class="bulleted-list"><li style="list-style-type:circle">(옵션) max_msa, num_recycle, num_models, num_seeds, paired/unpaired MSA 전략 등</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80d5-b1d1-ea7ca70db7b6" class="bulleted-list"><li style="list-style-type:disc">출력:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80f4-b579-f32c48f64879" class="bulleted-list"><li style="list-style-type:circle">복합체 구조 PDB (보통 모델 N개)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80c2-bcf5-ef734cfbf441" class="bulleted-list"><li style="list-style-type:circle">신뢰도 지표: pLDDT(잔기/원자 신뢰도), PAE(잔기쌍 정렬 오차), pTM(전체 접힘 품질), ipTM(인터페이스 중심 품질), ranking confidence(모델 랭킹에 쓰는 결합 점수) (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e5-b6ae-e36e6700e4d8" class="bulleted-list"><li style="list-style-type:disc">파이프라인에서의 의미: PepMLM이 만든 후보를 “구조적으로 가능한 결합 형태”로 구체화하고, 이후 도킹/상호작용/친화도 평가 단계의 입력 구조를 표준화된 방식으로 생성</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8029-8f5b-e18673cbbfd3"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-80ae-b455-fecf9289b79b" class="">ColabFold(AlphaFold-Multimer) 설명</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8045-8379-d9889ca84f66" class="">1) ColabFold가 하는 일 (왜 ColabFold를 쓰나)</h3></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-803d-b688-f4dd55e7a0b8" class="">ColabFold는 AlphaFold2/AlphaFold-Multimer를 더 빠르고 쉽게 돌리기 위한 파이프라인입니다. 핵심은 MMseqs2 기반의 빠른 상동서열 탐색으로 MSA를 만들고, 그 MSA를 AlphaFold 모델에 넣어 구조를 예측하는 구성입니다. 이 방식으로 MSA 생성/전체 파이프라인이 크게 가속되는 것이 ColabFold의 대표 장점입니다. (<a href="https://www.nature.com/articles/s41592-022-01488-1?utm_source=chatgpt.com">Nature</a>)</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-80ff-93ae-f5b4399816e3" class="">실무 관점에서 “구조 예측을 반복 실행(여러 후보, 여러 시드/옵션)”해야 하는 파이프라인에서는 ColabFold의 속도/자동화가 당위성을 만들어줍니다. (<a href="https://www.nature.com/articles/s41592-022-01488-1?utm_source=chatgpt.com">Nature</a>)</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8014-b0b1-f409e88f8422"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8024-b6bf-d3e06304fd51" class="">2) AlphaFold-Multimer의 논리 (복합체를 어떻게 예측하나)</h3></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8017-99f0-fc1a20a961b2" class="">AlphaFold-Multimer는 단일 단백질이 아니라 “여러 체인이 함께 접히는 복합체”를 목표로 학습/설계된 AlphaFold 계열 모델입니다. 입력은 멀티체인 서열과 MSA(필요 시 paired/unpaired)이며, 출력은 복합체 3D 구조와 인터페이스 신뢰도 지표(ipTM 등)를 함께 제공합니다. (<a href="https://www.biorxiv.org/content/10.1101/2021.10.04.463034v2?utm_source=chatgpt.com">BioRxiv</a>)</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8044-9496-f631224d09c4" class="">펩타이드–단백질처럼 작은 체인이 포함된 복합체에 대해서도 AlphaFold-Multimer의 예측 성능과 한계를 다룬 벤치마크 연구들이 있으며, “구조 후보를 빠르게 생성해 후속 평가로 거르는” 파이프라인 설계가 합리적임을 뒷받침합니다. (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9580857/?utm_source=chatgpt.com">PMC</a>)</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-80e1-bbfe-ff73a898285c"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8033-a051-e3179cc9104f" class="">3) ColabFold/Multimer 주요 출력 점수 (설명서에 꼭 들어갈 것)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8084-94ed-e0ace1a78fa0" class="bulleted-list"><li style="list-style-type:disc">pLDDT: 각 잔기(또는 원자)의 국소 구조 신뢰도(0-100). 높을수록 해당 구간의 구조가 안정적으로 예측됐을 가능성이 큼. (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8041-a926-ee77e9829ef0" class="bulleted-list"><li style="list-style-type:disc">PAE: 잔기 i와 j의 상대적 위치(정렬) 오차 예측. 인터페이스/도메인 배치가 믿을 만한지 판단할 때 중요. (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80ea-bab1-e999b9826c46" class="bulleted-list"><li style="list-style-type:disc">pTM: 복합체 전체 접힘(전역 배치) 품질에 대한 예측 TM-score. 전반적 접힘이 맞는지 신호를 줌. (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8026-beec-c79b4d42d122" class="bulleted-list"><li style="list-style-type:disc">ipTM: 체인 간 인터페이스 품질 중심의 예측 TM-score. “결합면이 믿을 만한가”를 볼 때 핵심 지표. (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80ac-a5bc-fb940584df67" class="bulleted-list"><li style="list-style-type:disc">ranking confidence: AlphaFold-Multimer가 모델들을 정렬할 때 쓰는 결합 점수(보통 ipTM, pTM의 조합). (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-80b7-87f1-e8d5773b52b0" class="">(파이프라인 관점 한 문장)</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8009-8eb7-d9b5d173cd8e" class="">ColabFold 단계의 목적은 “그럴듯한 결합 포즈를 하나 고르는 것”이 아니라, 후보별로 여러 구조를 생성하고 ipTM/PAE/pLDDT로 신뢰도 기반 1차 구조 필터링을 만드는 것이다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-80b2-982b-f190bf01b7f7"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-80cc-b9da-d9628014b4a8" class="">4) 왜 ‘도킹(Vina)’ 전에 Multimer 구조 예측을 넣나 (당위성)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-800a-b8c9-e3048c00062b" class="bulleted-list"><li style="list-style-type:disc">구조 기반 평가의 출발점 확보: 서열 생성만으로는 결합 기하(포즈)가 없어서 도킹/상호작용/친화도 계산이 불가능. Multimer 구조는 후속 평가 입력을 만들어준다. (<a href="https://www.biorxiv.org/content/10.1101/2021.10.04.463034v2?utm_source=chatgpt.com">BioRxiv</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-800f-9483-ec15748a6ebf" class="bulleted-list"><li style="list-style-type:disc">인터페이스 신뢰도라는 “추가 정보”: 도킹 점수만 볼 때보다, ipTM/PAE처럼 인터페이스 자체의 예측 신뢰도를 함께 사용하면 잘못된 포즈(단백질이 풀리거나, 펩타이드가 엉뚱한 곳에 붙는 케이스)를 빨리 걸러낼 수 있다. (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80e2-aaaa-f33baafa7adf" class="bulleted-list"><li style="list-style-type:disc">반복/대량 실행에 유리: ColabFold는 MSA 생성이 빠르고 배치 실행이 쉬워서, 펩타이드 후보가 많은 파이프라인에서 현실적인 처리량을 만든다. (<a href="https://www.nature.com/articles/s41592-022-01488-1?utm_source=chatgpt.com">Nature</a>)</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8055-8f2c-e0ad61c8f6c4"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-80ad-93a6-ec26c4530c15" class="">참고 문헌/리소스 (최소 세트)</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8097-96b0-cc21c132fb92" class="bulleted-list"><li style="list-style-type:disc">ColabFold (Nature Methods, 2022): ColabFold: making protein folding accessible to all (<a href="https://www.nature.com/articles/s41592-022-01488-1?utm_source=chatgpt.com">Nature</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-808b-a36c-c1c56a6475f5" class="bulleted-list"><li style="list-style-type:disc">AlphaFold-Multimer (bioRxiv, 2022): Protein complex prediction with AlphaFold-Multimer (<a href="https://www.biorxiv.org/content/10.1101/2021.10.04.463034v2?utm_source=chatgpt.com">BioRxiv</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8005-98ee-d952a7c0c5e2" class="bulleted-list"><li style="list-style-type:disc">ColabFold GitHub 문서(멀티머 방식/노트북/배치): sokrypton/ColabFold (<a href="https://github.com/sokrypton/ColabFold?utm_source=chatgpt.com">GitHub</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8009-b706-ccd56b41d67e" class="bulleted-list"><li style="list-style-type:disc">AF-Multimer confidence 지표 정리(실무용): EMBL-EBI training 자료(ipTM/pTM 등) (<a href="https://www.ebi.ac.uk/training/online/courses/alphafold/inputs-and-outputs/evaluating-alphafolds-predicted-structures-using-confidence-scores/confidence-scores-in-alphafold-multimer/?utm_source=chatgpt.com">ebi.ac.uk</a>)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-80fe-8ade-d3d8325f8328" class="bulleted-list"><li style="list-style-type:disc">펩타이드–단백질 복합체에서의 AF-Multimer 벤치마크(한계/가능성): Johansson-Åkhe et al., 2022 (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9580857/?utm_source=chatgpt.com">PMC</a>)</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8064-beb0-f54322a662cc" class="">원하면, 너희가 실제로 쓰는 ColabFold 옵션( max_msa / num_recycle / num_models / num_seeds )을 “설명서 주석으로 바로 붙여넣는” 형태로 아주 짧게 정리해서 다음 메시지에 같이 제공할게.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

@@ -1,0 +1,713 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>[GPT] Autodock Vina 설명 01</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2ea25f08-6a1c-8053-a9b3-f1a91a2993a2" class="page sans"><header><h1 class="page-title" dir="auto">[GPT] Autodock Vina 설명 01</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e3-9a59-ff8647331271" class="bulleted-list"><li style="list-style-type:disc">Vina = 구조 탐색 + 빠른 안정성 점수</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8142-96bc-f90f6921bb01" class="bulleted-list"><li style="list-style-type:disc">후보군 간 상대적 비교용.</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81fa-b39d-de31b078412f" class="">구조 탐색(포즈 탐색)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816a-9a6d-d092650bcb10" class="bulleted-list"><li style="list-style-type:disc">Vina의 핵심은 “정답 포즈를 맞춘다”라기보다, 가능한 결합 자세(포즈)를 많이 만들어 보고 그중 그럴듯한 것들을 점수로 정렬하는 과정임.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811e-b928-f71ccd61c6a1" class="bulleted-list"><li style="list-style-type:disc">무엇을 탐색하나?<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f5-a79b-dbee342c4ed2" class="bulleted-list"><li style="list-style-type:circle">위치/방향(translation/rotation): 리간드(펩타이드)가 단백질 주변에서 어디에, 어떤 방향으로 붙는지</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8186-af1a-f45ee8bee465" class="bulleted-list"><li style="list-style-type:circle">리간드 유연성: 리간드의 회전 가능한 결합(토션, dihedral)을 바꿔가며 형태(conformation)를 바꿈</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-815a-8e41-e4b007699b2d" class="bulleted-list"><li style="list-style-type:circle">(기본적으로) 단백질은 거의 고정: 대부분의 경우 리셉터는 rigid로 두고, 리간드만 유연하게 탐색함(리셉터 유연성은 제한적으로만 다룸)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8181-a459-e267c44ffdd0" class="bulleted-list"><li style="list-style-type:disc">탐색 범위는 “박스(grid box)”로 정의함<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8110-8c71-c80539028f6e" class="bulleted-list"><li style="list-style-type:circle">conf.txt의 center_x/y/z, size_x/y/z로 “어디를 탐색할지”를 지정</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8136-baaf-e60d9c9c6f73" class="bulleted-list"><li style="list-style-type:circle">박스가 너무 작으면 결합부위를 놓치고, 너무 크면 탐색이 희석되어 성능이 떨어질 수 있음(속도도 느려짐)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8164-abbe-fb5335f3a947" class="bulleted-list"><li style="list-style-type:disc">탐색 강도(얼마나 빡세게 뒤지나?)를 조절함<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810b-b8cf-de3f98a14d44" class="bulleted-list"><li style="list-style-type:circle">exhaustiveness: 탐색을 얼마나 촘촘히/많이 할지(올릴수록 더 오래 돌지만 더 다양한 포즈를 찾을 확률↑)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817c-a817-c57e103e6e64" class="bulleted-list"><li style="list-style-type:circle">num_modes: 최종으로 출력할 상위 포즈 개수(“랭킹 후보 포즈”를 몇 개 남길지)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-815b-89f1-c97251f55018" class="bulleted-list"><li style="list-style-type:circle">energy_range: 출력 포즈를 몇 kcal/mol 범위까지 포함할지(상위 포즈 주변의 대안 포즈 포함)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a6-bb0c-e091ac812045" class="bulleted-list"><li style="list-style-type:disc">최종 출력은 “여러 포즈 + 각 포즈 점수”<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e7-b9ad-f4d9c4b80d35" class="bulleted-list"><li style="list-style-type:circle">Vina는 단일 결과가 아니라, 상위 포즈들을 여러 개 내고(예: 9개) 각 포즈의 결합 에너지(점수)를 함께 제공함</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ac-9387-d2dc2c808269" class="bulleted-list"><li style="list-style-type:circle">흔한 연구 흐름: 상위 포즈 선택 → PLIP/MM-GBSA/MD 등 후속 검증</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81f2-8673-c1c81702a1ae" class=""><strong>간략 설명</strong></h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d0-b6a7-f4b7bb6772fb" class="bulleted-list"><li style="list-style-type:disc">분자 도킹(Molecular Docking) 시뮬레이션 툴.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8111-947a-c83017af215d" class="bulleted-list"><li style="list-style-type:disc">입력(리셉터-리간드 3D 구조, 탐색 박스)을 바탕으로 결합 가능한 포즈를 탐색하고, 각 포즈를 scoring function으로 빠르게 평가해 결합 에너지(점수)로 랭킹함.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8127-9b8e-c858772632ca" class="bulleted-list"><li style="list-style-type:disc">단일 “정답”을 주기보다, 상위 포즈 여러 개를 제공해 후속 분석(상호작용/재스코어링/MD)으로 이어지기 좋음.</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81b8-9830-fb409d16758c" class=""><strong>파이프라인 적합성</strong></h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-819d-bc97-eeeaf2b09732" class="bulleted-list"><li style="list-style-type:disc">ColabFold 예측 구조의 물리적 타당성을 검증하는 &#x27;현실 체크&#x27; 단계로 활용.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e5-b53c-fbf900bdab37" class="bulleted-list"><li style="list-style-type:disc">AI 예측 구조에 대해 물리 법칙 기반의 에너지 값을 계산.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8159-a78e-f37cfdaa4758" class="bulleted-list"><li style="list-style-type:disc">구조 탐색(포즈 샘플링)<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81be-92ed-cbad74c98813" class="bulleted-list"><li style="list-style-type:circle">같은 후보라도 “붙는 자세가 여러 개” 존재</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a0-bab1-d196c8a63c36" class="bulleted-list"><li style="list-style-type:circle">“점수가 비슷한 대안 포즈들”을 확보해서 PLIP/PRODIGY 같은 후속 단계에서 더 믿을만한 포즈를 고를 수 있음</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f4-8f12-c29f87d2dc2e" class="bulleted-list"><li style="list-style-type:disc">이를 통해 전체 예측 결과의 신뢰도를 향상.</li></ul></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81db-a7ec-d7581f53bbcc" class="">신뢰도</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c4-ad5c-e6f35a39d105" class="bulleted-list"><li style="list-style-type:disc"><strong>신뢰도: 매우 높음 (Gold-Standard) 🏆</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8125-a508-da23119eb78c" class="bulleted-list"><li style="list-style-type:disc"><strong>근거</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8191-9359-e2bc4af9ec5e" class="bulleted-list"><li style="list-style-type:circle">분자 도킹 분야에서 가장 널리 알려진 표준 도구 중 하나.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8155-a248-fd35702b9fe9" class="bulleted-list"><li style="list-style-type:circle">원본 논문이 3만 회 이상 인용될 정도로 학술적 신뢰도 확보.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e4-9a35-d8ab8f4a1fed" class="bulleted-list"><li style="list-style-type:circle">빠른 속도와 높은 정확도로 가상 스크리닝 연구에 널리 사용.</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81d3-96fa-fc728f1a85ee"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8109-a3b6-ea1db7f673db" class="">논문 활용 패턴</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81fe-ba55-d28e2d6079fd" class="bulleted-list"><li style="list-style-type:disc"><strong>주요 목적</strong>: 후보물질 “랭킹/스코어링”</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8190-ba14-ea72c70b7516" class="toggle"><li><details open=""><summary>많이 사용되는 이유</summary><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816c-ba0a-d0a53aadd458" class="bulleted-list"><li style="list-style-type:disc"><strong>빠른 속도 + 무료 공개 소프트웨어</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d7-8940-d01967054fb9" class="bulleted-list"><li style="list-style-type:circle">수천~수만 개 리간드 스크리닝에도 활용 가능 → *Virtual Screening(가상 스크리닝)*의 표준 도구로 자리잡음.</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8173-898f-e8666234d108" class="bulleted-list"><li style="list-style-type:disc"><strong>상대 비교 지표로 적합</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d6-9bca-f7f178ceb8e6" class="bulleted-list"><li style="list-style-type:circle">절대적인 ΔG는 부정확할 수 있지만, “후보 A(-9.0 kcal/mol) vs 후보 B(-7.0 kcal/mol)” 식의 <strong>상대적 랭킹</strong>은 꽤 신뢰성 있음.</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81be-b847-f050cb51f7eb" class="bulleted-list"><li style="list-style-type:circle">그래서 논문에서 “도킹 점수 기반 상위 N개 후보 선정”이라는 방식으로 자주 활용됨.</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8107-8d14-f05103877dcb" class="bulleted-list"><li style="list-style-type:disc"><strong>광범위한 적용 분야</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8117-b6ed-c5db8ff7614c" class="bulleted-list"><li style="list-style-type:circle">암 관련 단백질 억제제, 코로나19 치료제 후보, 항생제, 효소 저해제 등 <strong>거의 모든 단백질–리간드 연구</strong>에서 Vina 점수로 1차 평가.</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817b-9c09-e6faa8c49df5" class="bulleted-list"><li style="list-style-type:disc"><strong>후속 분석 연결 용이</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8169-8be2-d2fd4ccf7700" class="bulleted-list"><li style="list-style-type:circle">Vina 결과 → PLIP(상호작용 분석), MM-GBSA(정밀 자유에너지), MD 시뮬레이션으로 이어가는 연구 흐름이 보편적.</li></ul></div></li></ul></div></details></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ac-bc65-d09a76a481cd" class="bulleted-list"><li style="list-style-type:disc">빠르고, 공짜이고, 상대 비교에 신뢰성 있는 1차 평가 도구</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-815c-9f30-e7e21d7e59af" class="bulleted-list"><li style="list-style-type:disc">연구자들이 거의 기본적으로 사용하는 툴</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ea-9ebe-f7c891942798" class="bulleted-list"><li style="list-style-type:disc"><strong>활용 예시</strong><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813c-a6dc-d00333ba87a7" class="bulleted-list"><li style="list-style-type:circle">코로나19 Mpro 단백질 억제제 탐색 연구</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8125-bc8d-f41ec8c6e535" class="bulleted-list"><li style="list-style-type:circle">항암제 후보군 발굴 연구</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a6-bb27-d001cbe7b5f4" class="bulleted-list"><li style="list-style-type:circle">천연물 기반 신약 후보 스크리닝</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81a9-b02c-efdde39ad24c"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81ae-9267-e34de61ad58d" class="">관련 논문</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a6-85fc-ffc2dfd218cd" class="bulleted-list"><li style="list-style-type:disc">&quot;AutoDock Vina: improving the speed and accuracy of docking with a new scoring function, efficient optimization and multithreading&quot;<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c2-9a17-d1ea607aa386" class="">PubMed Central – Vina 개발의 원리, 성능, 정확성에 관한 대표 논문입니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b6-be1b-d18cf849b650" class="bulleted-list"><li style="list-style-type:circle">링크: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3041641/">https://pmc.ncbi.nlm.nih.gov/articles/PMC3041641/pmc.ncbi.nlm.nih</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8103-a203-dcd2788e80b2" class="bulleted-list"><li style="list-style-type:circle">원문 : <a href="https://onlinelibrary.wiley.com/doi/10.1002/jcc.21334">https://onlinelibrary.wiley.com/doi/10.1002/jcc.21334</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8183-b27f-d89132d5aa62" class="bulleted-list"><li style="list-style-type:disc">&quot;1001 Ways to run AutoDock Vina for virtual screening&quot;<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8118-8f21-c9c3e927dacf" class="">ScienceON – 다양한 가상 스크리닝 시나리오에서 AutoDock Vina 활용법을 분석한 논문입니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8170-926f-da6872e6ac2c" class="bulleted-list"><li style="list-style-type:circle">링크: <a href="https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART98621171">https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART98621171scienceon.kisti</a></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816f-b1c5-f1673b56e240" class="bulleted-list"><li style="list-style-type:circle">원본 : <a href="https://link.springer.com/article/10.1007/s10822-016-9900-9">https://link.springer.com/article/10.1007/s10822-016-9900-9</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-815d-b14f-ed52b701cc5d" class="bulleted-list"><li style="list-style-type:disc">&quot;A GUI for virtual screening with AUTODOCK Vina&quot;<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81ba-bccd-daae2f304720" class="">ScienceON – AutoDock Vina 기반 가상 스크리닝을 위한 그래픽 사용자 인터페이스 개발 논문입니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c4-9aa0-d2d5172edc59" class="bulleted-list"><li style="list-style-type:circle">링크: <a href="https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART73675515">https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART73675515scienceon.kisti</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810f-84af-f6f57cdccb49" class="bulleted-list"><li style="list-style-type:disc">&quot;Evaluation of Environmental Toxicants Binding Affinity using AutoDock Vina&quot;<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-811f-b180-c01471109cda" class="">DBpia – AutoDock Vina를 활용한 독성 화합물의 결합 친화도 예측 연구입니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813f-b963-f3fc93456fa7" class="bulleted-list"><li style="list-style-type:circle">링크: <a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11803444">https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11803444dbpia</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8157-9d06-d225eae02f31" class="bulleted-list"><li style="list-style-type:disc">&quot;AutoDock Vina 1.2.0: new docking methods, expanded force field, and python bindings&quot;<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-810a-9a51-fe4c134a29a3" class="">PubMed Central – 최신 버전의 AutoDock Vina 기능 확장 및 개선에 관한 논문입니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8138-80e6-f7ef981ecbb1" class="bulleted-list"><li style="list-style-type:circle">링크: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10683950/">https://pmc.ncbi.nlm.nih.gov/articles/PMC10683950/pmc.ncbi.nlm.nih</a></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8142-bf77-f27489c666fa" class="">각 논문은 AutoDock Vina의 이론, 응용, GUI, 환경 독성 평가, 최신 기능 업그레이드를 대표적으로 보여줍니다.</p></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-816b-9f7e-f46f350f4ee8" class="numbered-list" start="1"><li><a href="https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART98621171">https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART98621171</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-814c-96f0-f1a7d95efa59" class="numbered-list" start="2"><li><a href="https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART73675515">https://scienceon.kisti.re.kr/srch/selectPORSrchArticle.do?cn=NART73675515</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ec-9182-ff6e9f29d45d" class="numbered-list" start="3"><li><a href="https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11803444">https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11803444</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-818c-b23c-e0f115ce33e4" class="numbered-list" start="4"><li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3041641/">https://pmc.ncbi.nlm.nih.gov/articles/PMC3041641/</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-812c-88aa-c470c779e710" class="numbered-list" start="5"><li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10683950/">https://pmc.ncbi.nlm.nih.gov/articles/PMC10683950/</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8104-9950-f974d4d79fa2" class="numbered-list" start="6"><li><a href="https://vina.scripps.edu/">https://vina.scripps.edu</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81b2-ab61-ef4970e63765" class="numbered-list" start="7"><li><a href="https://www.themoonlight.io/ko/review/boltzina-efficient-and-accurate-virtual-screening-via-docking-guided-binding-prediction-with-boltz-2">https://www.themoonlight.io/ko/review/boltzina-efficient-and-accurate-virtual-screening-via-docking-guided-binding-prediction-with-boltz-2</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81ba-ba57-eb2aae5bc52c" class="numbered-list" start="8"><li><a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.21334">https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.21334</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8164-8291-cf1b3cb6c05f" class="numbered-list" start="9"><li><a href="https://kubig-2022-1.tistory.com/93">https://kubig-2022-1.tistory.com/93</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8123-b74b-f0a674ead25c" class="numbered-list" start="10"><li><a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002339712">https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002339712</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8149-a198-c1e46dc392ee" class="numbered-list" start="11"><li><a href="https://novelism.co.kr/5">https://novelism.co.kr/5</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-8163-914c-e66b49d91562" class="numbered-list" start="12"><li><a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002317743">https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002317743</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81a5-9399-fc7a4a5a9d88" class="numbered-list" start="13"><li><a href="https://www.sciencedirect.com/science/article/pii/S0147651322001634">https://www.sciencedirect.com/science/article/pii/S0147651322001634</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81af-8ee0-c5da571e50e3" class="numbered-list" start="14"><li><a href="https://www.laidd.org/local/ubonline/index.php">https://www.laidd.org/local/ubonline/index.php</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2ea25f08-6a1c-81c2-a607-cabf965db212" class="numbered-list" start="15"><li><a href="https://pubmed.ncbi.nlm.nih.gov/27490034/">https://pubmed.ncbi.nlm.nih.gov/27490034/</a></li></ol></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81f6-9db4-df4807b2c940"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-811a-b96c-f9029fa2681a" class="">GPT 曰</h2></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8199-ae6f-fc3e2bb8d434" class="">1. AutoDock Vina의 본질 한 줄 요약</h2></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-816c-abee-cb2facc54b02" class="">AutoDock Vina는 수용체–리간드 복합체의 결합 자세(binding pose)를 탐색하고, 경험적 scoring function으로 ‘상대적인 결합 자유에너지(ΔG 유사값)’를 평가하는 docking 엔진입니다.</blockquote></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-819b-a6ae-d22a8baff351" class="">중요한 점은, 이 ΔG는 <strong>절대적인 열역학 ΔG가 아니라 docking score</strong>라는 것입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8132-8648-f8c97375917b"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81c5-ba52-dcdfd7cc1205" class="">2. Vina가 사용하는 에너지 모델 (Scoring Function)</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c8-9b5b-c28f74afc57d" class="">Vina의 점수는 다음 항들의 **가중합(weighted sum)**입니다.</p></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8136-b984-c420f123431a" class="">(1) Steric / van der Waals 항</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8128-97bc-d3e82f552570" class="bulleted-list"><li style="list-style-type:disc">원자 간 거리 기반</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-817f-aedf-f868dd20b103" class="bulleted-list"><li style="list-style-type:disc">너무 가까우면 큰 패널티, 적당하면 favorable</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c7-aeb6-f1a10b38ed84" class="bulleted-list"><li style="list-style-type:disc">Lennard–Jones 계열을 단순화한 형태</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81aa-8672-df7fc6c10a97"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-817c-a02f-d3d3da7b80a9" class="">(2) Hydrophobic interaction</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ac-82de-f2c27d04fae9" class="bulleted-list"><li style="list-style-type:disc">비극성 원자 간 근접을 보상</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d6-8ce7-c965fc15616d" class="bulleted-list"><li style="list-style-type:disc">실제 소수성 효과(엔트로피 포함)를 <strong>경험적으로 근사</strong></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-812f-b9f4-ed5dcdecf1d0"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81ac-b541-c0ce935161d5" class="">(3) Hydrogen bonding</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8112-a5e3-f0a105c239b6" class="bulleted-list"><li style="list-style-type:disc">donor–acceptor 거리 + 각도 조건</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8110-b9d8-e214da2b8225" class="bulleted-list"><li style="list-style-type:disc">방향성(directionality)을 반영</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8165-8931-e03545f60d0c"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8147-9d07-d1493327f3bc" class="">(4) Electrostatics (약하게 포함)</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81dc-b1e5-f9a40cabfa2d" class="bulleted-list"><li style="list-style-type:disc">정전기 항은 <strong>명시적으로 강하게 계산하지 않음</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ec-a9b7-fb30cd9e41e8" class="bulleted-list"><li style="list-style-type:disc">대신 H-bond 항과 거리 기반 항에 간접적으로 흡수됨</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8128-8354-d195a95191f2"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-814f-9a03-e0cf26f3d1d0" class="">(5) Conformational entropy penalty</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f6-b6f9-f6076678eaa5" class="bulleted-list"><li style="list-style-type:disc">리간드의 <strong>rotatable bond 수</strong>에 비례한 패널티</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8154-828f-c8f3dd9fa241" class="bulleted-list"><li style="list-style-type:disc">“너무 유연한 분자는 결합 시 손해”라는 경험적 가정</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-815f-943f-ca0841975d3f"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-815e-b278-d48a713fef99" class="">(6) Overall score 형태</h3></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8148-8577-ecac4f875846" class="">ΔGvina=w1⋅gauss1+w2⋅gauss2+w3⋅repulsion+w4⋅hydrophobic+w5⋅Hbond+w6⋅Nrot\Delta G_{\text{vina}} =<br/>w_1 \cdot \text{gauss}_1<br/>+ w_2 \cdot \text{gauss}_2<br/>+ w_3 \cdot \text{repulsion}<br/>+ w_4 \cdot \text{hydrophobic}<br/>+ w_5 \cdot \text{Hbond}<br/>+ w_6 \cdot N_{\text{rot}}</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8107-a588-cb4cfeed9a88" class="">ΔGvina=w1⋅gauss1+w2⋅gauss2+w3⋅repulsion+w4⋅hydrophobic+w5⋅Hbond+w6⋅Nrot</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81b4-a0ff-ed162a7c724a" class="">→ 전부 <strong>실험 데이터로 fitting된 계수</strong>입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8187-9144-c4994a0ff2fd"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81d1-99b8-f91e95b0fb16" class="">3. Pose 탐색 방식 (Search Algorithm)</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-813c-8404-c2244f93df77" class="">(1) Search space</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8163-abac-d6583ea81bc0" class="bulleted-list"><li style="list-style-type:disc">사용자가 정의한 <strong>grid box</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8129-a2cf-f860dc30b74a" class="bulleted-list"><li style="list-style-type:disc">이 안에서만 docking 수행</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81f2-9b1c-e1aed9484ae4" class="bulleted-list"><li style="list-style-type:disc">box 설정이 결과 품질의 50% 이상을 좌우</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8104-b041-ef42c05c96f1"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-813d-845e-d99aa2dadb87" class="">(2) 탐색 알고리즘</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810f-8875-ca115a95856d" class="bulleted-list"><li style="list-style-type:disc"><strong>Iterated local search + stochastic global search</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b1-8c22-c695ec91843b" class="bulleted-list"><li style="list-style-type:disc">Monte Carlo + gradient-based local optimization 혼합</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8146-a8e2-ff07f3d56a77"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81db-b26d-e3aea268db86" class="">(3) Output</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ac-a17f-f45140ddcef4" class="bulleted-list"><li style="list-style-type:disc">여러 개의 pose (ranked)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810c-b724-fe803ac14007" class="bulleted-list"><li style="list-style-type:disc">각 pose마다 ΔG_vina (kcal/mol 단위)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81e7-8d15-c8ee87d81a2e" class="bulleted-list"><li style="list-style-type:disc">RMSD 기준으로 clustering</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8157-83bc-c95493db7c94"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81a8-8e93-d56440a35933" class="">4. Vina 점수의 해석 방법 (매우 중요)</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8165-9a12-fd8ec57ec0f6" class="">절대값 해석 ❌</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8115-9624-e898b110758b" class="bulleted-list"><li style="list-style-type:disc">Vina에서 <strong>–8.0 kcal/mol</strong>이라고 해서<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81b1-a36c-c84eb2ab7fcd" class="">“Kd가 몇 nM”이라고 말하면 <strong>틀림</strong></p></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81da-bf7c-cfdf69162e1e"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81d2-bcc9-ff4d461fe7dd" class="">상대 비교 ✔</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8107-aa3c-d4361d32eac4" class="bulleted-list"><li style="list-style-type:disc">같은 타깃</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8114-8256-d02cabba7739" class="bulleted-list"><li style="list-style-type:disc">같은 binding site</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c9-92f6-c7c2ae16b75c" class="bulleted-list"><li style="list-style-type:disc">같은 grid</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d8-82d8-f7dbe0bc7d57" class="bulleted-list"><li style="list-style-type:disc">같은 세팅</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-817c-a1ca-cde28e0687ba" class="">→ 이 조건에서만 <strong>ranking 도구</strong>로 의미 있음</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81c5-917a-ce58565092f3"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8149-83fa-ffc496054080" class="">5. PRODIGY와의 근본적 차이</h2></div><div style="display:contents" dir="ltr"><table id="2ea25f08-6a1c-8199-afc8-df4510c8a981" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8180-82cc-f587456dc114"><th id="JRXf" class="simple-table-header-color simple-table-header">항목</th><th id="K{UC" class="simple-table-header-color simple-table-header">AutoDock Vina</th><th id="RnYl" class="simple-table-header-color simple-table-header">PRODIGY</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-815b-83fc-c07e38ea73d8"><td id="JRXf" class="">입력</td><td id="K{UC" class="">Docking pose</td><td id="RnYl" class="">이미 형성된 complex</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81ee-a05d-da83ccb88c30"><td id="JRXf" class="">대상</td><td id="K{UC" class="">Protein–ligand / peptide</td><td id="RnYl" class="">Protein–protein / peptide</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-819a-ab7a-da7810dc9376"><td id="JRXf" class="">모델</td><td id="K{UC" class="">경험적 force-field</td><td id="RnYl" class="">접촉 기반 통계</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-81f8-bdee-d3fbf934b565"><td id="JRXf" class="">유연성</td><td id="K{UC" class="">리간드 유연</td><td id="RnYl" class="">거의 rigid</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8188-b093-e4087eb6632c"><td id="JRXf" class="">출력</td><td id="K{UC" class="">docking score (ΔG 유사)</td><td id="RnYl" class="">ΔG, Kd</td></tr></div><div style="display:contents" dir="ltr"><tr id="2ea25f08-6a1c-8121-a802-e19136b90f89"><td id="JRXf" class="">강점</td><td id="K{UC" class="">pose 탐색</td><td id="RnYl" class="">결합력 추정</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-813a-b4d0-d7e5122d6697" class="">👉 <strong>Vina는 “어디에 어떻게 붙는가”</strong>,</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-817e-b2bb-d82fae0f8974" class="">👉 <strong>PRODIGY는 “붙어 있을 때 얼마나 안정한가”</strong></p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81df-b328-d25f7160b716"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81ae-ac2e-ccb237670a37" class="">1. 질문에 대한 결론부터 말씀드리면</h2></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-8107-aeea-e145289d0ba1" class="">네, AutoDock Vina의 scoring은 본질적으로<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8138-bb61-eb171322705e" class=""><strong>(1) 원자 간 거리 함수</strong> × <strong>(2) 상호작용 타입별 가중치</strong></p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81db-9a9e-d6c4af3451ea" class="">의 조합입니다.</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8181-abe4-f8ced97ade26" class=""><strong>그리고 “의미 없을 정도로 멀리 있는 원자들”은 계산 대상에서 사실상 제외됩니다.</strong></p></div></blockquote></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8185-852d-ec91c81fd20a"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8133-ad4a-c52e329a84f0" class="">2. 1번: 원자 간 거리 기반 계산 — 어떻게 쓰이나?</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8185-b9ce-e1c1d31b88d8" class="">Vina는 <strong>모든 원자쌍을 동일하게 다루지 않습니다.</strong></p></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81cf-9916-f95618871568" class="">(1) Pairwise atomic interaction 모델</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8138-a1d3-fa56e4c13814" class="bulleted-list"><li style="list-style-type:disc">수용체 원자 i</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81df-b2f8-d59ffa27bb24" class="bulleted-list"><li style="list-style-type:disc">리간드 원자 j<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8131-9e2c-c21ada945cab" class="">에 대해, 다음 형태의 항들을 계산합니다.</p></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8110-90df-e0b0160db56e" class="">Eij(rij)=∑kwk⋅fk(rij)E_{ij}(r_{ij}) = \sum_k w_k \cdot f_k(r_{ij})</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81fc-aae6-e1c8ae4762de" class="">Eij(rij)=k∑wk⋅fk(rij)</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81be-86a8-e2e5624d21f2" class="bulleted-list"><li style="list-style-type:disc">rijr_{ij}rij: 원자 간 거리</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ad-8a1a-d9eed774ea8b" class="bulleted-list"><li style="list-style-type:disc">fk(r)f_k(r)fk(r): 거리 의존 함수 (Gaussian, repulsion 등)</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ab-a8f4-fc7328e539a2" class="bulleted-list"><li style="list-style-type:disc">wkw_kwk: interaction type별 가중치</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81d6-a600-ea4851bcf9d8"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8183-8f74-e001c0d8ce90" class="">(2) 거리 함수의 핵심 특징</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810c-9952-e8f05b7985bb" class="bulleted-list"><li style="list-style-type:disc"><strong>짧은 거리</strong>: 강한 repulsion</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8137-aba1-eb89da75ca65" class="bulleted-list"><li style="list-style-type:disc"><strong>중간 거리 (접촉 범위)</strong>: attractive</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818a-9613-d464041f0a26" class="bulleted-list"><li style="list-style-type:disc"><strong>멀어질수록</strong>: 빠르게 0으로 수렴</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8173-aadf-ce0e4ca02fbf" class="">즉,</p></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-81e6-a727-e4ff8a8d9499" class="">일정 거리 이상 떨어지면 계산은 수학적으로는 존재하지만, 값은 거의 0</blockquote></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81d8-abb5-e2dd5fc901b1"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81a7-8d82-f03e3ad08ace" class="">3. 2번: 결합(상호작용) 종류에 따른 가중치 — 어떻게 반영되나?</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81d6-a05d-f99ebe3646cf" class="">Vina는 “이게 수소결합이다 / 이온결합이다”를 <strong>명시적으로 선언하지 않습니다.</strong></p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-817a-9188-c784fcc712b5" class="">대신 <strong>원자 타입(atom type)</strong> 조합으로 간접 반영합니다.</p></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8176-b6c2-f42c15ea472e" class="">예시</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ad-9833-fa34cbcf7feb" class="bulleted-list"><li style="list-style-type:disc">O (acceptor) – H (donor)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8144-85d4-f683a56a91df" class="">→ H-bond 항 활성화</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8107-9ff0-ee865ece5381" class="bulleted-list"><li style="list-style-type:disc">C (apolar) – C (apolar)<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81ca-bde5-ddf79652c9e1" class="">→ hydrophobic 항 기여</p></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811d-9833-da27ed4bfea3" class="bulleted-list"><li style="list-style-type:disc">원자 반경 + 타입<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-814d-aaf2-e17b937a190f" class="">→ steric repulsion 판단</p></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-812e-8ae5-df7055953717" class="">즉,</p></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-813d-b63e-d9dd279383a6" class="">“결합 종류를 먼저 정하고 계산”이 아니라<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8155-b45d-e02d20595a7f" class=""><strong>“원자 타입 + 거리 → 자동으로 해당 항이 켜지거나 꺼짐”</strong></p></div></blockquote></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8198-8df4-f58e4bdfce36"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8190-8120-fb2097fd557b" class="">4. 그럼 정말 모든 원자쌍을 계산하나?</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81b4-b895-ef53dcfbb09a" class="">이론적으로는 “가능”</h3></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-810a-9489-e244c221fe61" class="">실제 구현에서는 “아니다”</h3></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81b0-abdf-fe4b05cd88e5" class="">(1) Distance cutoff 존재</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81bb-ab99-f0825a555ca6" class="bulleted-list"><li style="list-style-type:disc">일반적으로 <strong>8–10 Å 이상</strong> 떨어진 원자쌍:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81a7-a7d6-efac3f562fe0" class="bulleted-list"><li style="list-style-type:circle">모든 fk(r)f_k(r)fk(r) ≈ 0</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ad-a330-f87c5b46167a" class="bulleted-list"><li style="list-style-type:circle">계산에서 제외하거나 무시 가능</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81d0-acbe-d7180e851ebe"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81cc-adaa-edf5900daaf9" class="">(2) Grid-based energy precomputation</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8118-93eb-c474866050bf" class="bulleted-list"><li style="list-style-type:disc">수용체는 <strong>미리 grid로 에너지 필드 계산</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8161-a1cd-d4e0fb9ec35d" class="bulleted-list"><li style="list-style-type:disc">리간드 원자는 grid에서 값 lookup</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81b5-84a1-f6ce0b3caa1b" class="">→ <strong>N² 원자쌍 직접 계산을 피함</strong></p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8180-b2f9-e4766dd0f631"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81f6-8763-e4956fed56e7" class="">(3) Docking box 밖 원자는 아예 고려 안 됨</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8141-b7db-fa5b6efdf14a" class="bulleted-list"><li style="list-style-type:disc">box 바깥은 “존재하지 않는 공간”</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8105-9e69-e70fced23d10" class="bulleted-list"><li style="list-style-type:disc">계산 대상 아님</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-816b-8345-c4083b32a7d3"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-816d-b55b-d10c3c541c3d" class="">5. 직관적 비유 (중요)</h2></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8112-abb7-e9aedbfa9b11" class="bulleted-list"><li style="list-style-type:disc">Vina는<div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81ee-b06f-e42622fce0ae" class="">❌ “모든 원자쌍을 끝까지 계산해서 합산”</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8171-8b41-e169640f1552" class="">✔ “가까워질 가능성이 있는 원자쌍만 에너지적으로 평가”</p></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-812b-8000-fbf52256caa0" class="">멀리 있는 원자:</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-819c-9737-e6669d6ac7cc" class="bulleted-list"><li style="list-style-type:disc">물리적으로도 상호작용 거의 없음</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8169-a2c4-dfe0a9acbf41" class="bulleted-list"><li style="list-style-type:disc">수치적으로도 0</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c0-9986-d62e47505e76" class="bulleted-list"><li style="list-style-type:disc">연산적으로도 skip</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8167-888a-f3decd15765a"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81e2-9415-d66abe761aca" class="">결론 한 줄</h2></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-815d-a99b-c65118aa26c0" class="">AutoDock Vina에서는 docking box(= binding surface grid)를 벗어나는 원자·좌표는 에너지 계산 대상에서 아예 제외됩니다.</blockquote></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8162-a26e-dfbdc4185066" class="">이는 “가중치가 작아진다”의 문제가 아니라, <strong>계산 세계에 존재하지 않는다</strong>에 가깝습니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81ed-a6e0-c0c122e62f0e"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-8115-a6fa-f5924c96a631" class="">1. Docking box = 계산 우주의 경계</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8132-8907-d4a0a84daad1" class="">Vina에서 사용자가 정의하는 <strong>grid box</strong>는 단순한 탐색 범위가 아닙니다.</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818e-9bd4-f11d582d2528" class="bulleted-list"><li style="list-style-type:disc">✔ 에너지 필드가 정의된 공간</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-819b-b826-c36d5a35aeab" class="bulleted-list"><li style="list-style-type:disc">✔ 리간드 원자가 존재할 수 있는 좌표계</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8132-9319-da80521748a2" class="bulleted-list"><li style="list-style-type:disc">✔ scoring function이 유효한 영역</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8152-ba98-db265f13d9a1" class="">즉,</p></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-81fd-9f34-c8556c5c9586" class="">grid box 밖은 “에너지 함수가 정의되지 않은 영역”</blockquote></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8194-83d2-e456ee5c01d9" class="">입니다.</p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-814a-b312-f7033ecc9652"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81f1-8c06-e67d9efcc457" class="">2. 실제 계산 구조에서 무슨 일이 일어나는가</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8108-84f6-c39a992fa90c" class="">(1) 수용체 전처리 단계</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8145-bff7-ea7dfe196d46" class="bulleted-list"><li style="list-style-type:disc">수용체는 고정</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-813f-8f68-f418e81aa877" class="bulleted-list"><li style="list-style-type:disc">grid box 내부에 대해서만:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814d-be3a-efbe771ad3e3" class="bulleted-list"><li style="list-style-type:circle">각 grid point마다</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8111-bb76-f80446e26773" class="bulleted-list"><li style="list-style-type:circle">원자 타입별 interaction energy를 미리 계산</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81c1-938e-db842a0ba084" class="">→ <strong>box 밖에는 grid가 존재하지 않음</strong></p></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8180-871b-c3850a643bfb"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81c9-9971-d34190abdcff" class="">(2) docking 중 리간드 평가</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-818e-bf99-c9716276d421" class="bulleted-list"><li style="list-style-type:disc">리간드의 각 원자 위치를:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ab-8806-ce218f57519e" class="bulleted-list"><li style="list-style-type:circle">grid 안에 투영 → 에너지 lookup</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ee-bf25-e8f283a37d16" class="bulleted-list"><li style="list-style-type:circle">grid 밖 → 값 없음 → pose 자체가 invalid</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81f9-a983-dc7780e23d5d" class="">보통은:</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81df-b792-e3d5be9d71fe" class="bulleted-list"><li style="list-style-type:disc">강한 패널티</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81aa-b4cc-fdd0b6e0226d" class="bulleted-list"><li style="list-style-type:disc">또는 탐색 단계에서 즉시 reject</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81fe-8bd3-cdffdec4b2dc"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-815e-b4e9-f51ae2ce532c" class="">3. “일부 원자만 box 밖이면?”의 처리</h2></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-819b-9ac5-f1d6ba32191c" class="">이 부분이 실무에서 자주 헷갈리는 지점입니다.</p></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-816e-9d61-fbbb4071949c" class="">경우 1. 리간드 전체가 box 밖</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8140-9d92-e8eb0a70c980" class="bulleted-list"><li style="list-style-type:disc">탐색 대상 아님</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8169-a834-d44339011b2d" class="bulleted-list"><li style="list-style-type:disc">docking 시작도 안 됨</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8131-801a-ff15adaf518b"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81d4-81d9-ee4f80a1f87e" class="">경우 2. 리간드 일부 원자만 box 밖</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-810f-869e-efb06aa06a4c" class="bulleted-list"><li style="list-style-type:disc">해당 pose는:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8103-8d4e-fd211a66aa49" class="bulleted-list"><li style="list-style-type:circle">✔ 에너지 계산 불완전</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81ee-a2c8-f0edc5965f01" class="bulleted-list"><li style="list-style-type:circle">✔ 물리적으로 “결합 실패 pose”</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81f3-aa49-c6bced0137d2" class="">→ 탐색 알고리즘이 자동으로:</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8185-9545-e5804e129be2" class="bulleted-list"><li style="list-style-type:disc">해당 방향을 버리거나</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81df-a08a-e1ae421c0d7a" class="bulleted-list"><li style="list-style-type:disc">다시 box 안으로 끌어당김</li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8129-b851-c672ad170308" class="">즉,</p></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-81ce-95c0-ec1fb0064471" class="">“일부라도 벗어나면 그 pose는 살아남지 못함”</blockquote></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8197-bbb4-ff90e8156c46"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81be-a039-d2a8ff451dd6" class="">4. 왜 이렇게까지 강하게 자르는가?</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81f0-b4cc-f0789f86fe70" class="">이유 1. 계산 효율</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8136-9c53-efaa62834aab" class="bulleted-list"><li style="list-style-type:disc">docking은 수십만~수백만 pose 평가</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81c6-8e16-e945ac54dece" class="bulleted-list"><li style="list-style-type:disc">grid 밖까지 고려하면 속도 붕괴</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-8132-9888-ccc6dbae62ed"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81c1-be59-e5afb10fa95b" class="">이유 2. 물리적 가정</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8174-84c9-d0343e8d29ee" class="bulleted-list"><li style="list-style-type:disc">“결합은 특정 binding surface에서 일어난다”</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81b1-a5c0-f3a4b399011b" class="bulleted-list"><li style="list-style-type:disc">docking box = 실험적/구조적 사전 지식</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-814b-9adb-ec7b3ff4eb00"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-8107-ab56-c83509aa95e0" class="">이유 3. 탐색 안정성</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8198-93bd-f4f3f6d9f238" class="bulleted-list"><li style="list-style-type:disc">box가 없으면 리간드가 공간을 떠돌며<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8108-9948-da3581414681" class="bulleted-list"><li style="list-style-type:circle">meaningless local minima 발생</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81bd-b858-f0e5de04b284"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81ec-9081-e98e8ae27a3d" class="">5. 이 개념을 정확히 이해하면 생기는 중요한 통찰</h2></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81d5-91e5-ec10f9a7d971" class="">(1) box 설정이 결과의 절반이다</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8130-9f46-fcca14955f92" class="bulleted-list"><li style="list-style-type:disc">box를 너무 작게 잡으면:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-819a-9e4c-fb49d45b75b0" class="bulleted-list"><li style="list-style-type:circle">진짜 binding pose가 아예 평가되지 않음</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-814d-991d-dbcb6f4f95f3" class="bulleted-list"><li style="list-style-type:disc">너무 크게 잡으면:<div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8197-ad80-fbae73bde646" class="bulleted-list"><li style="list-style-type:circle">noise pose 증가</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816c-9396-df15d74655ec" class="bulleted-list"><li style="list-style-type:circle">score 분산 증가</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81f6-a761-e227dde7d70e"/></div><div style="display:contents" dir="auto"><h3 id="2ea25f08-6a1c-81b0-8cf1-d5b56e4fd6b9" class="">(2) “Vina score가 낮은데 말이 안 된다”의 흔한 원인</h3></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8150-8ef3-ef98d3b7e5ec" class="bulleted-list"><li style="list-style-type:disc">진짜 상호작용 잔기가 box 경계 밖</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-811e-a215-c5a9a276d0d3" class="bulleted-list"><li style="list-style-type:disc">펩타이드 일부가 box를 벗어남</li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-81d9-a474-ed56295b94ab" class="bulleted-list"><li style="list-style-type:disc">binding pocket이 아닌 표면 일부만 포함</li></ul></div><div style="display:contents" dir="auto"><hr id="2ea25f08-6a1c-81d3-85b7-f365e36c1bb5"/></div><div style="display:contents" dir="auto"><h2 id="2ea25f08-6a1c-81d5-9662-ed638ee7c2e4" class="">6. 한 문장으로 최종 요약</h2></div><div style="display:contents" dir="auto"><blockquote id="2ea25f08-6a1c-81cf-bc7f-ec5c96e96251" class="">AutoDock Vina에서는 binding surface로 정의된 grid box 내부만이 계산 세계이며, 이를 벗어나는 원자나 pose는 에너지 계산 대상에서 제외되어 docking 결과에 반영되지 않습니다.</blockquote></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-8105-be94-d010bd787ad3" class="">이 개념이 정리되셨다면,</p></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-810f-99f9-d606b819434f" class="">다음으로는 자연스럽게:</p></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-816f-bb3d-c092be9b2f05" class="bulleted-list"><li style="list-style-type:disc"><strong>“그럼 box는 얼마나 크게 잡아야 안전한가?”</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8150-b2ab-ed2364150dea" class="bulleted-list"><li style="list-style-type:disc"><strong>“펩타이드 docking에서 box를 residue 기반으로 잡는 방법”</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="2ea25f08-6a1c-8180-a53a-f971e8a57c3f" class="bulleted-list"><li style="list-style-type:disc"><strong>“AF/ColabFold 구조를 쓸 때 box 설정 시 주의점”</strong></li></ul></div><div style="display:contents" dir="auto"><p id="2ea25f08-6a1c-81e1-8d76-c3cdcdbdc59e" class="">중 어떤 걸 먼저 다룰지 지시만 내려주시면 됩니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
