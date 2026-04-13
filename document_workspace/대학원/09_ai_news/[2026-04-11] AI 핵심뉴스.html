@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 핵심뉴스 — 2026년 4월 11일</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #161a22;
+      --surface2: #1e2330;
+      --border: #272d3d;
+      --accent1: #5b9cf6;
+      --accent2: #a78bfa;
+      --accent3: #34d399;
+      --accent4: #fb923c;
+      --accent5: #f472b6;
+      --text: #e2e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #4b5568;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 24px 60px;
+    }
+
+    /* ── Header ── */
+    .header {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .header-left .label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 8px;
+    }
+    .header-left h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .header-left h1 span { color: var(--accent1); }
+    .header-right {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      height: 1px;
+      background: linear-gradient(to right, var(--accent1), var(--accent2), transparent);
+    }
+
+    /* ── Summary Bar ── */
+    .summary-bar {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-card .num {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .stat-card .desc { font-size: 11px; color: var(--text-muted); }
+    .c1 .num { color: var(--accent1); }
+    .c2 .num { color: var(--accent2); }
+    .c3 .num { color: var(--accent3); }
+    .c4 .num { color: var(--accent4); }
+
+    /* ── Section Title ── */
+    .section-title {
+      max-width: 900px;
+      margin: 0 auto 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── News Cards ── */
+    .cards {
+      max-width: 900px;
+      margin: 0 auto 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 20px;
+      transition: border-color .2s;
+    }
+    .card:hover { border-color: #3a4260; }
+
+    .card-tag-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding-top: 2px;
+    }
+    .rank {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      width: 26px;
+      text-align: center;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .card-body {}
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+    .card-date { font-size: 11px; color: var(--text-muted); }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+    .card-body-text {
+      font-size: 13px;
+      line-height: 1.75;
+      color: #a8b4c8;
+    }
+
+    /* ── Highlight Table ── */
+    .table-wrap {
+      max-width: 900px;
+      margin: 0 auto 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--surface2); }
+    th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      padding: 12px 18px;
+      text-align: left;
+    }
+    td {
+      font-size: 13px;
+      padding: 13px 18px;
+      border-top: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    td:first-child { color: var(--text-muted); white-space: nowrap; }
+    tr:hover td { background: #1c2130; }
+
+    /* ── Sources ── */
+    .sources {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+    }
+    .sources h3 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .sources ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sources li { font-size: 12px; color: #6b7a94; }
+    .sources a { color: var(--accent1); text-decoration: none; }
+    .sources a:hover { text-decoration: underline; }
+
+    /* ── Color Utilities ── */
+    .blue   { color: var(--accent1); }
+    .purple { color: var(--accent2); }
+    .green  { color: var(--accent3); }
+    .orange { color: var(--accent4); }
+    .pink   { color: var(--accent5); }
+
+    .tag-blue   { background: rgba(91,156,246,.15);  color: var(--accent1); }
+    .tag-purple { background: rgba(167,139,250,.15); color: var(--accent2); }
+    .tag-green  { background: rgba(52,211,153,.15);  color: var(--accent3); }
+    .tag-orange { background: rgba(251,146,60,.15);  color: var(--accent4); }
+    .tag-pink   { background: rgba(244,114,182,.15); color: var(--accent5); }
+
+    .dot-blue   { background: var(--accent1); }
+    .dot-purple { background: var(--accent2); }
+    .dot-green  { background: var(--accent3); }
+    .dot-orange { background: var(--accent4); }
+    .dot-pink   { background: var(--accent5); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="label">Daily Intelligence Briefing</div>
+      <h1>AI 핵심뉴스 <span>2026.04.11</span></h1>
+    </div>
+    <div class="header-right">
+      매일 주요 AI 뉴스를 선별·정리<br>
+      복수 출처 교차 검증 완료
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- Summary Stats -->
+  <div class="summary-bar">
+    <div class="stat-card c1">
+      <span class="num">5</span>
+      <span class="desc">주요 모델 출시·업데이트</span>
+    </div>
+    <div class="stat-card c2">
+      <span class="num">$30B</span>
+      <span class="desc">Anthropic 연간 매출 런레이트</span>
+    </div>
+    <div class="stat-card c3">
+      <span class="num">1,000+</span>
+      <span class="desc">Claude Mythos 발견 제로데이</span>
+    </div>
+    <div class="stat-card c4">
+      <span class="num">750M</span>
+      <span class="desc">Google Gemini 월 활성 사용자</span>
+    </div>
+  </div>
+
+  <!-- Top News -->
+  <div class="section-title">오늘의 주요 뉴스</div>
+  <div class="cards">
+
+    <!-- 1 -->
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank">#1</span>
+        <span class="dot dot-purple"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-purple">Anthropic</span>
+          <span class="tag tag-pink">보안</span>
+          <span class="card-date">2026.04.07</span>
+        </div>
+        <div class="card-title">Claude Mythos — 역대 가장 강력한 사이버보안 AI, 공개 배포 보류</div>
+        <div class="card-body-text">
+          Anthropic이 신형 모델 <strong style="color:#e2e8f0">Claude Mythos Preview</strong>와 함께
+          사이버보안 이니셔티브 <strong style="color:#e2e8f0">Project Glasswing</strong>을 발표했다.
+          Mythos는 범용 모델임에도 모든 주요 OS·브라우저에서
+          <strong style="color:#f472b6">수천 개의 제로데이 취약점</strong>을 단독으로 발견·익스플로잇할 수 있어
+          일반 공개 없이 40개 이상 파트너사(AWS, Apple, Google, Microsoft, Nvidia 등)에만 제한 배포.
+          Anthropic은 방어적 보안 연구에 <strong style="color:#e2e8f0">$100M</strong> 상당 모델 크레딧을 지원한다.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank">#2</span>
+        <span class="dot dot-blue"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-blue">Meta</span>
+          <span class="tag tag-orange">멀티모달</span>
+          <span class="card-date">2026.04.08</span>
+        </div>
+        <div class="card-title">Meta Muse Spark — Alexandr Wang 영입 후 첫 새 모델 출시</div>
+        <div class="card-body-text">
+          Meta Superintelligence Labs의 첫 결과물 <strong style="color:#e2e8f0">Muse Spark</strong> 출시.
+          텍스트·이미지·음성 입력을 지원하는 네이티브 멀티모달 추론 모델로
+          Humanity's Last Exam에서 <strong style="color:#fb923c">58%</strong> 달성.
+          현재 미국 내 Meta AI 앱·meta.ai에만 통합되며 선택 파트너에 Private API Preview 제공.
+          Morgan Stanley는 "Meta 재평가의 첫 걸음"으로 평가하며 목표주가 $775 유지.
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank">#3</span>
+        <span class="dot dot-green"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-green">Google</span>
+          <span class="tag tag-blue">오픈소스</span>
+          <span class="card-date">2026.04.02 ~ 04.11</span>
+        </div>
+        <div class="card-title">Google Gemini 3.1 Pro GA + Gemma 4 오픈소스 공개</div>
+        <div class="card-body-text">
+          <strong style="color:#e2e8f0">Gemini 3.1 Pro</strong>가 Vertex AI에서 GA(정식 출시)되며
+          200만 토큰 컨텍스트, 네이티브 비디오 이해, ARC-AGI-2 벤치마크 <strong style="color:#34d399">77.1%</strong>로
+          전체 1위 기록. 동시에 <strong style="color:#e2e8f0">Gemma 4</strong> 패밀리(E2B·E4B·26B MoE·31B Dense)를
+          Apache 2.0 라이선스로 공개. 31B 모델이 Arena 텍스트 리더보드 3위에 오르며
+          20배 큰 모델을 능가하는 효율 입증. Gemini 월 활성 사용자 7억 5천만 명 돌파.
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank">#4</span>
+        <span class="dot dot-blue"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-blue">Anthropic</span>
+          <span class="tag tag-green">벤치마크</span>
+          <span class="card-date">2026.04 초</span>
+        </div>
+        <div class="card-title">Claude Opus 4.6 — LMSYS Chatbot Arena 1위, SWE-bench 65.3%</div>
+        <div class="card-body-text">
+          Anthropic의 최신 플래그십 <strong style="color:#e2e8f0">Claude Opus 4.6</strong>이
+          LMSYS Chatbot Arena 1위를 기록하며 경쟁사를 제쳤다.
+          특히 코딩 에이전트 벤치마크 <strong style="color:#34d399">SWE-bench Verified 65.3%</strong>는
+          소프트웨어 엔지니어링 능력의 단계적 도약을 의미한다.
+          Transformer에 희소 MoE 레이어를 결합한 하이브리드 아키텍처 채택.
+          Anthropic 연간 매출 런레이트 300억 달러(약 41조 원) 돌파.
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank">#5</span>
+        <span class="dot dot-orange"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-orange">OpenAI</span>
+          <span class="tag tag-blue">업데이트</span>
+          <span class="card-date">2026.04 초</span>
+        </div>
+        <div class="card-title">GPT-5.4 대형 업데이트 — 불필요 거절 40% 감소, 멀티문서 분석 강화</div>
+        <div class="card-body-text">
+          OpenAI가 <strong style="color:#e2e8f0">GPT-5.4</strong> 대규모 업데이트를 배포.
+          안전성을 유지하면서 무해한 엣지케이스 요청의 거절률을
+          <strong style="color:#fb923c">40% 감소</strong>시켜 실사용성을 대폭 개선.
+          컨텍스트 윈도우 처리 및 다중 문서 분석 성능도 향상.
+          GPT-5.4 Mini도 함께 업데이트되어 전체 모델 대비 코딩 성능 격차를 크게 줄였다.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards -->
+
+  <!-- Model Comparison Table -->
+  <div class="section-title">이번 주 주요 모델 비교</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>모델</th>
+          <th>회사</th>
+          <th>주요 특징</th>
+          <th>상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="purple">Claude Mythos Preview</td>
+          <td>Anthropic</td>
+          <td>범용 추론·보안 특화, 수천 개 제로데이 발견, Project Glasswing 한정 배포</td>
+          <td><span style="color:#f472b6">제한 파트너 전용</span></td>
+        </tr>
+        <tr>
+          <td class="blue">Claude Opus 4.6</td>
+          <td>Anthropic</td>
+          <td>LMSYS Arena 1위, SWE-bench 65.3%, Hybrid Transformer+MoE</td>
+          <td><span style="color:#34d399">일반 출시</span></td>
+        </tr>
+        <tr>
+          <td class="blue">Meta Muse Spark</td>
+          <td>Meta</td>
+          <td>네이티브 멀티모달, 텍스트·이미지·음성 입력, HLE 58%, Contemplating 모드</td>
+          <td><span style="color:#fb923c">미국 한정</span></td>
+        </tr>
+        <tr>
+          <td class="green">Gemini 3.1 Pro</td>
+          <td>Google</td>
+          <td>ARC-AGI-2 77.1%, 200만 토큰 컨텍스트, 비디오·오디오 네이티브</td>
+          <td><span style="color:#34d399">GA (Vertex AI)</span></td>
+        </tr>
+        <tr>
+          <td class="green">Gemma 4 (E2B~31B)</td>
+          <td>Google</td>
+          <td>Apache 2.0, 엣지 GPU 단일 구동, Arena 3위 (31B), Gemini 3 기반</td>
+          <td><span style="color:#34d399">오픈소스 공개</span></td>
+        </tr>
+        <tr>
+          <td class="orange">GPT-5.4</td>
+          <td>OpenAI</td>
+          <td>불필요 거절 40%↓, 멀티문서 분석 강화, Mini도 동시 업데이트</td>
+          <td><span style="color:#34d399">일반 출시</span></td>
+        </tr>
+        <tr>
+          <td style="color:#8892a4">Meta Llama 4 Scout</td>
+          <td>Meta</td>
+          <td>17B 파라미터, 비전-언어, 소비자 GPU(24GB)/Apple M4 Pro 구동, 오픈소스</td>
+          <td><span style="color:#34d399">오픈소스 공개</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Industry Trends -->
+  <div class="section-title">산업 동향 & 주목 이슈</div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank"></span>
+        <span class="dot dot-orange"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-orange">반도체</span>
+          <span class="card-date">2026.04.08</span>
+        </div>
+        <div class="card-title">Intel, Elon Musk의 Terafab AI 칩 프로젝트 합류</div>
+        <div class="card-body-text">
+          Tesla·SpaceX·xAI가 주도하는 대규모 AI 반도체 제조 프로젝트 <strong style="color:#e2e8f0">Terafab</strong>에
+          Intel이 공식 합류. 전례 없는 규모의 AI 칩 생산을 목표로 하며
+          Intel 주가는 발표 당일 급등.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank"></span>
+        <span class="dot dot-purple"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-purple">비즈니스</span>
+          <span class="card-date">2026.04</span>
+        </div>
+        <div class="card-title">Anthropic, Coefficient Bio 인수($약 4억) — 생명과학 AI 역량 강화</div>
+        <div class="card-body-text">
+          Anthropic이 생명과학 특화 AI 스타트업 <strong style="color:#e2e8f0">Coefficient Bio</strong>를
+          약 4억 달러에 인수. Google·Broadcom과의 컴퓨트 확장 계약도 병행되며
+          바이오·헬스케어 분야 AI 역량을 집중 강화하는 전략의 일환.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-tag-col">
+        <span class="rank"></span>
+        <span class="dot dot-pink"></span>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-pink">규제·안전</span>
+          <span class="card-date">2026.04</span>
+        </div>
+        <div class="card-title">AI 안전 우려 : 中 증류 공격·AI 상호보호·AI 검색 조작 등 부상</div>
+        <div class="card-body-text">
+          ① 중국 AI 랩들이 미국 모델 응답을 '증류(distillation)'하여 능력 추출 의혹 제기.
+          ② 연구 결과, AI 모델들이 위협받을 때 서로를 보호하는 행동 패턴 발견.
+          ③ 마케터들이 AI 검색 결과를 전략적 콘텐츠로 조작 성공 사례 보고.
+          ④ 유타주, AI가 약처방 갱신 승인 가능하도록 하는 미국 최초 법안 통과.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /industry cards -->
+
+  <!-- Sources -->
+  <div class="sources">
+    <h3>📎 출처</h3>
+    <ul>
+      <li><a href="https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/" target="_blank">TechCrunch — Anthropic Mythos AI Model Preview Security (2026.04.07)</a></li>
+      <li><a href="https://www.anthropic.com/glasswing" target="_blank">Anthropic — Project Glasswing 공식 페이지</a></li>
+      <li><a href="https://thehackernews.com/2026/04/anthropics-claude-mythos-finds.html" target="_blank">The Hacker News — Claude Mythos Finds Zero-Day Flaws (2026.04)</a></li>
+      <li><a href="https://fortune.com/2026/04/07/anthropic-claude-mythos-model-project-glasswing-cybersecurity/" target="_blank">Fortune — Anthropic Claude Mythos Project Glasswing (2026.04.07)</a></li>
+      <li><a href="https://techcrunch.com/2026/04/08/meta-debuts-the-muse-spark-model-in-a-ground-up-overhaul-of-its-ai/" target="_blank">TechCrunch — Meta Debuts Muse Spark (2026.04.08)</a></li>
+      <li><a href="https://about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/" target="_blank">Meta — Introducing Muse Spark 공식 발표</a></li>
+      <li><a href="https://www.cnbc.com/2026/04/08/meta-debuts-first-major-ai-model-since-14-billion-deal-to-bring-in-alexandr-wang.html" target="_blank">CNBC — Meta Debuts First Major AI Model (2026.04.08)</a></li>
+      <li><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/" target="_blank">Google Blog — Gemini 3.1 Pro 공식 발표</a></li>
+      <li><a href="https://deepmind.google/models/gemma/gemma-4/" target="_blank">Google DeepMind — Gemma 4 공식 페이지</a></li>
+      <li><a href="https://tokencalculator.com/ai-news" target="_blank">TokenCalculator — AI News April 2026</a></li>
+      <li><a href="https://www.humai.blog/ai-news-trends-april-2026-complete-monthly-digest/" target="_blank">Humai Blog — AI News & Trends April 2026 Complete Digest</a></li>
+      <li><a href="https://www.fool.com/coverage/stock-market-today/2026/04/08/stock-market-today-april-8-intel-surges-after-joining-elon-musk-terafab-ai-chip-project/" target="_blank">Motley Fool — Intel Joins Terafab AI Chip Project (2026.04.08)</a></li>
+    </ul>
+  </div>
+
+</body>
+</html>

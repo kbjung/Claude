@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 핵심뉴스 — 2026년 4월 10일</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@300;400;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #151820;
+      --surface2: #1c2030;
+      --border: #252a3a;
+      --accent: #5b8dee;
+      --accent2: #7c5cbf;
+      --accent3: #3dbfa0;
+      --accent4: #e05e7a;
+      --accent5: #e8a03a;
+      --text: #e8eaf0;
+      --text-muted: #7a8099;
+      --text-dim: #4a5068;
+      --card-glow: rgba(91,141,238,0.06);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0d0f14 0%, #111420 60%, #161025 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 200px;
+      background: radial-gradient(ellipse, rgba(91,141,238,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-tag {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    header h1 {
+      font-size: clamp(26px, 5vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    header h1 span {
+      background: linear-gradient(90deg, var(--accent), #9e8cf0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-date {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── SUMMARY BAR ── */
+    .summary-bar {
+      display: flex;
+      gap: 16px;
+      padding: 28px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .summary-bar::-webkit-scrollbar { display: none; }
+    .summary-pill {
+      flex: 0 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      min-width: 140px;
+      text-align: center;
+    }
+    .summary-pill .pill-num {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+    .summary-pill .pill-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin: 32px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── NEWS CARD ── */
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .news-card:hover {
+      border-color: rgba(91,141,238,0.3);
+      box-shadow: 0 0 28px rgba(91,141,238,0.08);
+    }
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .card-blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .card-purple::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+    .card-green::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+    .card-red::before { background: linear-gradient(90deg, var(--accent4), transparent); }
+    .card-yellow::before { background: linear-gradient(90deg, var(--accent5), transparent); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .icon-blue  { background: rgba(91,141,238,0.12); }
+    .icon-purple{ background: rgba(124,92,191,0.12); }
+    .icon-green { background: rgba(61,191,160,0.12); }
+    .icon-red   { background: rgba(224,94,122,0.12); }
+    .icon-yellow{ background: rgba(232,160,58,0.12); }
+
+    .card-meta { flex: 1; min-width: 0; }
+    .card-company {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .text-blue   { color: var(--accent); }
+    .text-purple { color: var(--accent2); }
+    .text-green  { color: var(--accent3); }
+    .text-red    { color: var(--accent4); }
+    .text-yellow { color: var(--accent5); }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+    }
+
+    .card-body {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    /* ── KEY FACTS TABLE ── */
+    .facts-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    .facts-table tr { border-top: 1px solid var(--border); }
+    .facts-table tr:first-child { border-top: none; }
+    .facts-table td {
+      padding: 8px 4px;
+      vertical-align: top;
+    }
+    .facts-table td:first-child {
+      color: var(--text-dim);
+      width: 110px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .facts-table td:last-child {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    /* ── HIGHLIGHT BADGE ── */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 6px;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+    .badge-blue   { background: rgba(91,141,238,0.15);  color: var(--accent); }
+    .badge-purple { background: rgba(124,92,191,0.15);  color: var(--accent2); }
+    .badge-green  { background: rgba(61,191,160,0.15);  color: var(--accent3); }
+    .badge-red    { background: rgba(224,94,122,0.15);  color: var(--accent4); }
+    .badge-yellow { background: rgba(232,160,58,0.15);  color: var(--accent5); }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+    /* ── SOURCES ── */
+    .sources-section {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin: 32px 0 48px;
+    }
+    .sources-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    .source-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .source-item:hover {
+      background: rgba(91,141,238,0.08);
+      border-color: rgba(91,141,238,0.2);
+      color: var(--accent);
+    }
+    .source-item::before {
+      content: '↗';
+      font-size: 10px;
+      opacity: 0.5;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px 0 36px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-tag">Daily Brief</div>
+  <h1>AI <span>핵심 뉴스</span></h1>
+  <p class="header-date">2026년 4월 10일 (금) · KST</p>
+</header>
+
+<div class="container">
+
+  <!-- ── SUMMARY PILLS ── -->
+  <div class="summary-bar">
+    <div class="summary-pill">
+      <span class="pill-num">5</span>
+      <span class="pill-label">주요 뉴스</span>
+    </div>
+    <div class="summary-pill">
+      <span class="pill-num">4</span>
+      <span class="pill-label">빅테크 기업</span>
+    </div>
+    <div class="summary-pill">
+      <span class="pill-num">$30B</span>
+      <span class="pill-label">Anthropic ARR</span>
+    </div>
+    <div class="summary-pill">
+      <span class="pill-num">900M</span>
+      <span class="pill-label">ChatGPT 주간 사용자</span>
+    </div>
+    <div class="summary-pill">
+      <span class="pill-num">31B</span>
+      <span class="pill-label">Gemma 4 파라미터</span>
+    </div>
+  </div>
+
+  <!-- ── TOP STORY ── -->
+  <div class="section-title">🔥 오늘의 핵심</div>
+
+  <!-- 1. Anthropic Mythos -->
+  <div class="news-card card-purple">
+    <div class="card-header">
+      <div class="card-icon icon-purple">🔐</div>
+      <div class="card-meta">
+        <div class="card-company text-purple">Anthropic</div>
+        <div class="card-title">Claude Mythos Preview 공개 — 수천 개 제로데이 취약점 발견</div>
+      </div>
+    </div>
+    <div class="card-body">
+      Anthropic이 최신 프론티어 모델 <strong style="color:#fff">Claude Mythos Preview</strong>를 공개했다. 공개 배포는 하지 않고, <strong>Project Glasswing</strong>이라는 보안 파트너십 프로그램을 통해 Amazon, Apple, Microsoft, Cisco, CrowdStrike 등 12개 기업에 제한 제공된다.
+    </div>
+    <div class="divider"></div>
+    <table class="facts-table">
+      <tr><td>핵심 성과</td><td>수천 개의 제로데이 취약점 탐지 (주요 OS·브라우저 전체 포함)</td></tr>
+      <tr><td>최장 버그</td><td>27년간 미발견된 OpenBSD 취약점 발견</td></tr>
+      <tr><td>파트너</td><td>Amazon, Apple, Microsoft, Cisco, Broadcom, Linux Foundation 등</td></tr>
+      <tr><td>공개 여부</td><td>일반 공개 미예정 — 사이버보안 목적 한정 배포</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <span class="badge badge-purple">사이버보안</span>
+      <span class="badge badge-red">제한 배포</span>
+      <span class="badge badge-purple">에이전틱 AI</span>
+    </div>
+  </div>
+
+  <!-- 2. Anthropic Revenue -->
+  <div class="news-card card-green">
+    <div class="card-header">
+      <div class="card-icon icon-green">📈</div>
+      <div class="card-meta">
+        <div class="card-company text-green">Anthropic</div>
+        <div class="card-title">ARR $30B 돌파 — OpenAI 제치고 업계 1위 등극</div>
+      </div>
+    </div>
+    <div class="card-body">
+      Anthropic의 연간 반복 수익(ARR)이 <strong style="color:#fff">$30B</strong>을 넘어서며 OpenAI($25B)를 처음으로 추월했다. 2025년 말 $9B에서 불과 8주 만에 $30B으로 급등한 이례적인 성장세다.
+    </div>
+    <div class="divider"></div>
+    <table class="facts-table">
+      <tr><td>Anthropic ARR</td><td><strong style="color:#3dbfa0">$30B+</strong> (2025년 말 $9B에서 급성장)</td></tr>
+      <tr><td>OpenAI ARR</td><td>$25B</td></tr>
+      <tr><td>엔터프라이즈</td><td>연간 $1M+ 지출 고객 1,000개 이상 / 매출의 80%</td></tr>
+      <tr><td>인프라 투자</td><td>Google·Broadcom TPU 5GW 용량 확보 계약 체결</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <span class="badge badge-green">시장 역전</span>
+      <span class="badge badge-green">엔터프라이즈</span>
+    </div>
+  </div>
+
+  <!-- ── MODEL RELEASES ── -->
+  <div class="section-title">🚀 모델 출시</div>
+
+  <!-- 3. Google Gemma 4 -->
+  <div class="news-card card-blue">
+    <div class="card-header">
+      <div class="card-icon icon-blue">🔷</div>
+      <div class="card-meta">
+        <div class="card-company text-blue">Google DeepMind</div>
+        <div class="card-title">Gemma 4 출시 — 31B 모델이 400B급 경쟁자를 벤치마크에서 압도</div>
+      </div>
+    </div>
+    <div class="card-body">
+      Google이 4월 2일 오픈소스 모델 <strong style="color:#fff">Gemma 4</strong>를 출시했다. 4가지 사이즈(E2B·E4B·26B MoE·31B Dense)로 구성되며, 스마트폰부터 클라우드 서버까지 폭넓은 배포 환경을 지원한다.
+    </div>
+    <div class="divider"></div>
+    <table class="facts-table">
+      <tr><td>모델 라인업</td><td>E2B / E4B / 26B MoE / 31B Dense</td></tr>
+      <tr><td>컨텍스트 창</td><td>최대 256K 토큰</td></tr>
+      <tr><td>멀티모달</td><td>비전·오디오 네이티브 지원, 140개 이상 언어</td></tr>
+      <tr><td>라이선스</td><td>Apache 2.0 (상업적 사용 허용)</td></tr>
+      <tr><td>누적 다운로드</td><td>4억 회 이상</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <span class="badge badge-blue">오픈소스</span>
+      <span class="badge badge-blue">멀티모달</span>
+      <span class="badge badge-blue">온디바이스</span>
+    </div>
+  </div>
+
+  <!-- 4. Meta Muse Spark -->
+  <div class="news-card card-red">
+    <div class="card-header">
+      <div class="card-icon icon-red">🔴</div>
+      <div class="card-meta">
+        <div class="card-company text-red">Meta</div>
+        <div class="card-title">Muse Spark 공개 — Alexandr Wang 합류 후 첫 대형 모델</div>
+      </div>
+    </div>
+    <div class="card-body">
+      Meta가 Scale AI의 Alexandr Wang을 $14B에 영입한 지 9개월 만에 <strong style="color:#fff">Muse Spark</strong>를 공개했다. 텍스트·음성·이미지를 입력받아 텍스트로 출력하며, 과학·수학·의료 분야에서 특히 강점을 보인다.
+    </div>
+    <div class="divider"></div>
+    <table class="facts-table">
+      <tr><td>코드명</td><td>Avocado</td></tr>
+      <tr><td>입력 모달리티</td><td>텍스트, 음성, 이미지</td></tr>
+      <tr><td>배포 채널</td><td>Meta AI 앱·웹사이트 → Facebook, Instagram, WhatsApp 순차 확대</td></tr>
+      <tr><td>현재 가용 지역</td><td>미국 한정</td></tr>
+      <tr><td>전임 모델</td><td>Llama 4 (1년 전 출시)</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <span class="badge badge-red">멀티모달</span>
+      <span class="badge badge-red">소셜 통합</span>
+    </div>
+  </div>
+
+  <!-- ── INDUSTRY TREND ── -->
+  <div class="section-title">📊 산업 동향</div>
+
+  <!-- 5. ChatGPT / OpenAI -->
+  <div class="news-card card-yellow">
+    <div class="card-header">
+      <div class="card-icon icon-yellow">💬</div>
+      <div class="card-meta">
+        <div class="card-company text-yellow">OpenAI</div>
+        <div class="card-title">ChatGPT 주간 사용자 9억 명 — 유료 구독자 5,000만 명 돌파</div>
+      </div>
+    </div>
+    <div class="card-body">
+      ChatGPT의 주간 활성 사용자(WAU)가 <strong style="color:#fff">9억 명</strong>에 도달하며 1억 명 돌파를 눈앞에 뒀다. 엔터프라이즈가 전체 매출의 40% 이상을 차지하며 B2B 비중이 빠르게 성장 중이다.
+    </div>
+    <div class="divider"></div>
+    <table class="facts-table">
+      <tr><td>주간 활성 사용자</td><td>9억 명 (2월 27일 발표)</td></tr>
+      <tr><td>유료 구독자</td><td>5,000만 명</td></tr>
+      <tr><td>기업 매출 비중</td><td>40%+ (연말까지 소비자와 동등 수준 목표)</td></tr>
+      <tr><td>시장 지위</td><td>월간 웹 방문·모바일 세션 2위 대비 6배</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <span class="badge badge-yellow">슈퍼앱</span>
+      <span class="badge badge-yellow">엔터프라이즈</span>
+    </div>
+  </div>
+
+  <!-- ── SOURCES ── -->
+  <div class="sources-section">
+    <div class="sources-title">📎 출처</div>
+    <div class="source-grid">
+      <a class="source-item" href="https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/" target="_blank">TechCrunch — Claude Mythos</a>
+      <a class="source-item" href="https://www.anthropic.com/glasswing" target="_blank">Anthropic — Project Glasswing</a>
+      <a class="source-item" href="https://www.cnbc.com/2026/04/07/anthropic-claude-mythos-ai-hackers-cyberattacks.html" target="_blank">CNBC — Mythos 사이버보안</a>
+      <a class="source-item" href="https://www.the-ai-corner.com/p/anthropic-30b-arr-passed-openai-revenue-2026" target="_blank">The AI Corner — Anthropic $30B ARR</a>
+      <a class="source-item" href="https://www.saastr.com/anthropic-just-passed-openai-in-revenue-while-spending-4x-less-to-train-their-models/" target="_blank">SaaStr — Anthropic vs OpenAI 매출</a>
+      <a class="source-item" href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank">Google Blog — Gemma 4</a>
+      <a class="source-item" href="https://deepmind.google/models/gemma/gemma-4/" target="_blank">Google DeepMind — Gemma 4</a>
+      <a class="source-item" href="https://techcrunch.com/2026/04/08/meta-debuts-the-muse-spark-model-in-a-ground-up-overhaul-of-its-ai/" target="_blank">TechCrunch — Meta Muse Spark</a>
+      <a class="source-item" href="https://www.cnbc.com/2026/04/08/meta-debuts-first-major-ai-model-since-14-billion-deal-to-bring-in-alexandr-wang.html" target="_blank">CNBC — Meta Muse Spark</a>
+      <a class="source-item" href="https://fortune.com/2026/04/08/meta-unveils-muse-spark-mark-zuckerberg-ai-push/" target="_blank">Fortune — Meta Muse Spark</a>
+      <a class="source-item" href="https://techcrunch.com/2026/02/27/chatgpt-reaches-900m-weekly-active-users/" target="_blank">TechCrunch — ChatGPT 9억 사용자</a>
+      <a class="source-item" href="https://www.llm-stats.com/ai-news" target="_blank">LLM Stats — AI News April 2026</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  자동 생성 — 2026년 4월 10일 KST &nbsp;|&nbsp; 여러 출처 크로스 체크 기반
+</footer>
+
+</body>
+</html>

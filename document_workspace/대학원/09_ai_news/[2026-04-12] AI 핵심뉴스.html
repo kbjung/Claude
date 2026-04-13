@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 핵심뉴스 — 2026년 4월 12일</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --card: #1a1e29;
+      --border: #252a38;
+      --accent1: #6c63ff;
+      --accent2: #00d4aa;
+      --accent3: #ff6b6b;
+      --accent4: #ffd166;
+      --text-primary: #f0f2f8;
+      --text-secondary: #8b93b0;
+      --text-muted: #555e7a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── 헤더 ── */
+    header {
+      background: linear-gradient(135deg, #0d0f14 0%, #161b2e 50%, #0d0f14 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(108,99,255,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: 30%;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(0,212,170,.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #f0f2f8 40%, var(--accent1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .header-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ── 레이아웃 ── */
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+
+    /* ── 요약 배너 ── */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .summary-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      text-align: center;
+    }
+    .summary-item .num {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .summary-item .lbl {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      letter-spacing: .5px;
+    }
+    .c1 { color: var(--accent1); }
+    .c2 { color: var(--accent2); }
+    .c3 { color: var(--accent3); }
+    .c4 { color: var(--accent4); }
+
+    /* ── 섹션 제목 ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding-left: 2px;
+    }
+
+    /* ── 뉴스 카드 ── */
+    .news-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .news-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px;
+      align-items: start;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .news-card:hover {
+      border-color: #353a50;
+      box-shadow: 0 4px 24px rgba(0,0,0,.4);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .icon-purple  { background: rgba(108,99,255,.15); }
+    .icon-teal    { background: rgba(0,212,170,.15); }
+    .icon-red     { background: rgba(255,107,107,.15); }
+    .icon-yellow  { background: rgba(255,209,102,.15); }
+    .icon-blue    { background: rgba(66,153,225,.15); }
+
+    .card-body {}
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .tag-purple { background: rgba(108,99,255,.2); color: #a89aff; }
+    .tag-teal   { background: rgba(0,212,170,.2);  color: #4de8cc; }
+    .tag-red    { background: rgba(255,107,107,.2); color: #ff9a9a; }
+    .tag-yellow { background: rgba(255,209,102,.2); color: #ffe08a; }
+    .tag-blue   { background: rgba(66,153,225,.2);  color: #7ec8f5; }
+
+    .card-source {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    /* ── 키포인트 테이블 ── */
+    .kp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .kp-table tr {
+      border-top: 1px solid var(--border);
+    }
+    .kp-table tr:first-child { border-top: none; }
+    .kp-table td {
+      padding: 7px 0;
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .kp-table td:first-child {
+      white-space: nowrap;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .5px;
+      padding-right: 16px;
+      width: 90px;
+    }
+
+    /* ── 보안 경고 카드 (특별) ── */
+    .alert-card {
+      border-color: rgba(255,107,107,.35) !important;
+      background: linear-gradient(135deg, #1a1e29 0%, #1e1520 100%);
+    }
+
+    /* ── 출처 섹션 ── */
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 26px;
+    }
+    .sources-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 8px;
+    }
+    .src-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      transition: background .15s, color .15s;
+    }
+    .src-link:hover {
+      background: #21273a;
+      color: var(--text-primary);
+    }
+    .src-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── 푸터 ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 32px 20px 24px; }
+      header h1 { font-size: 22px; }
+      .summary-bar { grid-template-columns: repeat(2, 1fr); }
+      .news-card { grid-template-columns: 1fr; }
+      .card-icon { display: none; }
+      .container { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── 헤더 ── -->
+<header>
+  <div class="header-label">Daily Intelligence Brief</div>
+  <h1>AI 핵심뉴스</h1>
+  <div class="header-sub">2026년 4월 12일 (일) &nbsp;·&nbsp; 오늘의 AI 핵심 동향 5선</div>
+</header>
+
+<div class="container">
+
+  <!-- ── 요약 배너 ── -->
+  <div class="summary-bar">
+    <div class="summary-item">
+      <div class="num c1">$122B</div>
+      <div class="lbl">OpenAI 펀딩</div>
+    </div>
+    <div class="summary-item">
+      <div class="num c2">Meta</div>
+      <div class="lbl">Muse Spark 출시</div>
+    </div>
+    <div class="summary-item">
+      <div class="num c3">⚠ 제한</div>
+      <div class="lbl">Anthropic Mythos</div>
+    </div>
+    <div class="summary-item">
+      <div class="num c4">Mars</div>
+      <div class="lbl">AI 화성 탐사</div>
+    </div>
+  </div>
+
+  <!-- ── 뉴스 1 ── -->
+  <div class="section-title">주요 뉴스</div>
+  <div class="news-grid">
+
+    <div class="news-card">
+      <div class="card-icon icon-purple">🚀</div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-purple">펀딩 / 전략</span>
+          <span class="card-source">Bloomberg · TechCrunch · OpenAI</span>
+        </div>
+        <div class="card-title">OpenAI, $122B 조달 — 기업 가치 $852B · ChatGPT 슈퍼앱 출시</div>
+        <div class="card-desc">
+          Amazon($50B), NVIDIA·SoftBank(각 $30B) 등 전략 투자자를 포함한 사상 최대 규모 펀딩.
+          이번 자금으로 ChatGPT·Codex·웹 검색·에이전트 기능을 하나로 합친 <strong>ChatGPT 슈퍼앱</strong>을 개발한다.
+          주간 활성 사용자 9억 명 돌파, 월 매출 $2B 기록.
+        </div>
+        <table class="kp-table">
+          <tr><td>기업가치</td><td>$852B (post-money)</td></tr>
+          <tr><td>주요 투자자</td><td>Amazon, NVIDIA, SoftBank, Microsoft</td></tr>
+          <tr><td>슈퍼앱 구성</td><td>ChatGPT + Codex + 검색 + 에이전트 통합</td></tr>
+          <tr><td>MAU</td><td>주간 9억 명, 기업 고객 매출 비중 40%+</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-icon icon-teal">🧠</div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-teal">신모델 출시</span>
+          <span class="card-source">Meta AI · TechCrunch · CNBC</span>
+        </div>
+        <div class="card-title">Meta, Muse Spark 공개 — Llama 독점 탈피, 멀티모달 추론 모델</div>
+        <div class="card-desc">
+          Meta Superintelligence Labs(수장: Alexandr Wang)가 9개월 만에 스택을 전면 재설계해 출시한 첫 번째 모델.
+          텍스트·이미지·음성 입력을 지원하는 네이티브 멀티모달 추론 모델로, 기존 오픈소스 Llama와 달리 <strong>독점 모델</strong>로 전환.
+          Artificial Analysis 지수 52점으로 4위 (1위 Gemini 3.1 Pro·GPT-5.4 57점, 3위 Claude Opus 4.6 53점).
+        </div>
+        <table class="kp-table">
+          <tr><td>개발 기간</td><td>9개월 (스택 전면 재설계)</td></tr>
+          <tr><td>입력 모달</td><td>텍스트, 이미지, 음성 (출력: 텍스트)</td></tr>
+          <tr><td>벤치마크</td><td>AA Index 52점 (4위) · 시각 STEM·엔터티 인식 강점</td></tr>
+          <tr><td>배포</td><td>Meta AI 앱 → Facebook·IG·WhatsApp·Ray-Ban 안경 순차 적용</td></tr>
+          <tr><td>라이선스</td><td>독점 (추후 일부 오픈소스 예정)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="news-card alert-card">
+      <div class="card-icon icon-red">🔐</div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-red">보안 / 위협</span>
+          <span class="card-source">Axios · Fortune · TechCrunch · NPR</span>
+        </div>
+        <div class="card-title">Anthropic, Mythos Preview 제한 공개 — "공개하기엔 너무 위험한 모델"</div>
+        <div class="card-desc">
+          Anthropic의 신모델 <strong>Mythos Preview</strong>는 모든 주요 OS·브라우저의 제로데이 취약점을 자동 발굴·익스플로잇할 수 있어 일반 공개 대신 <strong>40개 이상 조직에만 제한 배포</strong>.
+          Project Glasswing 이니셔티브를 통해 AWS·Apple·Google·Microsoft 등 11개사와 협력해 방어적 활용에만 집중.
+        </div>
+        <table class="kp-table">
+          <tr><td>능력</td><td>수만 건 취약점 식별 + 익스플로잇 코드 자동 생성</td></tr>
+          <tr><td>참여사</td><td>AWS, Apple, Broadcom, Cisco, CrowdStrike, Google, JPMorgan, Linux Foundation, Microsoft, NVIDIA, Palo Alto Networks</td></tr>
+          <tr><td>기준 비교</td><td>Claude Opus 4.6는 약 500건 제로데이 발견 → Mythos는 수십 배 이상</td></tr>
+          <tr><td>배포 정책</td><td>비공개 / 방어 목적 한정</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-icon icon-yellow">🔴</div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-yellow">우주 / 과학</span>
+          <span class="card-source">NASA JPL · Anthropic · IEEE Spectrum</span>
+        </div>
+        <div class="card-title">NASA 화성 탐사 로버, AI가 최초로 경로 계획 — Claude 투입</div>
+        <div class="card-desc">
+          퍼서비어런스 로버가 Anthropic Claude의 비전·코딩 능력을 활용해 <strong>역사상 최초로 AI가 계획한 화성 주행</strong>을 완료.
+          28년간 인간이 수동 수행하던 경로 계획 작업을 Claude가 Rover Markup Language로 직접 코드 작성 후 실행.
+        </div>
+        <table class="kp-table">
+          <tr><td>주행 거리</td><td>Sol 1707: 210m + Sol 1709: 245.9m = 총 455.9m</td></tr>
+          <tr><td>AI 역할</td><td>위성 이미지 분석 → 경로 포인트 자동 생성 → RML 코드 작성</td></tr>
+          <tr><td>의의</td><td>28년 인간 수동 작업 대체 첫 사례</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-icon icon-blue">💊</div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="tag tag-blue">헬스케어 / 규제</span>
+          <span class="card-source">Washington Post · Axios · The Hill</span>
+        </div>
+        <div class="card-title">미국 유타주, AI의 처방전 갱신 허용 — 전국 최초</div>
+        <div class="card-desc">
+          유타주가 AI 플랫폼 Doctronic과 파트너십을 맺고 <strong>만성질환(당뇨·고혈압 등) 환자의 정기 처방전 갱신을 AI가 자율 처리</strong>하는 시범 사업(12개월)을 시작.
+          의사 단체는 반대 입장. AI 승인 시 약국으로 직접 처방전 전송, 건당 $4.
+        </div>
+        <table class="kp-table">
+          <tr><td>대상 약물</td><td>190종 (진통제·주사제·ADHD 약물 제외)</td></tr>
+          <tr><td>안전장치</td><td>처음 250건은 의사 검토 필수 / 의사 override 가능</td></tr>
+          <tr><td>정확도</td><td>의사 처방 계획과 99% 일치 (Doctronic 발표)</td></tr>
+          <tr><td>쟁점</td><td>유타 의사협회 공식 반대</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── 출처 ── -->
+  <div class="sources-section">
+    <div class="sources-title">📎 출처</div>
+    <div class="sources-grid">
+      <a class="src-link" href="https://openai.com/index/accelerating-the-next-phase-ai/" target="_blank">
+        <span class="src-dot" style="background:var(--accent1)"></span>OpenAI — $122B 펀딩 공식 발표
+      </a>
+      <a class="src-link" href="https://www.bloomberg.com/news/articles/2026-03-31/openai-valued-at-852-billion-after-completing-122-billion-round" target="_blank">
+        <span class="src-dot" style="background:var(--accent1)"></span>Bloomberg — OpenAI $852B 밸류에이션
+      </a>
+      <a class="src-link" href="https://techcrunch.com/2026/03/31/openai-not-yet-public-raises-3b-from-retail-investors-in-monster-122b-fund-raise/" target="_blank">
+        <span class="src-dot" style="background:var(--accent1)"></span>TechCrunch — OpenAI 펀딩 상세
+      </a>
+      <a class="src-link" href="https://ai.meta.com/blog/introducing-muse-spark-msl/" target="_blank">
+        <span class="src-dot" style="background:var(--accent2)"></span>Meta AI — Muse Spark 공식 블로그
+      </a>
+      <a class="src-link" href="https://techcrunch.com/2026/04/08/meta-debuts-the-muse-spark-model-in-a-ground-up-overhaul-of-its-ai/" target="_blank">
+        <span class="src-dot" style="background:var(--accent2)"></span>TechCrunch — Meta Muse Spark 분석
+      </a>
+      <a class="src-link" href="https://www.cnbc.com/2026/04/08/meta-debuts-first-major-ai-model-since-14-billion-deal-to-bring-in-alexandr-wang.html" target="_blank">
+        <span class="src-dot" style="background:var(--accent2)"></span>CNBC — Meta 신모델 리뷰
+      </a>
+      <a class="src-link" href="https://www.axios.com/2026/04/07/anthropic-mythos-preview-cybersecurity-risks" target="_blank">
+        <span class="src-dot" style="background:var(--accent3)"></span>Axios — Anthropic Mythos 제한 배포
+      </a>
+      <a class="src-link" href="https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/" target="_blank">
+        <span class="src-dot" style="background:var(--accent3)"></span>TechCrunch — Mythos 보안 분석
+      </a>
+      <a class="src-link" href="https://www.anthropic.com/glasswing" target="_blank">
+        <span class="src-dot" style="background:var(--accent3)"></span>Anthropic — Project Glasswing 공식
+      </a>
+      <a class="src-link" href="https://www.jpl.nasa.gov/news/nasas-perseverance-rover-completes-first-ai-planned-drive-on-mars/" target="_blank">
+        <span class="src-dot" style="background:var(--accent4)"></span>NASA JPL — AI 화성 주행 공식 발표
+      </a>
+      <a class="src-link" href="https://spectrum.ieee.org/perseverance-rover-nasa-anthropic-ai" target="_blank">
+        <span class="src-dot" style="background:var(--accent4)"></span>IEEE Spectrum — 퍼서비어런스 AI 주행
+      </a>
+      <a class="src-link" href="https://www.washingtonpost.com/nation/2026/01/08/ai-prescription-drugs-utah/" target="_blank">
+        <span class="src-dot" style="background:#7ec8f5"></span>Washington Post — 유타 AI 처방전
+      </a>
+      <a class="src-link" href="https://thehill.com/policy/healthcare/5676511-ai-prescriptions-utah-doctronic/" target="_blank">
+        <span class="src-dot" style="background:#7ec8f5"></span>The Hill — 유타 AI 처방전 상세
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  AI 핵심뉴스 &nbsp;·&nbsp; 2026년 4월 12일 &nbsp;·&nbsp; 정보 출처: CNBC, TechCrunch, Bloomberg, Axios, NASA JPL, Anthropic, Washington Post 外
+</footer>
+
+</body>
+</html>

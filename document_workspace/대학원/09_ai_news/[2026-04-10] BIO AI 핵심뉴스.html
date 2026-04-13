@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BIO AI 핵심뉴스 | 2026.04.10</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1e2530;
+      --border: #2a3341;
+      --accent1: #4fc3f7;
+      --accent2: #81c784;
+      --accent3: #ffb74d;
+      --accent4: #ce93d8;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #586069;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0d1b2e 0%, #0d1117 60%, #1a0d2e 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 60px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(79,195,247,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 30%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(206,147,216,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .badge {
+      background: rgba(79,195,247,0.15);
+      color: var(--accent1);
+      border: 1px solid rgba(79,195,247,0.3);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge.green { background: rgba(129,199,132,0.15); color: var(--accent2); border-color: rgba(129,199,132,0.3); }
+    .date-tag {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #e6edf3 30%, #4fc3f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-sub {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 60px 60px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      margin-top: 44px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 16px;
+      border-radius: 2px;
+    }
+    .section-title.blue::before  { background: var(--accent1); }
+    .section-title.green::before { background: var(--accent2); }
+    .section-title.orange::before{ background: var(--accent3); }
+    .section-title.purple::before{ background: var(--accent4); }
+
+    /* ── SUMMARY CARDS (top row) ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 8px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .stat-card.blue::before  { background: var(--accent1); }
+    .stat-card.green::before { background: var(--accent2); }
+    .stat-card.orange::before{ background: var(--accent3); }
+    .stat-card.purple::before{ background: var(--accent4); }
+    .stat-card .label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .stat-card .value {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .stat-card.blue .value  { color: var(--accent1); }
+    .stat-card.green .value { color: var(--accent2); }
+    .stat-card.orange .value{ color: var(--accent3); }
+    .stat-card.purple .value{ color: var(--accent4); }
+    .stat-card .desc {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ── NEWS CARDS ── */
+    .news-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .news-grid.single { grid-template-columns: 1fr; }
+
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .news-card:hover { border-color: rgba(79,195,247,0.4); }
+
+    .news-card .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+    .news-card .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .tag.deal    { background: rgba(129,199,132,0.15); color: var(--accent2); }
+    .tag.model   { background: rgba(79,195,247,0.15);  color: var(--accent1); }
+    .tag.peptide { background: rgba(206,147,216,0.15); color: var(--accent4); }
+    .tag.trend   { background: rgba(255,183,77,0.15);  color: var(--accent3); }
+    .tag.infra   { background: rgba(79,195,247,0.1);   color: var(--accent1); }
+
+    .news-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-primary);
+      flex: 1;
+    }
+    .news-card .body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .news-card .highlight {
+      display: inline;
+      background: rgba(79,195,247,0.12);
+      color: var(--accent1);
+      border-radius: 3px;
+      padding: 0 4px;
+      font-weight: 500;
+    }
+    .news-card .highlight.green {
+      background: rgba(129,199,132,0.12);
+      color: var(--accent2);
+    }
+    .news-card .highlight.orange {
+      background: rgba(255,183,77,0.12);
+      color: var(--accent3);
+    }
+    .news-card .highlight.purple {
+      background: rgba(206,147,216,0.12);
+      color: var(--accent4);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead th {
+      background: var(--surface2);
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:not(:last-child) td {
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:hover td { background: rgba(255,255,255,0.02); }
+    tbody td {
+      padding: 13px 16px;
+      font-size: 13px;
+      color: var(--text-primary);
+      vertical-align: top;
+    }
+    tbody td.muted { color: var(--text-secondary); }
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    .pill.blue   { background: rgba(79,195,247,0.15);  color: var(--accent1); }
+    .pill.green  { background: rgba(129,199,132,0.15); color: var(--accent2); }
+    .pill.purple { background: rgba(206,147,216,0.15); color: var(--accent4); }
+
+    /* ── DIVIDER ── */
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    /* ── SOURCES ── */
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+    }
+    .sources-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .source-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .source-item {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      align-items: flex-start;
+    }
+    .source-item .num {
+      color: var(--text-muted);
+      min-width: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+    .source-item a {
+      color: var(--accent1);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .source-item a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      header, .container, footer { padding-left: 20px; padding-right: 20px; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .news-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="header-meta">
+    <span class="badge">BIO AI NEWS</span>
+    <span class="badge green">Weekly Digest</span>
+    <span class="date-tag">2026.04.10 (KST)</span>
+  </div>
+  <h1>생명공학 AI 핵심뉴스</h1>
+  <p class="header-sub">AI 기반 신약개발 · 단백질 구조 예측 · 펩타이드 설계 최신 동향 요약</p>
+</header>
+
+<!-- ══════════ BODY ══════════ -->
+<div class="container">
+
+  <!-- 핵심 지표 -->
+  <div class="section-title blue">이번 주 핵심 지표</div>
+  <div class="summary-grid">
+    <div class="stat-card blue">
+      <div class="label">Insilico × Lilly 딜</div>
+      <div class="value">$2.75B</div>
+      <div class="desc">AI 신약 상업화 역대 최대 계약</div>
+    </div>
+    <div class="stat-card green">
+      <div class="label">AI 예산 증대 계획 기업</div>
+      <div class="value">80%</div>
+      <div class="desc">12개월 내 AI 투자 확대 예정</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="label">NVIDIA × Lilly 공동 투자</div>
+      <div class="value">$1B</div>
+      <div class="desc">5년간 AI 신약개발 Co-Innovation Lab</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="label">OpenFold3 학습 데이터</div>
+      <div class="value">13M+</div>
+      <div class="desc">합성 구조 DB 기반 오픈소스 모델</div>
+    </div>
+  </div>
+
+  <!-- ── 섹션1: 빅딜 & 투자 ── -->
+  <div class="section-title green">빅딜 &amp; 투자</div>
+  <div class="news-grid">
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>Insilico Medicine × Eli Lilly, $2.75B 글로벌 R&amp;D 협약 체결</h3>
+        <span class="tag deal">DEAL</span>
+      </div>
+      <div class="body">
+        2026년 3월 29일, AI 신약 개발사 <span class="highlight green">Insilico Medicine</span>과 Eli Lilly가 최대 <span class="highlight green">27억 5천만 달러(약 3.8조 원)</span> 규모의 상업화 협약을 체결했다. 선지급금 <strong>1억 1,500만 달러</strong>에 마일스톤 및 로열티가 추가되며, Insilico의 Pharma.AI 플랫폼이 구강 투여 치료제 개발에 활용된다.<br><br>
+        Insilico는 현재까지 생성형 AI로 <strong>28개 이상의 신약 후보</strong>를 발굴했으며, 이 중 절반 이상이 임상 단계에 진입했다. 발표 당일 주가는 15% 급등했다.
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>NVIDIA × Eli Lilly, AI 신약 Co-Innovation Lab 설립</h3>
+        <span class="tag infra">INFRA</span>
+      </div>
+      <div class="body">
+        NVIDIA와 Eli Lilly가 <span class="highlight">5년간 최대 10억 달러</span>를 공동 투자하는 AI 신약개발 협력 랩을 발표했다. 인재·인프라·컴퓨팅 자원을 포함하며, 생성형 AI로 분자 설계와 임상 예측을 가속화한다.<br><br>
+        Syneron Bio도 자사 AI 플랫폼 <strong>Synova</strong>를 통해 종양학·자가면역·희귀질환 치료제를 개발 중이며, 4월 3일 <span class="highlight">시리즈 B 1억 5천만 달러</span> 투자 라운드를 성공적으로 마감했다.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 섹션2: 단백질 구조 AI ── -->
+  <div class="section-title blue">단백질 구조 예측 AI</div>
+  <div class="news-grid">
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>OpenFold3 공개 — AlphaFold3에 필적하는 오픈소스 모델</h3>
+        <span class="tag model">MODEL</span>
+      </div>
+      <div class="body">
+        2025년 10월 OpenFold 컨소시엄(Novo Nordisk, Columbia Univ., AWS)이 <span class="highlight">OpenFold3</span>를 공개했다. 30만 개 실험 구조 + <strong>1,300만 개 합성 구조</strong>로 학습하며, AlphaFold3와 유사한 정확도로 단백질·핵산·소분자·항체 복합체를 예측한다.<br><br>
+        <span class="highlight">Apache 2.0 라이선스</span> 적용으로 <strong>산업계 사용도 완전 허용</strong> — AlphaFold3가 비상업 학술용으로 제한된 것과 대비된다. NVIDIA NIM으로도 배포 중이다.
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>AlphaFold3 & RFdiffusion: 현황과 통합</h3>
+        <span class="tag model">MODEL</span>
+      </div>
+      <div class="body">
+        Google DeepMind는 2026년 2월 학술기관·대학용 AlphaFold 플랫폼을 공식 출시했다. AlphaFold3는 단백질 외 DNA·RNA·소분자 복합체 구조까지 예측 범위를 확장했다.<br><br>
+        <span class="highlight">RFdiffusion</span>은 de novo 단백질 설계 도구로서 AlphaFold3와 통합 활용되는 추세다. 조건부 binder 설계·대칭 올리고머 설계에서 탁월한 성능을 보이며, 절반 이상의 설계체가 실험적으로 발현·안정성 확인됐다. 단백질 구조·설계 시장은 2028년 <span class="highlight orange">28억 달러</span> 규모로 성장 전망이다.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 섹션3: 펩타이드 AI ── -->
+  <div class="section-title purple">AI 펩타이드 설계</div>
+  <div class="news-grid">
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>RFpeptides — 표적 결합 고리형 펩타이드 AI 설계</h3>
+        <span class="tag peptide">PEPTIDE</span>
+      </div>
+      <div class="body">
+        워싱턴대 단백질설계연구소(IPD)의 <span class="highlight purple">RFpeptides</span>가 <em>Nature Chemical Biology</em>에 정식 게재됐다. 표적 단백질의 서열 또는 구조만으로 <strong>마크로사이클 펩타이드</strong>(고리형 펩타이드)를 딥러닝으로 설계한다.<br><br>
+        기존 선형 펩타이드 대비 생체 안정성과 표적 선택성이 뛰어나며, 이전에는 다루기 어려운 표적에 대해서도 고친화도 binder 생성이 가능하다. 다양한 단백질-펩타이드 결합 시나리오에서 검증됐다.
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>생성형 AI × 펩타이드 신약: RSC &amp; 다중 벤치마크 연구</h3>
+        <span class="tag peptide">PEPTIDE</span>
+      </div>
+      <div class="body">
+        RSC <em>Chemical Communications</em>(2026)에 게재된 리뷰에서 그래프 신경망·트랜스포머·확산 모델(Diffusion Model) 기반 <span class="highlight purple">생성형 AI 펩타이드 설계</span> 패러다임이 정리됐다.<br><br>
+        BMPR1A 표적 연구(bioRxiv, 2026.03)에서 <strong>4개 AI 도구로 192개 후보 펩타이드</strong>를 생성하고 다중 지표(결합 에너지·부위 특이성)로 교차 평가하는 멀티툴 벤치마크 방법론이 제안됐다. <span class="highlight purple">Peptide2Mol</span>은 펩타이드를 모방하는 소분자를 생성하는 확산 모델로 주목받고 있다.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 섹션4: 산업 트렌드 ── -->
+  <div class="section-title orange">산업 트렌드</div>
+  <div class="news-grid">
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>제약사 AI 인프라 전환 가속 — "Builder Phase" 진입</h3>
+        <span class="tag trend">TREND</span>
+      </div>
+      <div class="body">
+        Benchling의 2026 Biotech AI 보고서에 따르면, 제약·바이오 업계는 <span class="highlight orange">AI 파일럿 단계를 넘어 '빌더 단계'</span>로 진입했다. 80%의 조직이 12개월 내 AI 예산을 늘릴 계획이며, 23%는 2배 이상 증액을 계획한다.<br><br>
+        가장 성공적인 조직은 AI를 보조 도구가 아닌 <strong>R&amp;D 기본 인프라</strong>로 재편하고 있으며, 데이터 환경과 조직 구조 자체를 AI 친화적으로 전환 중이다.
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="card-header">
+        <h3>AI 신약 R&amp;D 효율화 사례 & 한국 동향</h3>
+        <span class="tag trend">TREND</span>
+      </div>
+      <div class="body">
+        GenSys Biotech은 AI 타겟 발굴 시스템 도입 후 <span class="highlight orange">R&amp;D 비용 40% 절감</span>을 보고했다. BIOVIA의 GTD 솔루션은 4,000개 이상 합성 화합물을 기존의 1/4 수준으로 줄이고 선도물질 선정 기간을 50% 단축했다.<br><br>
+        한국에서는 <span class="highlight orange">온코크로스</span>가 AI 신약개발 핵심 기술 미국 특허를 등록(2026.04.03)해 전주기 IP 포트폴리오를 구축했다. NEOscan은 암 게놈 분석 + AI 딥러닝으로 환자 맞춤형 <strong>네오항원 펩타이드</strong> 예측 기술을 개발 중이다.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI 모델 비교표 ── -->
+  <div class="section-title blue">주요 AI 모델 비교</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>모델</th>
+          <th>개발</th>
+          <th>주요 기능</th>
+          <th>라이선스</th>
+          <th>상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>AlphaFold3</strong></td>
+          <td class="muted">Google DeepMind</td>
+          <td>단백질·DNA·RNA·소분자 복합체 구조 예측</td>
+          <td><span class="pill blue">학술 제한</span></td>
+          <td class="muted">운영 중</td>
+        </tr>
+        <tr>
+          <td><strong>OpenFold3</strong></td>
+          <td class="muted">OpenFold 컨소시엄</td>
+          <td>AlphaFold3 수준 예측 + 산업 사용 허용</td>
+          <td><span class="pill green">Apache 2.0</span></td>
+          <td class="muted">공개(2025.10)</td>
+        </tr>
+        <tr>
+          <td><strong>RFdiffusion</strong></td>
+          <td class="muted">UW IPD</td>
+          <td>De novo 단백질·binder 설계, 확산 모델</td>
+          <td><span class="pill green">오픈소스</span></td>
+          <td class="muted">운영 중</td>
+        </tr>
+        <tr>
+          <td><strong>RFpeptides</strong></td>
+          <td class="muted">UW IPD</td>
+          <td>표적 기반 고리형 펩타이드 설계</td>
+          <td><span class="pill green">오픈소스</span></td>
+          <td class="muted">Nature Chem.Bio. 게재</td>
+        </tr>
+        <tr>
+          <td><strong>PepMLM</strong></td>
+          <td class="muted">학계 (ESM-2 기반)</td>
+          <td>마스킹 언어모델 기반 펩타이드 서열 생성</td>
+          <td><span class="pill green">오픈소스</span></td>
+          <td class="muted">운영 중</td>
+        </tr>
+        <tr>
+          <td><strong>Peptide2Mol</strong></td>
+          <td class="muted">학계</td>
+          <td>펩타이드 모방 소분자 생성 (확산 모델)</td>
+          <td><span class="pill purple">연구용</span></td>
+          <td class="muted">arxiv 공개</td>
+        </tr>
+        <tr>
+          <td><strong>Pharma.AI</strong></td>
+          <td class="muted">Insilico Medicine</td>
+          <td>표적 발굴 → 분자 생성 → 임상 예측 E2E</td>
+          <td><span class="pill blue">상업</span></td>
+          <td class="muted">Lilly와 $2.75B 딜</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── 출처 ── -->
+  <div class="sources-section">
+    <div class="sources-title">📎 출처</div>
+    <div class="source-list">
+      <div class="source-item"><span class="num">1</span><a href="https://www.statnews.com/2026/03/29/insilico-medicine-lilly-sign-ai-drug-commercialization-deal/" target="_blank">STAT News — Insilico Medicine and Lilly ink commercialization deal worth up to $2.75 billion</a></div>
+      <div class="source-item"><span class="num">2</span><a href="https://www.cnbc.com/2026/03/29/eli-lilly-reaches-deal-to-bring-ai-developed-drugs-to-global-market.html" target="_blank">CNBC — Eli Lilly reaches $2.75 billion deal with Insilico to bring AI-developed drugs to the global market</a></div>
+      <div class="source-item"><span class="num">3</span><a href="https://nvidianews.nvidia.com/news/nvidia-and-lilly-announce-co-innovation-lab-to-reinvent-drug-discovery-in-the-age-of-ai" target="_blank">NVIDIA Newsroom — NVIDIA and Lilly Announce Co-Innovation AI Lab</a></div>
+      <div class="source-item"><span class="num">4</span><a href="https://www.synbiobeta.com/read/openfold-consortium-unveils-openfold3-a-game-changer-for-protein-structure-prediction" target="_blank">SynBioBeta — OpenFold Consortium Unveils OpenFold3</a></div>
+      <div class="source-item"><span class="num">5</span><a href="https://www.nature.com/articles/d41586-025-03546-y" target="_blank">Nature — Open-source protein structure AI aims to match AlphaFold</a></div>
+      <div class="source-item"><span class="num">6</span><a href="https://www.ipd.uw.edu/2024/11/introducing-rfpeptides-ai-for-cyclic-peptide-design/" target="_blank">UW IPD — Introducing RFpeptides – AI for Cyclic Peptide Design</a></div>
+      <div class="source-item"><span class="num">7</span><a href="https://pubs.rsc.org/en/content/articlehtml/2026/cc/d5cc04998a" target="_blank">RSC Chemical Communications — Peptide-based drug design using generative AI (2026)</a></div>
+      <div class="source-item"><span class="num">8</span><a href="https://www.biorxiv.org/content/10.64898/2026.03.22.713519v1" target="_blank">bioRxiv — AI-guided design of candidate BMPR1A-binding peptides (2026.03)</a></div>
+      <div class="source-item"><span class="num">9</span><a href="https://arxiv.org/abs/2511.04984" target="_blank">arXiv — Peptide2Mol: A Diffusion Model for Generating Small Molecules as Peptide Mimics</a></div>
+      <div class="source-item"><span class="num">10</span><a href="https://ardigen.com/ai-in-biotech-lessons-from-2025-and-the-trends-shaping-drug-discovery-in-2026/" target="_blank">Ardigen — AI in Biotech: 2026 Drug Discovery Trends</a></div>
+      <div class="source-item"><span class="num">11</span><a href="https://www.drugdiscoverynews.com/the-2026-ai-power-shift-17020" target="_blank">Drug Discovery News — The 2026 AI power shift</a></div>
+      <div class="source-item"><span class="num">12</span><a href="https://www.mt.co.kr/thebio/2026/04/03/2026040309295061291" target="_blank">머니투데이 — 온코크로스, 핵심 기술 美 특허 등록</a></div>
+      <div class="source-item"><span class="num">13</span><a href="https://www.kairnews.com/news/479505" target="_blank">한국AI부동산신문 — 2026년 1분기 바이오파마 VC 투자 동향</a></div>
+      <div class="source-item"><span class="num">14</span><a href="https://www.sandboxaq.com/openfold3" target="_blank">SandboxAQ — OpenFold3: Fully Open-Source Cofolding AI for Drug Discovery</a></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <span>BIO AI 핵심뉴스 · 2026.04.10</span>
+  <span>자동 수집 및 요약 — 크로스체크 완료 | 14개 출처</span>
+</footer>
+
+</body>
+</html>
