@@ -101,10 +101,27 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 - 예시: `PLIP_분석_보고서_20260304_1646.docx`
 - 예시: `시스템_설명서_구성안_20260409_1218.md`
 
+### 09_ai_news 폴더 파일명 규칙 (별도)
+
+`[YYYY-MM-DD] AI 핵심뉴스.html` / `[YYYY-MM-DD] BIO AI 핵심뉴스.html`
+
+- 예시: `[2026-04-12] AI 핵심뉴스.html`
+- 예시: `[2026-04-12] BIO AI 핵심뉴스.html`
+
 ### ⚠️ 클로드 작업 시 필수 규칙
 - **구성안 등 반복 수정 문서**: 업데이트 시마다 새 파일로 저장 (덮어쓰기 금지)
-- **날짜/시간**: 한국 시간(KST) 기준 `YYYYMMDD_HHMM` 형식
+- **날짜/시간**: 한국 시간(KST) 기준 `YYYYMMDD_HHMM` 형식 (반드시 `TZ='Asia/Seoul' date` 명령으로 실제 KST 확인 후 사용)
 - 새 파일 첫 줄에 이전 버전 파일명 기록
+- **파일 생성·수정 완료 시**: 응답 마지막에 반드시 `computer://` 링크를 제공하여 사용자가 바로 열어볼 수 있도록 한다
+
+### 세션 간 대화 요약 저장 규칙
+대화 섹션 간 정보 전달이 필요할 때 마크다운 파일로 저장한다.
+파일명: `대화요약_[주제]_YYYYMMDD_HHMM.md`
+
+| 대화 유형 | 저장 위치 |
+|----------|----------|
+| BIO AI 뉴스 관련 탐색·분석 대화 | `09_ai_news/_sessions/` |
+| 파이프라인 개발과 직결된 논의 | `08 클로드 인수인계 문서/` |
 
 ---
 
@@ -134,3 +151,7 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | 2026.03.20 | 노션 새 페이지 구조 생성 (내부/외부), 6개 모델 설명 코드 기반 검증 및 수정 | 노션 |
 | 2026.03.20 | PLIP FinalScore 제외 코드 반영 (가중치: PRODIGY 60%, Vina 30%, ipTM 10%) | pepbind06.py |
 | 2026.03.20 | ADCP(AutoDock CrankPep) STEP 4b로 코드 추가 (비교 평가용, 기본 비활성화) | pepbind06.py |
+| 2026.04.10 | 세션 간 대화 요약 저장 규칙 추가 (뉴스 대화 → 09_ai_news/_sessions/, 파이프라인 논의 → 08) | CLAUDE.md |
+| 2026.04.10 | BMPR1A 벤치마크 연구 분석 — Contact Recapitulation 지표 도입 검토 아이디어 도출 | 대화요약_BioAI논문분석_20260410_2036.md |
+| 2026.04.10 | PepMLM Nature Biotechnology 실험 검증 확인 (ELISA: NCAM1/AMHR2 나노몰 결합, 세포 분해 40% 히트율) | 대화요약_BioAI논문분석_20260410_2036.md |
+| 2026.04.12 | 09_ai_news 폴더 파일명 규칙 추가 (`[YYYY-MM-DD] AI 핵심뉴스.html` 형식) | CLAUDE.md |
