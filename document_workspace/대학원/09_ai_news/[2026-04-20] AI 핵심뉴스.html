@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-04-20] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0d1b2e 0%, #162540 50%, #0d1b2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 30px 40px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-left h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+  .header-left h1 span { color: var(--accent1); }
+  .header-left p { margin-top: 5px; color: var(--text-muted); font-size: 0.87rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.82rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px; white-space: nowrap;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+
+  .top-banner {
+    background: linear-gradient(135deg, #0f2035, #162840);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 14px; padding: 20px 26px;
+    display: flex; gap: 18px; align-items: flex-start;
+    margin-bottom: 30px;
+  }
+  .top-banner .icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .top-banner h2 { font-size: 1rem; font-weight: 700; color: var(--accent1); margin-bottom: 5px; }
+  .top-banner p { font-size: 0.875rem; color: #cdd9e5; line-height: 1.65; }
+
+  .section-label {
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .grid-wide { display: grid; grid-template-columns: repeat(auto-fill, minmax(490px, 1fr)); gap: 16px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 0.95rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.865rem; color: #cdd9e5; line-height: 1.68; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag { font-size: 0.71rem; font-weight: 600; padding: 3px 9px; border-radius: 11px; background: #1f3248; color: var(--accent1); border: 1px solid rgba(88,166,255,0.2); }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.855rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.78rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.855rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+
+  .model-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 4px; }
+  .model-table th { font-size: 0.69rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+  .model-table td { padding: 9px 10px; border-bottom: 1px solid #21272e; color: #cdd9e5; }
+  .model-table tr:last-child td { border-bottom: none; }
+  .model-table tr:hover td { background: #1b2230; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; padding: 4px 0; }
+  .summary-item .lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; }
+  .summary-item p { font-size: 0.84rem; color: #cdd9e5; line-height: 1.55; }
+
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.82rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.76rem; padding: 16px 0 32px; }
+
+  @media (max-width: 620px) {
+    header { padding: 20px 16px 16px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide { grid-template-columns: 1fr; }
+    .top-banner { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <h1><span>AI</span> 핵심뉴스</h1>
+      <p>오늘의 인공지능 산업 핵심 동향을 빠르게 파악하세요</p>
+    </div>
+    <div class="date-badge">2026. 04. 20 (일)</div>
+  </div>
+</header>
+
+<main>
+
+<!-- 오늘의 핵심 요약 -->
+<div class="top-banner">
+  <div class="icon">⚡</div>
+  <div>
+    <h2>Today's Highlight</h2>
+    <p>NSA가 국방부 블랙리스트에도 불구하고 Anthropic의 Mythos Preview를 사용 중인 것이 Axios에 의해 보도됨. 동시에 Anthropic은 연간매출 $30B(약 40조 원)을 돌파하며 처음으로 OpenAI($25B)를 역전. Opus 4.7 출시(4/16), Perplexity의 Mac용 AI 에이전트 'Personal Computer' 정식 출시(4/16) 등 굵직한 발표가 이어진 한 주.</p>
+  </div>
+</div>
+
+<!-- ========== 1. 모델 릴리스 & 기술 ========== -->
+<div class="section-label"><span class="sdot"></span>모델 릴리스 & 기술</div>
+<div class="grid">
+
+  <!-- Claude Opus 4.7 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(88,166,255,0.12);">🧠</div>
+      <h3>Anthropic, Claude Opus 4.7 출시</h3>
+    </div>
+    <div class="card-body">
+      4월 16일 정식 공개. SWE-bench Verified 87.6%, GPQA 94.2%로 Opus 4.6 대비 12/14개 벤치마크 우위. 비전 해상도 3.3배 향상(1,568px → 2,576px). 사이버보안 자동 차단 기능과 Cyber Verification Program 신설.
+    </div>
+    <ul class="blist">
+      <li>가격 유지: 입력 $5 / 출력 $25 (1M 토큰)</li>
+      <li>API, Bedrock, Vertex AI, Foundry 동시 지원</li>
+    </ul>
+    <div class="tags">
+      <span class="tag">Anthropic</span>
+      <span class="tag p">LLM</span>
+      <span class="tag g">코딩</span>
+    </div>
+  </div>
+
+  <!-- Claude Mythos 5 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(188,140,255,0.12);">🔮</div>
+      <h3>Claude Mythos 5 — 10조 파라미터 시대 개막</h3>
+    </div>
+    <div class="card-body">
+      사상 최초의 10T 파라미터 모델. MoE 아키텍처로 실제 활성 파라미터는 약 0.8~1.2T. 사이버보안·학술 추론·코딩 분야에서 Opus 4.6을 압도적으로 상회. 현재 제한된 얼리액세스 테스트 중이며 일반 공개 시점은 미정.
+    </div>
+    <div class="alert y">
+      <span class="ai">⚠️</span>
+      <span>3월 말 Anthropic 내부 CMS 오설정으로 ~3,000개 자산이 유출되며 존재가 공개됨. 내부 코드명 "Capybara".</span>
+    </div>
+    <div class="tags">
+      <span class="tag p">Anthropic</span>
+      <span class="tag">10T 파라미터</span>
+      <span class="tag y">미공개</span>
+    </div>
+  </div>
+
+  <!-- Google Gemma 4 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(63,185,80,0.12);">🌐</div>
+      <h3>Google, Gemma 4 오픈소스 공개</h3>
+    </div>
+    <div class="card-body">
+      4월 2일 출시. E2B(2B), E4B(4B), 26B MoE, 31B Dense 4개 변형 모델. Apache 2.0 완전 오픈 라이선스로 상업적 사용 무제한. 멀티모달(텍스트+이미지+오디오), 최대 256K 컨텍스트 윈도우, 라즈베리파이부터 고성능 GPU까지 지원.
+    </div>
+    <ul class="blist">
+      <li class="g">31B Dense 모델이 400B급 경쟁 모델과 동등한 벤치마크</li>
+      <li class="g">HuggingFace, Ollama, Kaggle 배포</li>
+    </ul>
+    <div class="tags">
+      <span class="tag g">Google DeepMind</span>
+      <span class="tag g">오픈소스</span>
+      <span class="tag">멀티모달</span>
+    </div>
+  </div>
+
+  <!-- DeepSeek V4 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(210,153,34,0.12);">🐉</div>
+      <h3>DeepSeek V4 — 1T MoE, 화웨이 칩 가동</h3>
+    </div>
+    <div class="card-body">
+      1T 파라미터 MoE 모델(활성 ~37B). Apache 2.0 오픈 웨이트. 듀얼 RTX 4090에서 구동 가능. 4월 4일 로이터 확인: 화웨이 Ascend 950PR 칩으로 운영되는 최초의 프론티어 모델. 훈련 비용 약 $5.2M으로 극히 저렴.
+    </div>
+    <ul class="blist">
+      <li class="y">Manifold-Constrained Hyper-Connections, Engram Memory, Sparse Attention 3대 혁신</li>
+      <li class="y">SWE-bench 81%, 컨텍스트 100만 토큰</li>
+    </ul>
+    <div class="tags">
+      <span class="tag y">DeepSeek</span>
+      <span class="tag y">화웨이 칩</span>
+      <span class="tag g">오픈소스</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== 2. 산업 & 비즈니스 ========== -->
+<div class="section-label"><span class="sdot y"></span>산업 & 비즈니스</div>
+<div class="grid">
+
+  <!-- Anthropic 매출 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(63,185,80,0.12);">📈</div>
+      <h3>Anthropic, 연간매출 $30B 돌파 — OpenAI 최초 역전</h3>
+    </div>
+    <div class="card-body">
+      2024년 12월 $1B → 2025년 말 $9B → 2026년 2월 $14B → 3월 $19B → 4월 $30B. 15개월 만에 30배 성장. 연매출 $100만 이상 기업 고객이 2개월 새 500 → 1,000개로 두 배 증가. OpenAI($25B)를 처음으로 추월.
+    </div>
+    <div class="tags">
+      <span class="tag g">Anthropic</span>
+      <span class="tag g">매출</span>
+      <span class="tag">IPO 가능성</span>
+    </div>
+  </div>
+
+  <!-- OpenAI-Cerebras 딜 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(88,166,255,0.12);">💰</div>
+      <h3>OpenAI, Cerebras에 $20B+ 3년 계약</h3>
+    </div>
+    <div class="card-body">
+      1월 $10B 계약의 두 배 규모로 확대. Cerebras 칩 기반 서버 사용료 + 데이터센터 개발 $1B 투자. 워런트로 Cerebras 최대 10% 지분 확보 가능. Cerebras는 $35B 밸류 상장 추진 중(Q2 목표).
+    </div>
+    <ul class="blist">
+      <li>NVIDIA 의존도 감소 전략의 일환</li>
+      <li>OpenAI 총 지출 3년 $30B까지 확대 가능</li>
+    </ul>
+    <div class="tags">
+      <span class="tag">OpenAI</span>
+      <span class="tag">Cerebras</span>
+      <span class="tag y">인프라</span>
+    </div>
+  </div>
+
+  <!-- Perplexity Personal Computer -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(188,140,255,0.12);">🖥️</div>
+      <h3>Perplexity, Mac용 'Personal Computer' 정식 출시</h3>
+    </div>
+    <div class="card-body">
+      4월 16일 Mac 정식 롤아웃. 약 20개 AI 모델을 조합해 로컬 파일·앱·웹을 통합 제어하는 상시가동 AI 에이전트. iMessage, Mail, Calendar 등 네이티브 앱과 연동. Command 키 두 번으로 호출. 텍스트/음성 명령 지원.
+    </div>
+    <ul class="blist">
+      <li class="y">킬 스위치, 사용자 확인 필수, 감사 추적 내장</li>
+      <li class="y">Mac mini 추천 · Perplexity Max 전용($200/월)</li>
+    </ul>
+    <div class="tags">
+      <span class="tag p">Perplexity</span>
+      <span class="tag">AI 에이전트</span>
+      <span class="tag">macOS</span>
+    </div>
+  </div>
+
+  <!-- PwC AI 보고서 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(210,153,34,0.12);">📊</div>
+      <h3>PwC: AI 경제적 이익의 75%를 상위 20% 기업이 독점</h3>
+    </div>
+    <div class="card-body">
+      PwC 2026 AI Performance Study 발표. AI 선도 기업은 단순 생산성이 아닌 '성장'에 집중. 에이전틱(Agentic) AI — 대화가 아닌 다단계 워크플로우 자율 실행 — 로 산업 무게중심 이동 중.
+    </div>
+    <div class="tags">
+      <span class="tag y">PwC</span>
+      <span class="tag">보고서</span>
+      <span class="tag g">에이전틱 AI</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== 3. 정책 & 안보 ========== -->
+<div class="section-label"><span class="sdot r"></span>정책 & 안보</div>
+<div class="grid-wide">
+
+  <!-- NSA Mythos -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(248,81,73,0.12);">🛡️</div>
+      <h3>NSA, 국방부 블랙리스트 불구 Mythos Preview 사용 중 (Axios)</h3>
+    </div>
+    <div class="card-body">
+      4월 19일 Axios 보도. 국방부는 2월 Anthropic을 "공급망 리스크"로 지정하고 제거 명령을 내렸으나, NSA는 Mythos Preview를 사이버보안 취약점 스캔에 활용 중. Anthropic CEO Dario Amodei가 백악관 수석비서관 Susie Wiles, 재무장관 Scott Bessent과 회동. 핵심 갈등: 국방부의 "모든 합법적 용도" 요구 vs. Anthropic의 "대량 감시·자율무기 개발 불가" 원칙.
+    </div>
+    <div class="alert r">
+      <span class="ai">🔴</span>
+      <span>Anthropic은 4월 8일 항소심에서 국방부 블랙리스트 임시 차단 요청 기각 판결을 받음. 법정 다툼 지속 중.</span>
+    </div>
+    <div class="tags">
+      <span class="tag r">NSA</span>
+      <span class="tag r">국방부</span>
+      <span class="tag p">Anthropic</span>
+      <span class="tag">사이버보안</span>
+    </div>
+  </div>
+
+  <!-- 중국 모델 복제 대응 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(248,81,73,0.12);">🤝</div>
+      <h3>OpenAI·Anthropic·Google, 중국 모델 복제 공동 대응</h3>
+    </div>
+    <div class="card-body">
+      4월 6일 Bloomberg 보도. 3사가 Frontier Model Forum을 통해 중국 기업의 적대적 증류(adversarial distillation) 탐지 정보를 공유하기 시작. 포럼이 창설 이래 처음으로 특정 외부 위협에 대한 능동적 위협 인텔리전스 운영에 나선 것. Anthropic은 DeepSeek·Moonshot AI·MiniMax가 24,000개 사기 계정으로 1,600만 건 이상의 Claude 대화를 생성했다고 주장.
+    </div>
+    <div class="tags">
+      <span class="tag r">Frontier Model Forum</span>
+      <span class="tag">증류 방어</span>
+      <span class="tag y">미·중 AI</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== 4. 법률 & 규제 ========== -->
+<div class="section-label"><span class="sdot y"></span>법률 & 규제</div>
+<div class="grid">
+
+  <!-- AI 환각 제재 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(210,153,34,0.12);">⚖️</div>
+      <h3>미국 법원, AI 환각(Hallucination) 제재 급증</h3>
+    </div>
+    <div class="card-body">
+      네브래스카 대법원이 항소심 서면에 AI 환각 인용 20건을 포함한 변호사에 업무정지 처분. 2026년 1분기 미국 법원의 AI 인용 오류 관련 제재 총액 $145,000+. AI 생성 법률 문서의 사실확인 의무가 사실상의 법적 기준으로 자리잡는 추세.
+    </div>
+    <div class="tags">
+      <span class="tag y">법률</span>
+      <span class="tag r">환각</span>
+      <span class="tag">규제</span>
+    </div>
+  </div>
+
+  <!-- Vercel 보안사고 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:rgba(248,81,73,0.12);">🔓</div>
+      <h3>Vercel 내부 시스템, 서드파티 AI 도구 취약점으로 침해</h3>
+    </div>
+    <div class="card-body">
+      BreachForums에서 보고된 Vercel 보안 사고. 서드파티 AI 도구의 취약점을 통해 내부 시스템이 침해된 사례로, AI 공급망 보안의 새로운 위험 유형을 보여줌.
+    </div>
+    <div class="tags">
+      <span class="tag r">보안사고</span>
+      <span class="tag">Vercel</span>
+      <span class="tag y">AI 공급망</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== 5. 주요 수치 요약 ========== -->
+<div class="section-label"><span class="sdot g"></span>이번 주 핵심 수치</div>
+<div class="card">
+  <table class="model-table">
+    <thead>
+      <tr>
+        <th>항목</th>
+        <th>수치</th>
+        <th>비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Anthropic 연간매출(ARR)</td>
+        <td><strong>$30B</strong></td>
+        <td>OpenAI $25B 최초 역전</td>
+      </tr>
+      <tr>
+        <td>Claude Mythos 5 파라미터</td>
+        <td><strong>10T (활성 ~1T)</strong></td>
+        <td>사상 최대 규모 MoE</td>
+      </tr>
+      <tr>
+        <td>Claude Opus 4.7 SWE-bench</td>
+        <td><strong>87.6%</strong></td>
+        <td>4/16 출시</td>
+      </tr>
+      <tr>
+        <td>OpenAI-Cerebras 계약</td>
+        <td><strong>$20B+ / 3년</strong></td>
+        <td>1월 $10B에서 2배 확대</td>
+      </tr>
+      <tr>
+        <td>DeepSeek V4 파라미터</td>
+        <td><strong>1T (활성 ~37B)</strong></td>
+        <td>화웨이 Ascend 950PR 칩</td>
+      </tr>
+      <tr>
+        <td>Gemma 4 최대 컨텍스트</td>
+        <td><strong>256K 토큰</strong></td>
+        <td>Apache 2.0 오픈소스</td>
+      </tr>
+      <tr>
+        <td>AI 환각 제재 (Q1)</td>
+        <td><strong>$145,000+</strong></td>
+        <td>미국 법원 기준</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ========== 출처 ========== -->
+<div class="sources">
+  <h2>출처</h2>
+  <ul>
+    <li><a href="https://www.anthropic.com/news/claude-opus-4-7" target="_blank">Anthropic — Introducing Claude Opus 4.7</a></li>
+    <li><a href="https://www.axios.com/2026/04/16/anthropic-claude-opus-model-mythos" target="_blank">Axios — Anthropic releases Claude Opus 4.7, concedes it trails unreleased Mythos</a></li>
+    <li><a href="https://www.cnbc.com/2026/04/16/anthropic-claude-opus-4-7-model-mythos.html" target="_blank">CNBC — Anthropic releases Claude Opus 4.7, a less risky model than Mythos</a></li>
+    <li><a href="https://medium.com/ai-analytics-diaries/claude-mythos-5-the-first-10-trillion-parameter-model-scaling-laws-hit-a-new-milestone-fa542be336f8" target="_blank">Medium — Claude Mythos 5: The First 10-Trillion-Parameter Model</a></li>
+    <li><a href="https://smartchunks.com/anthropic-claude-mythos-5-10-trillion-parameters-cybersecurity/" target="_blank">Smart Chunks — Anthropic's 10T Parameter Model</a></li>
+    <li><a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank">Google Blog — Gemma 4: Byte for byte, the most capable open models</a></li>
+    <li><a href="https://deepmind.google/models/gemma/gemma-4/" target="_blank">Google DeepMind — Gemma 4</a></li>
+    <li><a href="https://www.nxcode.io/resources/news/deepseek-v4-release-specs-benchmarks-2026" target="_blank">NxCode — DeepSeek V4: 1T Parameters, Full Specs</a></li>
+    <li><a href="https://findskill.ai/blog/deepseek-v4-release-date-specs/" target="_blank">FindSkill.ai — DeepSeek V4: Release Date, Specs, and the Huawei Chip</a></li>
+    <li><a href="https://www.pymnts.com/artificial-intelligence-2/2026/anthropic-hits-30-billion-run-rate-as-enterprise-demand-accelerates/" target="_blank">PYMNTS — Anthropic Hits $30 Billion Run Rate</a></li>
+    <li><a href="https://www.axios.com/2026/04/13/anthropic-revenue-growth-ai" target="_blank">Axios — No company in American history has ever grown like Anthropic</a></li>
+    <li><a href="https://www.manilatimes.net/2026/04/18/business/foreign-business/openai-to-spend-more-than-20-billion-on-cerebras-chips-receive-stake/2322863" target="_blank">Manila Times — OpenAI to spend more than $20 billion on Cerebras chips</a></li>
+    <li><a href="https://www.gurufocus.com/news/8800280/openai-partners-with-cerebras-for-20-billion-deal-reducing-nvidia-dependency" target="_blank">GuruFocus — OpenAI Partners with Cerebras for $20 Billion Deal</a></li>
+    <li><a href="https://www.macrumors.com/2026/04/16/perplexity-personal-computer-for-mac/" target="_blank">MacRumors — Perplexity Launches Personal Computer for Mac</a></li>
+    <li><a href="https://9to5mac.com/2026/04/16/perplexitys-personal-computer-ai-assistant-feature-launches-on-mac-for-subscribers/" target="_blank">9to5Mac — Perplexity's Personal Computer AI assistant</a></li>
+    <li><a href="https://www.pwc.com/gx/en/news-room/press-releases/2026/pwc-2026-ai-performance-study.html" target="_blank">PwC — 2026 AI Performance Study</a></li>
+    <li><a href="https://www.axios.com/2026/04/19/nsa-anthropic-mythos-pentagon" target="_blank">Axios — NSA using Anthropic's Mythos despite Pentagon blacklist</a></li>
+    <li><a href="https://www.cnbc.com/2026/04/08/anthropic-pentagon-court-ruling-supply-chain-risk.html" target="_blank">CNBC — Anthropic loses appeals court bid for Pentagon blacklisting</a></li>
+    <li><a href="https://www.bloomberg.com/news/articles/2026-04-06/openai-anthropic-google-unite-to-combat-model-copying-in-china" target="_blank">Bloomberg — OpenAI, Anthropic, Google Unite to Combat Model Copying in China</a></li>
+    <li><a href="https://the-decoder.com/openai-anthropic-and-google-team-up-against-unauthorized-chinese-model-copying/" target="_blank">The Decoder — US firms team up against Chinese model copying</a></li>
+    <li><a href="https://llm-stats.com/ai-news" target="_blank">LLM Stats — LLM News Today (April 2026)</a></li>
+    <li><a href="https://www.nature.com/articles/d41586-026-01199-z" target="_blank">Nature — Human scientists trounce the best AI agents on complex tasks</a></li>
+  </ul>
+</div>
+
+</main>
+
+<footer>
+  AI 핵심뉴스 — 2026년 4월 20일 · 자동 수집 및 교차 검증 기반 생성
+</footer>
+
+</body>
+</html>
