@@ -101,7 +101,15 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 - 예시: `PLIP_분석_보고서_20260304_1646.docx`
 - 예시: `시스템_설명서_구성안_20260409_1218.md`
 
-### 09_ai_news 폴더 파일명 규칙 (별도)
+### 09_ai 폴더 파일명 규칙 (별도)
+
+**폴더 구조**
+```
+09_ai/
+├── 01_news/     ← AI·BIO AI 핵심뉴스 html 파일 (매주 월요일 자동 저장)
+├── 02_paper/    ← AI 관련 논문·중요 paper 정리 문서
+└── _sessions/   ← 세션 간 대화 요약 저장
+```
 
 `[YYYY-MM-DD] AI 핵심뉴스.html` / `[YYYY-MM-DD] BIO AI 핵심뉴스.html`
 
@@ -120,7 +128,7 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 
 | 대화 유형 | 저장 위치 |
 |----------|----------|
-| BIO AI 뉴스 관련 탐색·분석 대화 | `09_ai_news/_sessions/` |
+| BIO AI 뉴스 관련 탐색·분석 대화 | `09_ai/_sessions/` |
 | 파이프라인 개발과 직결된 논의 | `08 클로드 인수인계 문서/` |
 
 ---
@@ -155,3 +163,5 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | 2026.04.10 | BMPR1A 벤치마크 연구 분석 — Contact Recapitulation 지표 도입 검토 아이디어 도출 | 대화요약_BioAI논문분석_20260410_2036.md |
 | 2026.04.10 | PepMLM Nature Biotechnology 실험 검증 확인 (ELISA: NCAM1/AMHR2 나노몰 결합, 세포 분해 40% 히트율) | 대화요약_BioAI논문분석_20260410_2036.md |
 | 2026.04.12 | 09_ai_news 폴더 파일명 규칙 추가 (`[YYYY-MM-DD] AI 핵심뉴스.html` 형식) | CLAUDE.md |
+| 2026.04.21 | 09_ai_news → 09_ai 폴더 재구조화 (01_news, 02_paper, _sessions 서브폴더 생성) | CLAUDE.md |
+| 2026.04.21 | 스케줄 작업(weekly-ai_news, weekly-bio_ai_news) 저장 경로 09_ai/01_news 로 수정 | - |
