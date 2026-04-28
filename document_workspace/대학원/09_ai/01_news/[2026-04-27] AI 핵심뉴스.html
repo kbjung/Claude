@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-04-27] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0d1b2e 0%, #162540 50%, #0d1b2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 30px 40px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-left h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+  .header-left h1 span { color: var(--accent1); }
+  .header-left p { margin-top: 5px; color: var(--text-muted); font-size: 0.87rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.82rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px; white-space: nowrap;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+
+  .top-banner {
+    background: linear-gradient(135deg, #0f2035, #162840);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 14px; padding: 20px 26px;
+    display: flex; gap: 18px; align-items: flex-start;
+    margin-bottom: 30px;
+  }
+  .top-banner .icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .top-banner h2 { font-size: 1rem; font-weight: 700; color: var(--accent1); margin-bottom: 5px; }
+  .top-banner p { font-size: 0.875rem; color: #cdd9e5; line-height: 1.65; }
+
+  .section-label {
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .grid-wide { display: grid; grid-template-columns: repeat(auto-fill, minmax(490px, 1fr)); gap: 16px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 0.95rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.865rem; color: #cdd9e5; line-height: 1.68; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag { font-size: 0.71rem; font-weight: 600; padding: 3px 9px; border-radius: 11px; background: #1f3248; color: var(--accent1); border: 1px solid rgba(88,166,255,0.2); }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.855rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.78rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.855rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+
+  .model-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 4px; }
+  .model-table th { font-size: 0.69rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+  .model-table td { padding: 9px 10px; border-bottom: 1px solid #21272e; color: #cdd9e5; }
+  .model-table tr:last-child td { border-bottom: none; }
+  .model-table tr:hover td { background: #1b2230; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; padding: 4px 0; }
+  .summary-item .lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; }
+  .summary-item p { font-size: 0.84rem; color: #cdd9e5; line-height: 1.55; }
+
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.82rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.76rem; padding: 16px 0 32px; }
+
+  @media (max-width: 620px) {
+    header { padding: 20px 16px 16px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide { grid-template-columns: 1fr; }
+    .top-banner { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>⚡ <span>AI</span> 핵심뉴스</h1>
+      <p>지난 한 주간의 AI 주요 동향 — 모델 출시 · 투자 · 정책 · 연구</p>
+    </div>
+    <div class="date-badge">2026-04-27 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- 이번 주 요약 배너 -->
+  <div class="top-banner">
+    <div class="icon">🔥</div>
+    <div>
+      <h2>이번 주 핵심 요약</h2>
+      <p>DeepSeek V4(1.6조 파라미터) · Meta Muse Spark 공개 / Google, Anthropic에 최대 400억 달러 투자 발표 / Google Cloud Next '26에서 Gemini Enterprise 에이전트 플랫폼 공개 / Anthropic, 클로드 감정 패턴 해석 논문 발표 / 美 백악관 AI 정책 프레임워크 발표 · EU AI Act 시행 연기 논의</p>
+    </div>
+  </div>
+
+  <!-- ① 모델 출시 / 업데이트 -->
+  <div class="section-label"><span class="sdot"></span> Model Releases &amp; Updates</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2a40;">🇨🇳</div>
+        <h3>DeepSeek V4 프리뷰 공개 (오픈소스)</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-24</span>
+        <span class="tag p">DeepSeek</span>
+        <span class="tag g">오픈소스</span>
+      </div>
+      <div class="card-body">
+        중국 AI 스타트업 DeepSeek이 V4 프리뷰를 공개하고 동시에 오픈소스로 공개했다. V4-Pro(1.6조 파라미터 / 활성 49B)와 V4-Flash(284B / 활성 13B) 두 모델을 제공하며, 두 모델 모두 <strong>1M 컨텍스트 창</strong>과 Thinking / Non-Thinking 이중 모드를 지원한다.
+      </div>
+      <ul class="blist">
+        <li>핵심 혁신: CSA+HCA 하이브리드 어텐션 — V3 대비 KV 캐시 90% 절감</li>
+        <li>에이전틱 코딩 벤치마크 오픈소스 SOTA 달성</li>
+        <li class="y">가격: Flash $0.14/M 토큰, Pro $1.74/M 토큰 (입력 기준)</li>
+        <li class="r">기존 deepseek-chat · deepseek-reasoner는 2026-07-24 이후 종료</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e2a1e;">🦙</div>
+        <h3>Meta Muse Spark 출시 — Meta Superintelligence Labs 첫 작품</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-08</span>
+        <span class="tag g">Meta</span>
+        <span class="tag p">멀티모달</span>
+      </div>
+      <div class="card-body">
+        Alexandr Wang 영입 후 신설된 Meta Superintelligence Labs가 첫 모델 Muse Spark를 발표했다. 텍스트·이미지·음성을 입력받는 <strong>네이티브 멀티모달 추론 모델</strong>로, 도구 사용·시각적 사고·멀티에이전트 오케스트레이션을 지원한다.
+      </div>
+      <ul class="blist">
+        <li>Meta AI 앱·웹사이트 현재 탑재, WhatsApp·Instagram 등 순차 확대 예정</li>
+        <li class="g">건강 정보 처리 및 멀티모달 이해 분야에서 선두권 경쟁력</li>
+        <li class="y">코딩 성능은 OpenAI·Anthropic·Google 대비 아직 격차 존재</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1f2020;">🤖</div>
+        <h3>GPT-5.5 API 출시 — OpenAI의 완전 재학습 플래그십</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-23</span>
+        <span class="tag">OpenAI</span>
+      </div>
+      <div class="card-body">
+        OpenAI가 GPT-4.5 이후 완전히 새롭게 재학습한 기초 모델 GPT-5.5를 공식 발표하고 API를 즉시 개방했다. <strong>100만 토큰 컨텍스트 창</strong>을 지원하며, OpenAI는 이를 "새로운 차원의 지능(a new class of intelligence)"으로 규정했다.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 투자 / 비즈니스 -->
+  <div class="section-label"><span class="sdot y"></span> Business &amp; Investment</div>
+  <div class="grid-wide">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e2510;">💰</div>
+        <h3>Google, Anthropic에 최대 400억 달러 투자 — AI 최대 규모 단일 투자</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-24</span>
+        <span class="tag y">투자</span>
+        <span class="tag g">Anthropic</span>
+      </div>
+      <div class="card-body">
+        Google(Alphabet)이 Anthropic에 최대 <strong>400억 달러(약 56조 원)</strong> 투자를 발표했다. 우선 100억 달러를 즉시 출자(기업가치 3,500억 달러 기준)하고, 나머지 300억 달러는 성과 목표 달성 시 추가 집행한다.
+      </div>
+      <ul class="blist">
+        <li class="g">Anthropic 연간 반복 매출(ARR) 이미 300억 달러 돌파 (2025년 말 90억 달러 → 급성장)</li>
+        <li>Google Cloud, 향후 5년간 5GW 컴퓨팅 용량 제공 계약 포함</li>
+        <li>Amazon도 같은 시기 최대 250억 달러 추가 투자 발표 — 동시 경쟁·파트너 관계</li>
+        <li class="y">Google은 Gemini 라인업으로 Anthropic과 동시에 경쟁하는 이중 구도 지속</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🌐</div>
+        <h3>Google Cloud Next '26 — Gemini Enterprise 에이전트 플랫폼 공개</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-22</span>
+        <span class="tag">Google Cloud</span>
+        <span class="tag p">에이전트</span>
+      </div>
+      <div class="card-body">
+        라스베이거스에서 개최된 Google Cloud Next '26에서 <strong>Gemini Enterprise Agent Platform</strong>을 발표했다. Vertex AI를 대체하는 기업용 AI 개발 환경으로, 에이전트 빌드·배포·보안·최적화를 단일 플랫폼으로 통합했다.
+      </div>
+      <ul class="blist">
+        <li>8세대 TPU, 에이전틱 데이터 클라우드(크로스클라우드 Lakehouse) 함께 발표</li>
+        <li class="g">파트너 생태계 지원을 위한 7억 5천만 달러 펀드 조성</li>
+        <li>CEO Thomas Kurian: "실험 단계는 끝났다. 이제 진짜 도전이 시작된다"</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책 / 규제 -->
+  <div class="section-label"><span class="sdot r"></span> Policy &amp; Regulation</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d1a0a;">🏛️</div>
+        <h3>美 백악관, AI 국가 정책 프레임워크 발표</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-03-20 발표</span>
+        <span class="tag r">미국 정책</span>
+      </div>
+      <div class="card-body">
+        백악관이 AI 국가 정책 프레임워크를 발표하며 <strong>연방 정부의 주(州) AI 법률 선점권 권고</strong>를 핵심으로 내세웠다. 법무부는 AI 소송 태스크포스를 신설해 "불합리한 부담을 부과하는" 주 AI 법률에 도전하는 역할을 맡는다.
+      </div>
+      <div class="alert y">
+        <span class="ai">⚠️</span>
+        <span>뉴욕주 RAISE Act는 2026-03-27 개정안 서명으로 투명성·보고 중심으로 완화. 규제 환경이 연방 주도로 재편 중.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1a2d;">🇪🇺</div>
+        <h3>EU AI Act 시행 연기 논의 · ChatGPT DSA 적용 추진</h3>
+      </div>
+      <div class="tags">
+        <span class="tag r">EU 규제</span>
+        <span class="tag y">2026-04</span>
+      </div>
+      <div class="card-body">
+        EU 기관들이 AI Act 주요 준수 기한을 <strong>2027~2028년으로 연기</strong>하는 방안을 검토 중이다. 동시에 ChatGPT를 디지털서비스법(DSA)의 엄격한 온라인 플랫폼 규정 적용 대상으로 분류하는 방안도 추진, OpenAI가 EU 최강도 규제를 받을 가능성이 높아졌다.
+      </div>
+      <div class="alert r">
+        <span class="ai">⚠️</span>
+        <span>Amnesty International 등 시민사회: EU 기술법 '단순화' 명목의 규제 완화가 기본권 보호를 후퇴시킨다고 비판.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 연구 / 기술 -->
+  <div class="section-label"><span class="sdot p"></span> Research &amp; Technology</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1b30;">🧠</div>
+        <h3>Anthropic, 클로드 내부 '감정 패턴' 171개 식별</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-02</span>
+        <span class="tag p">해석가능성</span>
+        <span class="tag">Anthropic</span>
+      </div>
+      <div class="card-body">
+        Anthropic 해석가능성 팀이 <em>"Emotion Concepts and their Function in a Large Language Model"</em> 논문을 발표했다. Claude Sonnet 4.5 내부에서 행동에 인과적 영향을 미치는 <strong>171개의 '기능적 감정' 활성화 패턴</strong>을 식별했다. LLM 내부 상태 해석 연구의 이정표로 평가된다.
+      </div>
+      <div class="tags" style="margin-top:4px;">
+        <span class="tag p">논문</span>
+        <span class="tag">Anthropic Interpretability Team</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0f2820;">🤖</div>
+        <h3>소니 AI 로봇, 탁구 인간 전문가 최초 격파 — Nature 표지</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-23</span>
+        <span class="tag g">로보틱스</span>
+        <span class="tag p">Nature</span>
+      </div>
+      <div class="card-body">
+        소니 AI가 <em>"Outplaying Elite Table Tennis Players with an Autonomous Robot"</em>을 Nature 표지 논문으로 발표했다. <strong>실제 스포츠 경기에서 인간 전문가 수준을 달성한 로봇 최초 사례</strong>로 기록됐다. 5월 비엔나 ICRA 2026에서 추가 발표 예정.
+      </div>
+      <div class="tags" style="margin-top:4px;">
+        <span class="tag p">논문</span>
+        <span class="tag">Sony AI</span>
+        <span class="tag g">Nature (2026-04-23)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1f10;">⚡</div>
+        <h3>신경망 + 심볼릭 추론 결합으로 AI 에너지 소비 100배 절감</h3>
+      </div>
+      <div class="tags">
+        <span class="tag y">2026-04</span>
+        <span class="tag g">효율화</span>
+      </div>
+      <div class="card-body">
+        ScienceDaily 발표 연구에 따르면, 신경망과 인간 유사 심볼릭 추론을 결합한 새로운 접근법이 AI 에너지 사용을 최대 <strong>100배 절감</strong>하면서 정확도까지 향상시키는 것으로 나타났다. 5월 ICRA 2026 비엔나에서 정식 발표 예정.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🔬</div>
+        <h3>Google TurboQuant — 모델 압축 알고리즘 ICLR 2026 발표</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">ICLR 2026</span>
+        <span class="tag">Google Research</span>
+        <span class="tag p">모델 압축</span>
+      </div>
+      <div class="card-body">
+        Google 연구팀이 ICLR 2026에서 <strong>TurboQuant</strong>를 발표했다. 벡터 양자화(Vector Quantization)에서 발생하는 메모리 오버헤드 문제를 해결하는 새로운 알고리즘으로, 대형 모델의 효율적 배포에 기여할 전망이다.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 소스 -->
+  <div class="sources">
+    <h2>📎 Sources</h2>
+    <ul>
+      <li><a href="https://api-docs.deepseek.com/news/news260424" target="_blank">DeepSeek V4 Preview Release — DeepSeek API Docs (2026-04-24)</a></li>
+      <li><a href="https://www.cnbc.com/2026/04/24/deepseek-v4-llm-preview-open-source-ai-competition-china.html" target="_blank">China's DeepSeek releases preview of long-awaited V4 model — CNBC (2026-04-24)</a></li>
+      <li><a href="https://about.fb.com/news/2026/04/introducing-muse-spark-meta-superintelligence-labs/" target="_blank">Introducing Muse Spark: Meta's Most Powerful Model Yet — Meta (2026-04-08)</a></li>
+      <li><a href="https://www.cnbc.com/2026/04/24/google-to-invest-up-to-40-billion-in-anthropic-as-search-giant-spreads-its-ai-bets.html" target="_blank">Google to invest up to $40 billion in Anthropic — CNBC (2026-04-24)</a></li>
+      <li><a href="https://techcrunch.com/2026/04/24/google-to-invest-up-to-40b-in-anthropic-in-cash-and-compute/" target="_blank">Google to invest up to $40B in Anthropic in cash and compute — TechCrunch (2026-04-24)</a></li>
+      <li><a href="https://cloud.google.com/blog/topics/google-cloud-next/welcome-to-google-cloud-next26" target="_blank">Welcome to Google Cloud Next '26 — Google Cloud Blog (2026-04-22)</a></li>
+      <li><a href="https://siliconangle.com/2026/04/22/google-puts-gemini-enterprise-heart-new-agentic-taskforce-enterprise-automation/" target="_blank">Google puts Gemini Enterprise at the heart of the new agentic taskforce — SiliconAngle (2026-04-22)</a></li>
+      <li><a href="https://www.consumerfinancemonitor.com/2026/04/08/the-white-houses-national-policy-framework-for-artificial-intelligence-what-it-means-and-what-comes-next/" target="_blank">The White House's National Policy Framework for AI — Consumer Finance Monitor (2026-04-08)</a></li>
+      <li><a href="https://www.cooley.com/news/insight/2026/2026-04-24-state-ai-laws-where-are-they-now" target="_blank">State AI Laws – Where Are They Now? — Cooley (2026-04-24)</a></li>
+      <li><a href="https://www.computing.co.uk/news/2026/legislation-regulation/eu-to-classify-chatgpt-under-strict-online-platform-rules" target="_blank">EU set to classify ChatGPT under strict online platform rules — Computing (2026-04)</a></li>
+      <li><a href="https://www.sciencedaily.com/releases/2026/04/260405003952.htm" target="_blank">AI breakthrough cuts energy use by 100x while boosting accuracy — ScienceDaily (2026-04)</a></li>
+      <li><a href="https://ai.sony/news/sony-ai-announces-breakthrough-research-in-real-world-artificial-intelligence-and-robotics" target="_blank">Sony AI Announces Breakthrough Research — Sony AI (2026-04-23)</a></li>
+      <li><a href="https://www.anthropic.com/news" target="_blank">Anthropic News — Emotion Concepts in LLMs (2026-04-02)</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>Generated 2026-04-27 · AI 핵심뉴스 주간 자동 정리</footer>
+
+</body>
+</html>
