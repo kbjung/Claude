@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CleaveNet 논문 영한 대역 학습 문서</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #f5f7fa; color: #333; line-height: 1.7; }
+
+  /* 상단 네비게이션 */
+  .top-nav { position: sticky; top: 0; z-index: 100; background: #1a365d; color: #fff; padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .nav-inner { max-width: 1440px; margin: 0 auto; padding: 0 24px; }
+  .nav-links { display: flex; flex-wrap: wrap; gap: 5px; }
+  .nav-links a { color: #bee3f8; text-decoration: none; font-size: 11px; padding: 3px 9px; border-radius: 12px; background: rgba(255,255,255,0.1); transition: all 0.2s; white-space: nowrap; }
+  .nav-links a:hover { background: #3182ce; color: #fff; }
+
+  .container { max-width: 1440px; margin: 0 auto; padding: 20px; }
+
+  .paper-meta { background: linear-gradient(135deg, #ebf8ff, #f0fff4); border: 1px solid #bee3f8; border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+  .paper-meta .meta-title { font-size: 17px; font-weight: 700; color: #1a365d; margin-bottom: 12px; line-height: 1.5; }
+  .paper-meta .meta-row { margin-bottom: 8px; font-size: 13px; line-height: 1.6; }
+  .paper-meta .meta-label { font-weight: 700; color: #2b6cb0; }
+  .paper-meta .meta-aff { font-size: 11.5px; color: #555; margin: 2px 0 2px 16px; }
+  .paper-meta a { color: #2b6cb0; text-decoration: underline; }
+
+  .section { margin-bottom: 12px; background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: visible; }
+  .section-header { border-radius: 10px 10px 0 0; background: #2b6cb0; color: #fff; padding: 12px 20px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .section-header:hover { background: #2c5282; }
+  .section-header .toggle { font-size: 16px; transition: transform 0.3s; }
+  .section-header .toggle.collapsed { transform: rotate(-90deg); }
+  .section-header.is-collapsed { border-radius: 10px; }
+  .section-body { overflow: visible; position: relative; }
+  .section-body:last-child { border-radius: 0 0 10px 10px; }
+
+  .section-header .vocab .tip { z-index: 200; }
+  .section-header.level-3 .vocab { border-bottom: 2px dotted #e53e3e; color: #e53e3e; font-weight: 600; cursor: pointer; }
+  .section-header:not(.level-3) .vocab { border-bottom: none; color: inherit; font-weight: inherit; cursor: pointer; }
+
+  .section.level-2-section { margin: 0 16px; margin-bottom: 0; box-shadow: none; border-radius: 0; }
+  .section-header.level-2 { background: #3182ce; font-size: 13.5px; padding: 10px 20px 10px 24px; border-radius: 0; }
+  .section-header.level-2:hover { background: #2b6cb0; }
+
+  .section.level-3-section { margin: 0 16px; margin-bottom: 0; box-shadow: none; border-radius: 0; }
+  .section-header.level-3 { background: #4299e1; font-size: 12.5px; font-weight: 600; padding: 8px 20px 8px 24px; border-radius: 0; display: flex; justify-content: space-between; align-items: center; }
+  .section-header.level-3:hover { background: #3182ce; }
+  .section-header.level-3 .toggle { margin-left: auto; flex-shrink: 0; }
+
+  .para-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e2e8f0; overflow: visible; }
+  .para-row:last-child { border-bottom: none; }
+  .para-en, .para-ko { padding: 14px 20px; font-size: 13.5px; line-height: 1.85; overflow: visible; position: relative; }
+  .para-en { background: #fafbfc; border-right: 2px solid #e2e8f0; color: #2d3748; }
+  .para-ko { background: #fff; color: #1a202c; }
+
+  .vocab { border-bottom: 2px dotted #e53e3e; color: #c53030; font-weight: 600; cursor: help; position: relative; }
+  .vocab .tip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #2d3748; color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; font-weight: 400; z-index: 150; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .vocab .tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #2d3748; }
+  .vocab:hover .tip { display: block; }
+
+  .km { color: #3182ce; font-size: 12px; font-weight: 600; }
+
+  .fig-row { grid-column: 1 / -1; padding: 16px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: center; }
+  .fig-row img { max-width: 100%; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .fig-caption { margin-top: 8px; font-size: 12px; color: #555; line-height: 1.6; text-align: left; }
+  .fig-caption-ko { margin-top: 4px; font-size: 12px; color: #2b6cb0; line-height: 1.6; text-align: left; }
+
+  .glossary { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 28px; }
+  .glossary h2 { font-size: 16px; color: #1a365d; margin-bottom: 14px; border-bottom: 2px solid #2b6cb0; padding-bottom: 6px; }
+  .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 6px; }
+  .glossary-item { display: grid; grid-template-columns: 200px 1fr; padding: 5px 10px; border-radius: 4px; font-size: 12px; }
+  .glossary-item:nth-child(odd) { background: #f7fafc; }
+  .glossary-item .g-en { font-weight: 700; color: #c53030; }
+  .glossary-item .g-ko { color: #2d3748; }
+
+  .user-vocab { background: #fffbeb; border: 2px dashed #d69e2e; border-radius: 10px; padding: 20px; margin-bottom: 28px; }
+  .user-vocab h2 { font-size: 16px; color: #975a16; margin-bottom: 10px; }
+  .user-vocab p { font-size: 12px; color: #744210; margin-bottom: 10px; }
+
+  a.ref-link { color: #2b6cb0; text-decoration: none; font-size: 11px; vertical-align: super; }
+  a.ref-link:hover { text-decoration: underline; }
+  .ref-item { font-size: 12.5px; margin-bottom: 6px; line-height: 1.6; padding-left: 28px; text-indent: -28px; }
+  .ref-item .ref-num { font-weight: 700; color: #2b6cb0; }
+
+  .section[id], .paper-meta[id], .glossary[id], .user-vocab[id] { scroll-margin-top: 90px; }
+  .ref-item[id] { scroll-margin-top: 90px; }
+
+  @media (max-width: 768px) { .para-row { grid-template-columns: 1fr; } .para-en { border-right: none; border-bottom: 1px solid #e2e8f0; } }
+  @media print { .top-nav, .user-vocab { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a href="#sec-meta">논문정보</a>
+      <a href="#sec-abstract">Abstract</a>
+      <a href="#sec-intro">Introduction</a>
+      <a href="#sec-results">Results</a>
+      <a href="#sec-discussion">Discussion</a>
+      <a href="#sec-methods">Methods</a>
+      <a href="#sec-data-avail">Data·Code Availability</a>
+      <a href="#sec-references">References</a>
+      <a href="#sec-glossary">용어사전</a>
+      <a href="#sec-uservocab">내 단어장</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- 문서 제목 + 작성일 -->
+<div class="paper-meta" style="margin-bottom: 16px;">
+  <div class="meta-title" style="margin-bottom: 8px;">CleaveNet 논문 영한 대역 | Martin-Alonso et al., Nature Communications (2026)</div>
+  <div style="font-size: 12px; color: #4a5568;">📅 문서 작성일: 2026.04.30 20:31 (KST) &nbsp;|&nbsp; 최종 수정일: 2026.04.30 20:31 (KST)</div>
+</div>
+
+<!-- 논문 메타데이터 -->
+<div class="paper-meta" id="sec-meta">
+  <div class="meta-title">
+    Deep learning guided design of protease substrates<br>
+    <span style="font-size:14px; color:#2b6cb0; font-weight:600;">딥러닝 기반 단백질가수분해효소(프로테아제) 기질 설계</span>
+  </div>
+  <div class="meta-row"><span class="meta-label">저자 (Authors):</span> Carmen Martin-Alonso<sup>1,2,10</sup>, Sarah Alamdari<sup>3,10</sup>, Tahoura S. Samad<sup>1</sup>, Kevin K. Yang<sup>3</sup>, Sangeeta N. Bhatia<sup>1,2,4-9,11</sup>, Ava P. Amini<sup>3,11</sup></div>
+  <div class="meta-aff">1. Koch Institute for Integrative Cancer Research, MIT</div>
+  <div class="meta-aff">2. Harvard-MIT Division of Health Sciences and Technology, MIT</div>
+  <div class="meta-aff">3. Microsoft Research, Cambridge, MA</div>
+  <div class="meta-aff">4-9. Institute for Medical Engineering and Science · Marble Center for Cancer Nanomedicine · Broad Institute · MIT EECS · Wyss Institute · Howard Hughes Medical Institute</div>
+  <div class="meta-aff">10. 공동 1저자 &nbsp;·&nbsp; 11. 공동 교신저자</div>
+  <div class="meta-row" style="margin-top: 10px;"><span class="meta-label">저널:</span> Nature Communications (2026) 17:54</div>
+  <div class="meta-row"><span class="meta-label">접수/게재:</span> Received 31 March 2025 · Accepted 25 November 2025</div>
+  <div class="meta-row"><span class="meta-label">DOI:</span> <a href="https://doi.org/10.1038/s41467-025-67226-1" target="_blank">https://doi.org/10.1038/s41467-025-67226-1</a></div>
+  <div class="meta-row"><span class="meta-label">Source Code:</span> <a href="https://github.com/microsoft/cleavenet" target="_blank">github.com/microsoft/cleavenet</a></div>
+  <div class="meta-row"><span class="meta-label">Keywords:</span> Protease substrate design, Deep learning, Generative AI, Matrix metalloproteinases (MMP), CleaveNet, Conditional generation, In vitro screening</div>
+  <div class="meta-row"><span class="meta-label">교신:</span> sbhatia@mit.edu · ava.amini@microsoft.com</div>
+</div>
+
+<!-- ===== Abstract ===== -->
+<div class="section" id="sec-abstract">
+  <div class="section-header" onclick="toggleSection(this)">Abstract (초록) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">
+        <span class="vocab">Proteases<span class="tip">단백질가수분해효소</span></span>, enzymes that play critical roles in health and disease, exert their function through the <span class="vocab">cleavage<span class="tip">절단·분해</span></span> of peptide bonds. Identifying <span class="vocab">substrates<span class="tip">기질(효소 작용 대상)</span></span> that are efficiently and selectively cleaved by target proteases is essential for studying protease activity and for harnessing it in protease-activated diagnostics and therapeutics. However, the vast design space of possible substrates (c.a. 20<sup>10</sup> amino acid combinations for a 10-mer peptide) and the limited accessibility of high-throughput activity profiling tools hinder the speed and success of substrate design. We present <span class="vocab">CleaveNet<span class="tip">본 논문이 제안하는 AI 파이프라인 명칭</span></span>, an end-to-end AI pipeline for the design of protease substrates. Applied to <span class="vocab">matrix metalloproteinases<span class="tip">기질금속단백질분해효소(MMP)</span></span>, CleaveNet enhances the scale, tunability, and efficiency of substrate design. CleaveNet generates peptide substrates that exhibit sound biophysical properties and capture not only well-established but also previously-uncharacterized cleavage motifs. To control substrate design, CleaveNet incorporates a <span class="vocab">conditioning tag<span class="tip">조건 태그(원하는 절단 프로파일을 입력해 생성을 조향)</span></span> that steers peptide generation towards desired cleavage profiles, enabling targeted design of efficient and selective substrates. CleaveNet-generated substrates were validated experimentally through a large-scale <span class="vocab">in vitro<span class="tip">시험관 내(생체외)</span></span> screen, even in the challenging case of designing highly selective substrates for MMP13. We envision that CleaveNet will accelerate our ability to study and capitalize on protease activity, paving the way for in silico design tools across enzyme classes.
+      </div>
+      <div class="para-ko">
+        <span class="km">단백질가수분해효소(Protease)</span>는 건강과 질병에서 결정적 역할을 하는 효소로, 펩타이드 결합을 절단함으로써 그 기능을 수행한다. 표적 프로테아제에 의해 효율적이고 선택적으로 절단되는 <span class="km">기질(substrate)</span>을 찾아내는 것은 프로테아제 활성을 연구하고 이를 프로테아제 활성형 진단·치료제에 활용하기 위해 필수적이다. 그러나 가능한 기질의 거대한 설계 공간(10mer 펩타이드 기준 약 20<sup>10</sup>가지 아미노산 조합)과 고처리량 활성 프로파일링 도구의 제한된 접근성이 기질 설계의 속도와 성공률을 가로막는다. 본 연구에서는 프로테아제 기질 설계를 위한 엔드투엔드 AI 파이프라인 <span class="km">CleaveNet</span>을 제안한다. <span class="km">기질금속단백질분해효소(matrix metalloproteinases, MMPs)</span>에 적용한 결과 CleaveNet은 기질 설계의 규모·조정성·효율을 끌어올렸다. 또한 생물물리학적으로 타당한 펩타이드 기질을 생성하면서, 이미 알려진 절단 모티프뿐 아니라 그동안 보고되지 않았던 새로운 절단 모티프까지 포착했다. 기질 설계를 제어하기 위해 CleaveNet은 원하는 절단 프로파일로 생성을 유도하는 <span class="km">조건 태그(conditioning tag)</span>를 도입함으로써 효율적이고 선택적인 기질의 표적 설계를 가능하게 한다. CleaveNet이 생성한 기질들은 대규모 in vitro 스크린으로 실험적으로 검증되었으며, 특히 MMP13에 대해 고도로 선택적인 기질을 설계하는 어려운 과제에서도 검증되었다. 우리는 CleaveNet이 프로테아제 활성 연구·활용 능력을 가속하고, 효소 부류 전반에 걸친 in silico 설계 도구의 길을 열 것이라 기대한다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Introduction ===== -->
+<div class="section" id="sec-intro">
+  <div class="section-header" onclick="toggleSection(this)">Introduction (서론) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">
+        Proteases are a diverse class of enzymes that play critical roles in both health and disease, including in coagulation, tissue remodeling, and cancer<a href="#ref1" class="ref-link">1</a><sup>–</sup><a href="#ref3" class="ref-link">3</a>. Because proteases exert their function through the cleavage of peptide bonds, studying and capitalizing on protease activity relies on the identification of peptide substrates that can be used as molecular probes<a href="#ref4" class="ref-link">4,5</a>, peptide-based inhibitors<a href="#ref6" class="ref-link">6</a><sup>–</sup><a href="#ref8" class="ref-link">8</a>, or conditionally-activated triggers in engineered diagnostics<a href="#ref9" class="ref-link">9</a><sup>–</sup><a href="#ref11" class="ref-link">11</a> and therapeutics<a href="#ref12" class="ref-link">12</a><sup>–</sup><a href="#ref15" class="ref-link">15</a>. Yet, designing substrates that are both <span class="vocab">efficient<span class="tip">절대 절단량이 큰 것</span></span>—i.e., having high absolute cleavage—and <span class="vocab">selective<span class="tip">표적 프로테아제에 우선적으로 절단되는 것</span></span>—i.e., preferentially cleaved by a target protease over others—remains a significant challenge rooted in the complex biochemistry of proteases<a href="#ref16" class="ref-link">16,17</a> and their substrates<a href="#ref18" class="ref-link">18</a><sup>–</sup><a href="#ref20" class="ref-link">20</a>. To achieve such diverse functions, proteases have evolved to display a broad range of cleavage specificities, mediated by interactions between a protease active site and a natural or synthetic substrate, often up to 10 amino acids long<a href="#ref21" class="ref-link">21,22</a>. Substrate design is thus a combinatorial problem: for a 10-amino acid peptide, approximately 20<sup>10</sup> (c.a. 10<sup>13</sup>) sequences are possible, even without accounting for non-natural amino acids. Additionally, given that functionally related proteases often evolved from a common ancestor, they tend to share overlapping substrate sets, making it challenging to identify substrates that are truly selective for a target protease.
+      </div>
+      <div class="para-ko">
+        프로테아제는 응고·조직 리모델링·암을 포함해 건강과 질병 모두에서 결정적 역할을 하는 다양한 효소 부류이다<a href="#ref1" class="ref-link">1</a>~<a href="#ref3" class="ref-link">3</a>. 프로테아제는 펩타이드 결합을 절단함으로써 기능을 수행하기 때문에, 프로테아제 활성을 연구·활용하려면 분자 탐침<a href="#ref4" class="ref-link">4,5</a>, 펩타이드 기반 저해제<a href="#ref6" class="ref-link">6</a>~<a href="#ref8" class="ref-link">8</a>, 조건부 활성형 진단<a href="#ref9" class="ref-link">9</a>~<a href="#ref11" class="ref-link">11</a>·치료제<a href="#ref12" class="ref-link">12</a>~<a href="#ref15" class="ref-link">15</a>의 트리거로 사용할 수 있는 펩타이드 기질을 찾아내야 한다. 그러나 효율(절대 절단량)과 선택성(다른 프로테아제 대비 표적에서 우선 절단)을 동시에 만족하는 기질 설계는 프로테아제 자체와 그 기질의 복잡한 생화학에 뿌리를 둔 큰 과제이다. 프로테아제는 다양한 기능을 위해 진화하면서 활성 부위와 자연·합성 기질 간의 상호작용을 매개로 폭넓은 절단 특이성을 갖게 되었고, 그 상호작용 영역은 흔히 10 아미노산까지 이른다. 따라서 기질 설계는 조합론적 문제이다. 10잔기 펩타이드의 경우 비천연 아미노산을 빼더라도 약 20<sup>10</sup>(약 10<sup>13</sup>) 가지의 서열이 가능하다. 게다가 기능적으로 가까운 프로테아제들은 공통 조상에서 진화한 경우가 많아 서로 겹치는 기질 집합을 공유하기 때문에, 표적 프로테아제에 진정으로 선택적인 기질을 찾는 일은 더욱 어렵다.
+      </div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">
+        Given that all possible protease-substrate pairs have not yet been comprehensively profiled, substrate design typically involves two steps. The first is the <span class="vocab">nomination<span class="tip">후보 지명·도출</span></span> of candidate substrate sequences from a large, combinatorial space of possible sequences; the second is the selection of substrates as a function of their cleavage profiles after screening against proteases of interest. The most common approach for substrate nomination entails surveying the literature for existing substrates, informed by cleavage sites in naturally occurring proteins<a href="#ref23" class="ref-link">23</a>. However, this search is inefficient and seldom results in synthetic substrates with desired cleavage profiles<a href="#ref19" class="ref-link">19</a>. Alternatively, rational design leveraging expert knowledge of chemical biology can optimize synthetic substrates for specific targets, but this process is inherently resource-intensive, low-throughput, and bespoke to each protease of interest<a href="#ref24" class="ref-link">24</a>.
+      </div>
+      <div class="para-ko">
+        모든 프로테아제-기질 쌍이 아직 포괄적으로 프로파일링되지 않은 상황에서 기질 설계는 일반적으로 두 단계로 구성된다. 첫 단계는 거대한 조합 공간에서 <span class="km">후보 서열을 도출(nomination)</span>하는 것이고, 두 번째 단계는 관심 프로테아제들에 대해 스크리닝한 절단 프로파일에 따라 기질을 선택하는 것이다. 후보 도출에서 가장 흔한 접근은 자연 단백질의 절단 부위를 참고해 문헌의 기존 기질을 조사하는 방식이다<a href="#ref23" class="ref-link">23</a>. 그러나 이 방식은 비효율적이며 원하는 절단 프로파일의 합성 기질을 거의 만들어내지 못한다. 대안으로 화학생물학 전문지식을 활용한 합리적 설계(rational design)가 특정 표적용 합성 기질을 최적화할 수 있지만, 이 과정은 본질적으로 자원집약적이고 처리량이 낮으며 표적마다 맞춤 설계가 필요하다.
+      </div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">
+        To circumvent bottlenecks in substrate nomination, recent technological advances have significantly increased the throughput of the selection step<a href="#ref25" class="ref-link">25</a>. Large-scale chemical or display-based libraries, such as <span class="vocab">mRNA, ribosome, and phage display<span class="tip">대표적 디스플레이 기반 라이브러리 기법</span></span>, have enabled high-throughput in vitro screening of 10<sup>5</sup>–10<sup>13</sup> unique substrates against proteases of interest<a href="#ref26" class="ref-link">26</a><sup>–</sup><a href="#ref28" class="ref-link">28</a>. However, these methods are sophisticated and costly, and thus not broadly usable. In contrast to high-throughput experimental approaches, computational methods offer the possibility of accelerating substrate selection through virtual screening. Methods leveraging inferred substitution matrices<a href="#ref29" class="ref-link">29</a><sup>–</sup><a href="#ref31" class="ref-link">31</a>, structural and energetics patterns<a href="#ref32" class="ref-link">32,33</a>, or supervised learning<a href="#ref34" class="ref-link">34</a><sup>–</sup><a href="#ref38" class="ref-link">38</a> have focused on identifying substrate cleavage sites to predict whether a substrate will be recognized by a target protease. However, these methods return a binary cleavage prediction (i.e., cleaved vs. not cleaved), making it challenging to rank-order substrates by their cleavage efficiencies against a target protease, which is critical for engineering applications and the study of nuanced protease specificities. Recent deep learning models that extract patterns from amino acid sequence data have enabled the accurate prediction of protein sequence-function relationships<a href="#ref39" class="ref-link">39</a> and the generative design of proteins<a href="#ref40" class="ref-link">40</a><sup>–</sup><a href="#ref42" class="ref-link">42</a>, but remain challenging to apply to enzymes and have been underexplored in their application to protease substrate design<a href="#ref43" class="ref-link">43</a><sup>–</sup><a href="#ref45" class="ref-link">45</a>. In silico methods that learn from large-scale screening data to design protease substrates with pre-defined cleavage preferences would increase the scale, diversity, and tunability of substrate design.
+      </div>
+      <div class="para-ko">
+        후보 도출의 병목을 우회하기 위해, 최근 기술 발전은 선택 단계의 처리량을 크게 끌어올렸다. <span class="km">mRNA·리보솜·파지 디스플레이</span>처럼 대규모 화학·디스플레이 기반 라이브러리는 관심 프로테아제에 대해 10<sup>5</sup>~10<sup>13</sup> 개의 독립 기질을 고처리량 in vitro 스크리닝할 수 있게 했다. 그러나 이 방법들은 정교하고 비싸 일반적으로 쓰이기 어렵다. 실험적 고처리량 방식과 달리 계산 기반 방법은 가상 스크리닝을 통해 기질 선택을 가속할 가능성을 제공한다. 추론된 치환 행렬, 구조·에너지 패턴, 지도학습을 활용한 방법들이 기질이 표적 프로테아제에 인식될지를 예측하는 절단 부위 식별에 집중해 왔다. 그러나 이 방법들은 절단 여부의 이진 예측만을 반환하기 때문에, 공학적 응용과 정교한 프로테아제 특이성 연구에 결정적인 "절단 효율 순위 매김"이 어려웠다. 최근 아미노산 서열 패턴을 학습하는 딥러닝 모델은 단백질 서열-기능 관계의 정확한 예측과 단백질 생성형 설계를 가능하게 했지만, 효소에 적용하기는 여전히 어렵고 프로테아제 기질 설계에는 충분히 탐구되지 못했다. 사전에 정의된 절단 선호도를 가진 기질을 대규모 스크리닝 데이터로부터 학습해 설계하는 in silico 방법은 기질 설계의 규모·다양성·조정성을 크게 키울 수 있다.
+      </div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">
+        Here, we present <span class="vocab">CleaveNet<span class="tip">본 논문이 제안하는 종단간 AI 파이프라인</span></span>, an AI-based pipeline for the end-to-end design of protease substrates (Fig. 1). CleaveNet consists of a predictive model, the <span class="vocab">CleaveNet Predictor<span class="tip">절단 점수 예측 모델</span></span>, which assigns cleavage scores across proteases of interest (Fig. 1A), and a generative model, the <span class="vocab">CleaveNet Generator<span class="tip">펩타이드 서열 생성 모델</span></span>, which produces peptide sequences either unconditionally or conditioned on a desired protease cleavage profile input to the model (Fig. 1B). We validate our approach on the widely-studied family of matrix metalloproteinases (MMPs), which play important roles in health and a variety of diseases<a href="#ref3" class="ref-link">3</a><sup>,</sup><a href="#ref46" class="ref-link">46</a>, by training CleaveNet on a dataset of <span class="vocab">mRNA-display peptides<span class="tip">mRNA 디스플레이로 제작된 펩타이드 서열</span></span> screened against 18 MMPs<a href="#ref47" class="ref-link">47</a> and evaluating it both in silico and in vitro. We demonstrate that the CleaveNet Predictor achieves accurate and robust prediction of cleavage scores on an independent, experimentally-distinct test set and show that the CleaveNet Generator produces sequences that capture relevant cleavage profiles across MMPs and that exhibit both known and previously uncharacterized cleavage motifs. We use the end-to-end CleaveNet pipeline to design synthetic substrates for MMP13, a collagenase that plays a critical role in cancer metastasis, wound healing, and osteoarthritis<a href="#ref48" class="ref-link">48,49</a>, optimizing for both efficiency and selectivity (Fig. 1C), and experimentally assess their cleavage profiles through a large-scale in vitro screen of 95 substrates against 12 MMPs (Fig. 1D). All CleaveNet-designed substrates are cleavable by MMP13, and, strikingly, some substrates that were conditionally designed for high MMP13 selectivity are uniquely cleaved by MMP13. Our experimentally validated, AI-based design of protease substrates uncovers underappreciated determinants of MMP efficiency and selectivity, opening the door to overcoming the well-known promiscuity of MMPs. We envision that CleaveNet will advance the tunability, speed, and accuracy of protease substrate design across diverse applications.
+      </div>
+      <div class="para-ko">
+        본 연구에서 우리는 프로테아제 기질의 종단간(end-to-end) 설계를 위한 AI 기반 파이프라인 <span class="km">CleaveNet</span>을 제시한다(Fig. 1). CleaveNet은 관심 프로테아제 전반의 절단 점수를 부여하는 예측 모델 <span class="km">CleaveNet Predictor</span>(Fig. 1A)와, 비조건적으로 또는 원하는 프로테아제 절단 프로파일을 조건으로 입력해 펩타이드 서열을 생성하는 생성 모델 <span class="km">CleaveNet Generator</span>(Fig. 1B)로 구성된다. 우리는 건강과 다양한 질환에서 중요한 역할을 하는 광범위 연구 대상인 MMP 계열에 우리 접근법을 검증했다. 18개 MMP에 대해 mRNA-display로 스크리닝한 펩타이드 데이터셋으로 CleaveNet을 학습시키고, in silico·in vitro 양쪽에서 평가했다. 그 결과, CleaveNet Predictor가 실험적으로 별개인 독립 테스트셋에서 정확하고 견고한 절단 점수 예측을 달성하며, CleaveNet Generator가 MMP들의 관련 절단 프로파일을 포착하면서 기지(旣知) 및 미보고 절단 모티프를 모두 보여주는 서열을 생성함을 입증한다. 또한 암 전이·창상 치유·골관절염에 중요한 콜라게나아제인 MMP13에 대한 합성 기질을 효율과 선택성을 동시에 최적화하는 방향으로 종단간 CleaveNet 파이프라인으로 설계하고(Fig. 1C), 12개 MMP에 대한 95개 기질의 대규모 in vitro 스크린으로 절단 프로파일을 실험 평가했다(Fig. 1D). CleaveNet이 설계한 모든 기질이 MMP13에 의해 절단 가능했으며, 특히 MMP13 선택성을 조건으로 설계된 일부 기질은 MMP13에서만 고유하게 절단되었다. 실험으로 검증된 우리의 AI 기반 프로테아제 기질 설계는 그동안 과소평가되어 온 MMP 효율·선택성 결정 요인을 드러내며, 잘 알려진 MMP의 난잡성(promiscuity)을 극복할 길을 연다. 우리는 CleaveNet이 다양한 응용 전반의 프로테아제 기질 설계의 조정성·속도·정확도를 진전시킬 것으로 기대한다.
+      </div>
+    </div>
+    <!-- Figure 1 -->
+    <div class="para-row"><div class="fig-row" style="grid-column: 1 / -1;">
+      <img src="images/fig1.jpeg" alt="Fig. 1">
+      <div class="fig-caption"><b>Fig. 1 |</b> A deep learning approach for protease substrate design. <b>A</b> For a given peptide, the CleaveNet Predictor predicts cleavage scores across 18 matrix metalloproteinases (MMPs). <b>B</b> The CleaveNet Generator can generate substrates unconditionally (left) or conditionally, guided by a desired protease cleavage profile (right). <b>C</b> To design candidate substrates for a target protease, peptide sequences are generated by the CleaveNet Generator and prioritized by the cleavage scores from the CleaveNet Predictor. <b>D</b> An in vitro screen of 95 fluorogenic substrates against 12 recombinant MMPs was performed to validate the cleavage profiles of CleaveNet-designed substrates.</div>
+      <div class="fig-caption-ko"><b>그림 1 |</b> 프로테아제 기질 설계를 위한 딥러닝 접근. <b>A</b> 주어진 펩타이드에 대해 CleaveNet Predictor가 18개 MMP에 대한 절단 점수를 예측. <b>B</b> CleaveNet Generator는 비조건적(왼쪽) 또는 원하는 프로테아제 절단 프로파일을 조건으로 한 조건적 생성(오른쪽)이 가능. <b>C</b> 표적 프로테아제용 후보 기질을 설계할 때, Generator가 서열을 생성하고 Predictor의 절단 점수로 우선순위를 매김. <b>D</b> CleaveNet이 설계한 기질의 절단 프로파일 검증을 위해, 12개 재조합 MMP에 대해 95개 형광 기질의 in vitro 스크린 수행.</div>
+    </div></div>
+  </div>
+</div>
+
+<!-- 다음 섹션 placeholder (Results 다음에 Discussion, Methods, Refs, Glossary 추가됨) -->
+
+<!-- ===== Results ===== -->
+<div class="section" id="sec-results">
+  <div class="section-header" onclick="toggleSection(this)">Results (결과) <span class="toggle">▼</span></div>
+  <div class="section-body">
+
+    <!-- 2.1 Predictor -->
+    <div class="section level-2-section" id="sec-results-1">
+      <div class="section-header level-2" onclick="toggleSection(this)">CleaveNet predicts cleavage efficiencies of peptides by MMPs (펩타이드의 MMP 절단 효율 예측) <span class="toggle">▼</span></div>
+      <div class="section-body">
+        <div class="para-row">
+          <div class="para-en">
+            We trained our CleaveNet models on a publicly available dataset of c.a. 18,500 mRNA-displayed synthetic substrates and their continuous cleavage efficiencies across 18 MMPs, quantified as a normalized <span class="vocab">Z-score (Zsm)<span class="tip">정규화된 절단 강도 점수</span></span> representing the relative strength of cleavage of substrate s by protease m<a href="#ref47" class="ref-link">47</a>. Although sequences with higher Z-scores can generally be expected to be cleaved with higher likelihoods, we note that this readout does not directly distinguish cleaved from non-cleaved substrates. Since a critical component of substrate design is the down-selection of candidate substrates from a large combinatorial space, we first developed a predictive deep learning model, the CleaveNet Predictor, to score and virtually screen sequences in silico. We formulated the task of the CleaveNet Predictor as a multi-output sequence-to-function regression problem (Fig. 2A). Given an input amino acid sequence s, the model predicts continuous cleavage values Ẑsm for 18 MMPs. Their associated uncertainty scores σsm are quantified as the standard deviation of predicted Z-scores measured by training an ensemble of five predictor models over the mRNA-display dataset.
+          </div>
+          <div class="para-ko">
+            우리는 CleaveNet 모델을 공개 데이터셋(약 18,500개의 mRNA 디스플레이 합성 기질과 18개 MMP에 대한 연속 절단 효율)으로 학습시켰다. 절단 효율은 정규화된 <span class="km">Z-점수(Zsm)</span>로 정량화되어 기질 s가 프로테아제 m에 의해 절단되는 상대적 강도를 나타낸다. Z-점수가 높을수록 일반적으로 절단 가능성도 높아지지만, 이 측정값 자체가 "절단 vs 비절단"을 직접 구분해 주지는 않는다. 거대한 조합 공간에서 후보 기질을 추려내는 일이 기질 설계의 핵심이므로, 우리는 먼저 서열을 in silico로 점수화·가상 스크리닝하는 예측 딥러닝 모델 <span class="km">CleaveNet Predictor</span>를 개발했다. 이 작업은 다중 출력 서열-기능 회귀 문제로 정의된다(Fig. 2A). 입력 아미노산 서열 s에 대해 모델은 18개 MMP의 연속형 절단 값 Ẑsm을 예측하고, 5개 모델 앙상블의 예측 표준편차로 불확실성 σsm을 정량화한다.
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-en">
+            We investigated two model architectures common for sequence modeling—a recurrent bidirectional <span class="vocab">LSTM<span class="tip">장단기기억 신경망</span></span> architecture<a href="#ref50" class="ref-link">50</a> and a <span class="vocab">transformer<span class="tip">트랜스포머 신경망</span></span> architecture<a href="#ref51" class="ref-link">51</a>. To assess generalizability, we evaluated prediction performance across two datasets: a 20% random split of the training dataset filtered for homology (mRNA-display test) and an independent set of 71 <span class="vocab">FRET-paired<span class="tip">형광 공명 에너지 전달 쌍</span></span> sequences screened in vitro against seven recombinant MMPs (fluorescence test)<a href="#ref54" class="ref-link">54</a>. Both architectures showed comparable <span class="vocab">MAE<span class="tip">평균 절대 오차</span></span> (Fig. 2B; Suppl. Table 1), and we adopted the transformer for downstream analyses. Models performed better on MMPs with more high-Z training examples or wider Z-score dynamic range. The transformer achieved Pearson's r = 0.80 between predicted and true Zsm for MMP13 (Fig. 2C), and AUC of up to 0.98 at Zt = 2.5 (Fig. 2D). On the biochemically distinct fluorescence test set, the transformer also reached r = 0.80 for MMP13 (Fig. 2E), and predicted lower Ẑsm for non-cleaved than for cleaved substrates (Fig. 2F). Model uncertainty correlated with absolute error and was low for confident predictions (Fig. 2G). Together, these results support the accuracy and robustness of the CleaveNet Predictor across biochemically distinct assays.
+          </div>
+          <div class="para-ko">
+            우리는 서열 모델링에 흔히 쓰이는 두 구조—양방향 <span class="km">LSTM</span>과 <span class="km">트랜스포머</span>—를 검토했다. 일반화 성능을 평가하기 위해 두 데이터셋을 사용했다. 첫째는 학습셋에서 20%를 무작위 분할하고 학습셋과의 상동성을 필터링한 mRNA-display 테스트셋이고, 둘째는 7개 재조합 MMP에 in vitro 스크리닝된 71개 FRET 쌍 서열로 구성된 형광 테스트셋이다. 두 구조 모두 비슷한 MAE를 보였고(Fig. 2B), 후속 분석에는 트랜스포머를 채택했다. 학습셋에 고-Z 예시가 많거나 Z-점수 다이내믹 레인지가 넓은 MMP에서 모델 성능이 더 좋았다. 트랜스포머는 MMP13에 대해 Ẑsm과 실제 Zsm 사이 Pearson r = 0.80(Fig. 2C), Zt = 2.5에서 AUC 최대 0.98(Fig. 2D)을 달성했다. 생화학적으로 다른 형광 테스트셋에서도 MMP13에 대해 r = 0.80에 도달했고(Fig. 2E), 비절단 기질에 대해 절단 기질보다 낮은 Ẑsm을 예측했다(Fig. 2F). 모델 불확실성은 절대 오차와 상관관계를 보여 신뢰 높은 예측에서는 낮게 나타났다(Fig. 2G). 종합하면 CleaveNet Predictor는 생화학적으로 이질적인 평가 환경에서도 정확하고 견고하게 작동한다.
+          </div>
+        </div>
+        <!-- Figure 2 -->
+        <div class="para-row"><div class="fig-row">
+          <img src="images/fig2.jpeg" alt="Fig. 2">
+          <div class="fig-caption"><b>Fig. 2 |</b> CleaveNet accurately predicts cleavage efficiencies of synthetic peptides against MMPs. (A) Multi-output regression and uncertainty estimation. (B) MAE comparison of transformer vs. LSTM. (C) MMP13 correlation on mRNA-display test (r = 0.80). (D) ROC curves at varying Zt thresholds. (E) MMP13 correlation on fluorescence test (r = 0.80). (F, G) Rank-ordering colored by true cleavage and by uncertainty.</div>
+          <div class="fig-caption-ko"><b>그림 2 |</b> CleaveNet은 합성 펩타이드의 MMP 절단 효율을 정확히 예측. (A) 다중 출력 회귀 + 불확실성 추정. (B) 트랜스포머 vs LSTM의 MAE 비교. (C) mRNA-display 테스트셋 MMP13 상관(r = 0.80). (D) 다양한 Zt 임계값에서의 ROC 곡선. (E) 형광 테스트셋 MMP13 상관(r = 0.80). (F, G) 실제 절단 여부와 불확실성으로 색상 부여한 순위.</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- 2.2 Generator biophysics -->
+    <div class="section level-2-section" id="sec-results-2">
+      <div class="section-header level-2" onclick="toggleSection(this)">CleaveNet designs biophysically plausible MMP substrates (생물물리학적으로 타당한 기질 설계) <span class="toggle">▼</span></div>
+      <div class="section-body">
+        <div class="para-row">
+          <div class="para-en">
+            Having validated the CleaveNet Predictor and aiming to automate substrate nomination, we developed a generative model—the CleaveNet Generator—that learns pan-MMP cleavage specificities and enables unconditional sampling of diverse MMP-cleavable substrates. Generated sequences should capture the amino acid distribution and biophysical/functional properties of training sequences while remaining diverse and distinct. We trained an autoregressive transformer that can generate variable-length sequences on the training split of the mRNA-display dataset (see Methods). As a baseline, we sampled randomly and independently from position-wise amino acid distributions across all training sequences (the <span class="vocab">site-independent baseline<span class="tip">위치별 독립 샘플링 베이스라인</span></span>, Fig. 3A).
+          </div>
+          <div class="para-ko">
+            CleaveNet Predictor를 검증한 뒤 기질 후보 도출을 자동화하기 위해, 우리는 범-MMP 절단 특이성을 학습하고 다양한 MMP 절단 가능 기질을 비조건적으로 샘플링하는 생성 모델 <span class="km">CleaveNet Generator</span>를 개발했다. 생성 서열은 학습셋의 아미노산 분포·생물물리·기능적 특성을 포착하면서도 서로 다양하고 학습셋과 구별되어야 한다. 가변 길이 서열을 생성할 수 있는 자기회귀(autoregressive) 트랜스포머를 mRNA-display 학습 분할로 학습시켰다. 베이스라인으로는 학습 서열의 위치별 아미노산 분포에서 독립적으로 무작위 샘플링한 <span class="km">위치-독립 베이스라인(site-independent baseline)</span>을 사용했다(Fig. 3A).
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-en">
+            We unconditionally generated 20,000 sequences and compared them to mRNA-display test sequences (Fig. 3B; Suppl. Fig. 13). The CleaveNet Generator captured the canonical MMP motif <span class="vocab">PXX-hydrophobic<span class="tip">P3에 프롤린, P1'에 소수성 아미노산</span></span> and surpassed the site-independent baseline at recapitulating distributions in P3–P2' (avg KL 0.25 vs 0.404). Generated and baseline sequences exhibited biophysical properties consistent with mRNA-display data (Fig. 3C). Cleavage scores by the Predictor (Fig. 3D) showed that CleaveNet generations matched mRNA-display score distributions across MMPs, while the site-independent baseline scored significantly lower (Fig. 3E). The CDF analysis of unique k-mers (3- to 6-mers) showed that CleaveNet covered k-mer space similarly to mRNA-display data, while the site-independent baseline approached random coverage. The top 5- and 6-mers from CleaveNet were closer to canonical MMP motifs (Fig. 3F). Only 95 of 20,000 CleaveNet sequences exactly matched training sequences, indicating no memorization. CleaveNet thus produces biophysically plausible sequences with diverse, MMP-compatible motifs.
+          </div>
+          <div class="para-ko">
+            비조건적으로 20,000개를 생성한 뒤 mRNA-display 테스트 서열과 비교했다. CleaveNet Generator는 표준 MMP 모티프 <span class="km">PXX-소수성</span>을 포착했고, 절단에 핵심적인 P3~P2' 위치별 분포 재현에서 위치-독립 베이스라인을 능가했다(평균 KL 0.25 vs 0.404). 생성 서열은 mRNA-display 데이터와 일치하는 생물물리 특성을 보였고(Fig. 3C), Predictor 점수에서도 CleaveNet 생성은 mRNA-display 점수 분포에 근접한 반면 위치-독립 베이스라인은 모든 MMP에서 유의하게 낮았다(Fig. 3E). 고유 k-mer(3~6mer)의 누적분포 분석에서, CleaveNet은 mRNA-display와 유사한 k-mer 공간 커버리지를 보였고 위치-독립 베이스라인은 무작위에 가까웠다. CleaveNet의 상위 5~6mer는 표준 MMP 모티프에 더 가까웠다(Fig. 3F). 또한 20,000개 중 학습셋과 정확히 일치한 서열은 95개에 불과해 단순 암기가 아님을 보였다. 즉 CleaveNet은 다양하면서 MMP 친화적 모티프를 갖는 생물물리학적으로 타당한 서열을 만들어 낸다.
+          </div>
+        </div>
+        <div class="para-row"><div class="fig-row">
+          <img src="images/fig3.jpeg" alt="Fig. 3">
+          <div class="fig-caption"><b>Fig. 3 |</b> CleaveNet generates biophysically plausible MMP substrates. (A) Unconditional generation pipeline. (B) Position-wise amino acid composition (IceLogo, KL divergence shown). (C) Biophysical property densities. (D) Score distribution. (E) Cleavage score across 18 MMPs. (F) Cumulative k-mer distribution + top k-mers.</div>
+          <div class="fig-caption-ko"><b>그림 3 |</b> CleaveNet은 생물물리학적으로 타당한 MMP 기질 생성. (A) 비조건적 생성 흐름. (B) 위치별 아미노산 구성(IceLogo, KL 발산 표시). (C) 생물물리 특성 밀도. (D) 점수 분포. (E) 18개 MMP에 대한 절단 점수. (F) k-mer 누적 분포 + 상위 k-mer.</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- 2.3 Biological validity -->
+    <div class="section level-2-section" id="sec-results-3">
+      <div class="section-header level-2" onclick="toggleSection(this)">Generated sequences show biologically relevant cleavage patterns (생물학적으로 의미 있는 절단 패턴) <span class="toggle">▼</span></div>
+      <div class="section-body">
+        <div class="para-row">
+          <div class="para-en">
+            We virtually screened the 20,000 unconditional generations and analyzed sequence determinants and activity profiles of top-scoring substrates per MMP. <span class="vocab">IceLogos<span class="tip">위치별 아미노산 빈도 시각화 도구</span></span> revealed that top-scoring CleaveNet sequences closely matched mRNA-display profiles for individual MMPs (Fig. 4A), with shared trends within MMP subclasses (collagenases, gelatinases, MT1-/MT2-MMP, stromelysins). The PXXL motif was prominent across all MMPs, and we identified an unexpected preference for methionine at P4 (fold-increase: 11.4× gelatinases, 10.9× collagenases, 14.0× MT1-MMP, 9.2× MT2-MMP, 12.2× stromelysins), suggesting a previously unexplored relevance of methionine to MMP cleavage of short peptides. For gelatinases (MMP2, MMP9), we observed proline at P3 in 99% of sequences, small residues (Gly, Ala) at P1/P3', and a positively charged Arg at P2' (27.5%)—consistent with prior reports.
+          </div>
+          <div class="para-ko">
+            20,000개 비조건적 생성을 가상 스크리닝하고 MMP별 상위 점수 기질의 서열 결정 인자와 활성 프로파일을 분석했다. <span class="km">IceLogo</span> 분석에서 상위 점수 CleaveNet 서열의 위치별 아미노산 프로파일이 mRNA-display와 거의 일치했고(Fig. 4A), MMP 서브클래스(콜라게나제, 젤라티나제, MT1-/MT2-MMP, 스트로멜라이신) 안에서 공통 경향도 나타났다. 모든 MMP에서 PXXL 모티프가 두드러졌고, P4 위치에서 메티오닌 선호가 새로 확인되었다(자연빈도 대비 젤라티나제 11.4배, 콜라게나제 10.9배, MT1-MMP 14.0배, MT2-MMP 9.2배, 스트로멜라이신 12.2배). 짧은 펩타이드의 MMP 절단에서 메티오닌의 중요성은 그동안 충분히 탐구되지 않은 발견이다. 젤라티나제(MMP2, MMP9)에서는 P3 프롤린(99%), P1·P3'에 작은 잔기(Gly, Ala), P2'에 양전하 잔기 Arg(27.5%) 선호가 관찰되어 기존 보고와 일치했다.
+          </div>
+        </div>
+        <div class="para-row">
+          <div class="para-en">
+            To assess inter-amino-acid relationships such as <span class="vocab">subsite cooperativity<span class="tip">하위부위 협력성(인접한 위치들의 협력 효과)</span></span> not captured by position-wise IceLogos, we examined 3-mer frequencies among the 50 top MMP13 substrates from CleaveNet, mRNA display, and the site-independent baseline (Fig. 4B). Both CleaveNet and mRNA display showed strong enrichment of specific 3-mers, with PLG (canonical motif) emerging as the top 3-mer in both, and the top-4 3-mers shared. The site-independent baseline displayed little 3-mer preference and did not enrich PLG. Finally, CleaveNet Predictor scoring of top 25 generated sequences per MMP, followed by clustering, recapitulated the phylogenetic distance of MMP catalytic domains (Fig. 4C; group 1 MT-MMPs, group 2 collagenases, group 3 gelatinases + MMP13 + MMP3, group 4 GPI-anchored MT-MMPs, group 5 non-furin MMPs). These results reinforce the biological validity of CleaveNet sequences—aligning with established MMP preferences, capturing subsite cooperativity, and clustering by MMP phylogeny.
+          </div>
+          <div class="para-ko">
+            위치별 IceLogo로는 잡히지 않는 <span class="km">하위부위 협력성(subsite cooperativity)</span> 같은 아미노산 간 관계를 평가하기 위해, MMP13 상위 50개 기질에서 3-mer 빈도를 분석했다(Fig. 4B). CleaveNet과 mRNA-display 모두 특정 3-mer가 뚜렷이 농축되었고, 표준 모티프 <span class="km">PLG</span>가 양쪽 모두에서 1위 3-mer로 나타났으며 상위 4개 3-mer가 공유되었다. 위치-독립 베이스라인은 3-mer 선호도가 거의 없었고 PLG 농축도 일어나지 않았다. 마지막으로 MMP별 상위 25개 생성 기질의 Predictor 점수를 계층적 클러스터링한 결과, MMP 촉매 도메인의 계통학적 거리에 따라 5개 그룹으로 묶였다(Fig. 4C; 그룹1 MT-MMP, 그룹2 콜라게나제, 그룹3 젤라티나제+MMP13+MMP3, 그룹4 GPI-고정 MT-MMP, 그룹5 비-furin MMP). 이상의 결과는 CleaveNet 서열이 기존 MMP 선호도와 일치하고, 하위부위 협력성을 포착하며, 계통학적 관계에 따라 클러스터링됨을 보이며 그 생물학적 타당성을 강화한다.
+          </div>
+        </div>
+        <div class="para-row"><div class="fig-row">
+          <img src="images/fig4.jpeg" alt="Fig. 4">
+          <div class="fig-caption"><b>Fig. 4 |</b> Generated sequences recapitulate biologically relevant cleavage patterns across MMP functional classes. (A) IceLogos per MMP for top 100 sequences (CleaveNet vs mRNA-display). (B) 3-mer frequencies for top MMP13 substrates. (C) Heatmap clustering of top 25 Z-scoring substrates per MMP, with phylogenetic groups annotated.</div>
+          <div class="fig-caption-ko"><b>그림 4 |</b> 생성 서열은 MMP 기능 클래스 전반의 생물학적으로 의미 있는 절단 패턴을 재현. (A) 상위 100개 서열에 대한 MMP별 IceLogo (CleaveNet vs mRNA-display). (B) MMP13 상위 기질의 3-mer 빈도. (C) MMP별 상위 25개 Z-점수 기질 히트맵, 계통학적 그룹 주석 포함.</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- 2.4 In vitro MMP13 -->
+    <div class="section level-2-section" id="sec-results-4">
+      <div class="section-header level-2" onclick="toggleSection(this)">Generated substrates are cleaved by MMP13 in vitro (생성 기질의 MMP13 in vitro 절단 검증) <span class="toggle">▼</span></div>
+      <div class="section-body">
+        <div class="para-row">
+          <div class="para-en">
+            We virtually screened 20,000 unconditional generations with the CleaveNet Predictor and rank-ordered them by uncertainty-aware MMP13 cleavage scores (Fig. 5A). We selected 24 substrates with the highest predicted scores and non-overlapping 5-mers. Controls included site-independent substrates (with and without Predictor rank-ordering), top-5 MMP13 substrates and uncleaved substrates from mRNA-display training data. Substrates were synthesized as fluorogenic FRET probes and screened in vitro against recombinant MMP13. CleaveNet-designed substrates achieved markedly higher cleavage than site-independent controls; many surpassed mRNA-display top performers. Importantly, even site-independent sequences benefited from Predictor rank-ordering, illustrating the standalone value of the Predictor. We further selected the 7 highest-scoring CleaveNet substrates ("MMP13-activated CleaveNet substrates") for downstream characterization, demonstrating that CleaveNet successfully nominates efficient MMP13 substrates.
+          </div>
+          <div class="para-ko">
+            CleaveNet Predictor로 20,000개 비조건적 생성 서열을 가상 스크리닝하고 불확실성 보정 MMP13 절단 점수로 순위를 매겼다(Fig. 5A). 5-mer가 겹치지 않는 상위 24개 기질을 선택했고, 대조군으로 위치-독립 기질(Predictor 순위 적용/미적용 두 종류), mRNA-display 학습셋의 MMP13 상위 5개 및 비절단 5개를 포함했다. 모든 기질을 형광 FRET 프로브로 합성해 재조합 MMP13에 대해 in vitro 스크리닝했다. CleaveNet 설계 기질은 위치-독립 대조군 대비 현저히 높은 절단을 보였고, 다수가 mRNA-display 상위 기질도 능가했다. 흥미롭게도 위치-독립 서열도 Predictor 순위 매김의 이점을 받았으며, 이는 Predictor 단독의 가치를 보여준다. 후속 분석을 위해 가장 높은 점수의 CleaveNet 기질 7개("MMP13-activated CleaveNet substrates")를 선정했고, CleaveNet이 효율적 MMP13 기질을 성공적으로 도출함을 입증했다.
+          </div>
+        </div>
+        <div class="para-row"><div class="fig-row">
+          <img src="images/fig5.jpeg" alt="Fig. 5">
+          <div class="fig-caption"><b>Fig. 5 |</b> CleaveNet-designed substrates are efficiently cleaved by MMP13 in vitro.</div>
+          <div class="fig-caption-ko"><b>그림 5 |</b> CleaveNet 설계 기질은 MMP13에 의해 in vitro에서 효율적으로 절단된다.</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- 2.5 Conditional generation -->
+    <div class="section level-2-section" id="sec-results-5">
+      <div class="section-header level-2" onclick="toggleSection(this)">Conditional generation enables targeted design of selective substrates (조건부 생성으로 선택성 표적 설계) <span class="toggle">▼</span></div>
+      <div class="section-body">
+        <div class="para-row">
+          <div class="para-en">
+            To overcome MMP promiscuity and design substrates selectively cleaved by a target protease, we extended the CleaveNet Generator with a <span class="vocab">conditioning tag<span class="tip">조건 태그(원하는 절단 프로파일을 입력으로 받음)</span></span> encoding desired cleavage profiles across 18 MMPs (Fig. 6). The conditioning tag steers generation towards user-defined profiles, allowing targeted design of efficient and selective substrates. We trained the conditional Generator on the mRNA-display dataset paired with each sequence's measured cleavage profile (binary cleaved/uncleaved for each MMP). We then used CleaveNet to design substrates with tailored profiles—selectively cleaved by MMP13 over other MMPs. The pipeline produced sequences whose Predictor-scored profiles closely matched the input conditioning, validating control of substrate design through the conditioning tag. Thus, conditional CleaveNet enables the targeted design of substrates with pre-defined cleavage signatures, including selective ones.
+          </div>
+          <div class="para-ko">
+            MMP의 난잡성을 극복하고 표적 프로테아제에서 선택적으로 절단되는 기질을 설계하기 위해, CleaveNet Generator를 18개 MMP의 원하는 절단 프로파일을 인코딩하는 <span class="km">조건 태그(conditioning tag)</span>로 확장했다(Fig. 6). 조건 태그는 사용자가 정의한 프로파일로 생성을 유도해 효율적·선택적 기질의 표적 설계를 가능하게 한다. 우리는 각 서열의 측정 절단 프로파일(MMP별 절단/비절단 이진)과 짝지어진 mRNA-display 데이터로 조건부 Generator를 학습시켰다. 이후 다른 MMP보다 MMP13에서 선택적으로 절단되는 맞춤 프로파일 기질을 설계했고, Predictor가 점수 매긴 프로파일이 입력 조건과 거의 일치해 조건 태그를 통한 설계 제어가 검증되었다. 즉 조건부 CleaveNet은 사전 정의된 절단 시그니처(선택적인 것 포함)를 가진 기질의 표적 설계를 가능하게 한다.
+          </div>
+        </div>
+        <div class="para-row"><div class="fig-row">
+          <img src="images/fig6.jpeg" alt="Fig. 6">
+          <div class="fig-caption"><b>Fig. 6 |</b> Conditional generation enables targeted design of selective substrate sequences.</div>
+          <div class="fig-caption-ko"><b>그림 6 |</b> 조건부 생성으로 선택적 기질 서열의 표적 설계가 가능.</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- 2.6 Selective MMP13 -->
+    <div class="section level-2-section" id="sec-results-6">
+      <div class="section-header level-2" onclick="toggleSection(this)">CleaveNet designs MMP13-selective substrates validated in vitro (MMP13 선택적 기질의 실험 검증) <span class="toggle">▼</span></div>
+      <div class="section-body">
+        <div class="para-row">
+          <div class="para-en">
+            To test the conditional pipeline experimentally, we used CleaveNet to design substrates selectively cleaved by MMP13. We selected the 7 top-scoring conditionally-generated substrates ("MMP13-selective CleaveNet substrates") and screened them against 12 recombinant MMPs in vitro (Fig. 7). All 7 substrates were cleaved by MMP13. Strikingly, several were selectively—or even uniquely—cleaved by MMP13 with little or no cleavage by other MMPs, including closely related collagenases. The cleavage selectivity scores from in vitro data correlated with conditional input profiles, establishing that CleaveNet enables AI-guided design of MMP13-selective substrates.
+          </div>
+          <div class="para-ko">
+            조건부 파이프라인을 실험적으로 검증하기 위해 CleaveNet으로 MMP13 선택적 기질을 설계했다. 조건부 생성 상위 7개("MMP13-selective CleaveNet substrates")를 선정해 12개 재조합 MMP에 대해 in vitro 스크리닝했다(Fig. 7). 7개 모두 MMP13에 의해 절단되었으며, 일부는 가까운 콜라게나제를 포함한 다른 MMP에서는 거의/전혀 절단되지 않고 MMP13에서만 선택적·고유하게 절단되었다. 측정된 in vitro 선택성 점수는 입력 조건 프로파일과 상관관계를 보여, CleaveNet이 AI 기반 MMP13 선택적 기질 설계를 가능하게 함을 확립했다.
+          </div>
+        </div>
+        <div class="para-row"><div class="fig-row">
+          <img src="images/fig7.jpeg" alt="Fig. 7">
+          <div class="fig-caption"><b>Fig. 7 |</b> CleaveNet designs substrates that are selectively cleaved by MMP13 in vitro.</div>
+          <div class="fig-caption-ko"><b>그림 7 |</b> CleaveNet은 MMP13에서 in vitro 선택적으로 절단되는 기질을 설계한다.</div>
+        </div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== Discussion ===== -->
+<div class="section" id="sec-discussion">
+  <div class="section-header" onclick="toggleSection(this)">Discussion (고찰) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">
+        Given that the vast repertoire of possible protease substrates is larger than what has been profiled to date, the identification of substrates with target cleavage profiles remains a significant challenge<a href="#ref8" class="ref-link">8</a><sup>,</sup><a href="#ref18" class="ref-link">18,19</a>. We developed CleaveNet, an AI-based pipeline for next-generation protease substrate design, that is capable of designing substrates with pre-defined cleavage profiles and that does not require prior expertise in chemical biology. The CleaveNet pipeline consists of a generator model and a predictor model that replace the traditional substrate nomination and selection steps and greatly increase the scale, tunability, and efficacy of the design process. We demonstrate the validity of our pipeline for the design of substrates for MMPs, a protease class critical in health and disease. Given that CleaveNet integrates continuous cleavage scores for a given substrate across 18 MMPs, it allows users to optimize for not only cleavage efficiency but also selectivity.
+      </div>
+      <div class="para-ko">
+        가능한 프로테아제 기질의 방대한 레퍼토리가 지금까지 프로파일링된 양보다 훨씬 크다는 점에서, 표적 절단 프로파일을 가진 기질을 찾는 일은 여전히 큰 과제이다. 우리는 사전 정의된 절단 프로파일을 가진 기질을 설계할 수 있고 화학생물학 전문지식을 요구하지 않는 차세대 프로테아제 기질 설계용 AI 파이프라인 <span class="km">CleaveNet</span>을 개발했다. CleaveNet은 전통적인 기질 후보 도출·선택 단계를 대체하는 생성 모델과 예측 모델로 구성되어, 설계 과정의 규모·조정성·효율을 크게 끌어올린다. 우리는 건강과 질병에 중요한 프로테아제 부류인 MMP에 대해 본 파이프라인의 타당성을 입증했다. CleaveNet은 18개 MMP에 대한 연속 절단 점수를 통합하기 때문에, 사용자는 절단 효율뿐 아니라 선택성도 최적화할 수 있다.
+      </div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">
+        Using in silico analyses, we demonstrated that CleaveNet generates substrates that are distinct in sequence yet maintain comparable biophysical properties and cleavage profiles to training data. The pipeline was also able to recapitulate biologically relevant motifs across 18 MMPs and to capture intricate relationships dictating MMP cleavability, such as subsite cooperativity. Additionally, introducing a conditioning tag enabled guidance of substrate generation towards specific cleavage profiles, such as high MMP13 selectivity. We validated CleaveNet by experimentally testing substrates designed for high MMP13 efficiency or selectivity in vitro against 12 recombinant MMPs. This task, once exceedingly difficult due to the extensive substrate overlap of MMP13 with collagenases and gelatinases<a href="#ref47" class="ref-link">47</a><sup>,</sup><a href="#ref56" class="ref-link">56</a>, remains essential for developing effective MMP13-specific profiling tools and MMP13-activated diagnostics and therapeutics. All CleaveNet-designed substrates were cleaved by MMP13. Among substrates designed for high MMP13 selectivity, we identified three substrates that were uniquely cleaved by MMP13 but exhibited low efficiency, comparable to the most selective substrates in training. Additionally, we discovered a distinct set of CleaveNet-designed substrates with considerable selectivity for MMP13 but significantly higher efficiency—a cleavage profile entirely absent in the training data.
+      </div>
+      <div class="para-ko">
+        in silico 분석에서 CleaveNet이 학습 데이터와 비슷한 생물물리·절단 프로파일을 유지하면서 서열적으로는 구별되는 기질을 생성함을 보였다. 또한 18개 MMP 전반의 생물학적으로 의미 있는 모티프를 재현했고, 하위부위 협력성처럼 MMP 절단성을 결정하는 정교한 관계를 포착했다. 조건 태그 도입으로 MMP13 고선택성 등 특정 절단 프로파일로 생성을 유도할 수 있게 되었다. 12개 재조합 MMP에 대한 in vitro 검증에서 모든 CleaveNet 설계 기질이 MMP13에 의해 절단되었으며, 높은 선택성으로 설계된 기질 중 3개가 MMP13에서만 고유하게 절단되었으나 효율은 낮았다(학습셋의 가장 선택적인 기질과 동등). 추가로, 높은 선택성과 더불어 학습 데이터에 전혀 없던 훨씬 높은 효율을 동시에 보이는 CleaveNet 설계 기질군도 발견했다.
+      </div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">
+        These findings highlight the potential utility of CleaveNet for oversampling sparse sequence spaces of interest to identify substrates with distinct motifs and desirable cleavage profiles. Our fluorogenic screen also enabled identification of cleavage thresholds that can be used to calibrate predicted Z-scores to true cleavage efficiencies for individual MMPs. Such thresholds will greatly improve data interpretability, substrate selection, and model conditioning. We open source the CleaveNet models, datasets, and codebase to empower the broader research community. The most significant contribution of our work is the design and deployment of generative models for protease substrate design, a process that to date has remained highly manual, dictated by trial-and-error, and plagued by low hit rates. Far from replacing display-based technologies, CleaveNet complements them and will serve as a hypothesis generator to guide library design and to maximize the information that can be extracted from sparse datasets, greatly decreasing the complexity and cost of screening experiments. The CleaveNet Predictor also outputs continuous cleavage scores rather than binary labels, and even outperforms state-of-the-art tools for binary substrate classification (Suppl. Table 9).
+      </div>
+      <div class="para-ko">
+        이 결과들은 관심 있는 희소 서열 공간을 오버샘플링해 독특한 모티프와 바람직한 절단 프로파일을 가진 기질을 발굴하는 데 CleaveNet의 활용 가치를 보여준다. 형광 스크린은 또한 각 MMP에 대해 예측 Z-점수를 실제 절단 효율로 보정하는 절단 임계값 식별을 가능하게 했고, 이는 데이터 해석·기질 선택·모델 조건화 품질을 크게 개선한다. 우리는 CleaveNet 모델·데이터셋·코드베이스를 오픈 소스로 공개해 연구 커뮤니티가 활용할 수 있도록 했다. 본 연구의 핵심 기여는 그동안 시행착오와 낮은 히트율에 의존해 온 프로테아제 기질 설계에 생성 모델을 도입한 것이다. CleaveNet은 디스플레이 기반 기술을 대체하기보다 보완하며, 라이브러리 설계의 가설 생성기 역할을 해 희소 데이터에서 얻을 수 있는 정보를 극대화하고 스크리닝 실험의 복잡성·비용을 크게 줄인다. 또한 단독 사용 시 CleaveNet Predictor는 이진 라벨이 아닌 연속 절단 점수를 출력하며, 이진 기질 분류 SOTA 도구도 능가한다(Suppl. Table 9).
+      </div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">
+        Despite its successes, CleaveNet has several limitations that highlight avenues for continued work. First, CleaveNet is currently limited to synthetic substrates and could be extended to encompass natural substrates with appropriate training data or to design full-length proteins containing substrates for proteases of interest. Such work could benefit from integrating CleaveNet models with other AI-based protein structure prediction<a href="#ref59" class="ref-link">59,60</a> and generative design<a href="#ref40" class="ref-link">40</a><sup>,</sup><a href="#ref42" class="ref-link">42</a> models. Second, CleaveNet is so far only validated for MMP substrate design. Efforts to create similar datasets and models across other protease subclasses could greatly enhance CleaveNet's reach. Finally, even with high predictive accuracy and generation quality, experimental validation remains critical to ensure the real-world applicability of designed substrates, and thus, CleaveNet does not completely replace the need for in vitro testing. CleaveNet opens the door to numerous lines of future research, including structure-based docking analyses to reveal molecular determinants of substrate recognition, design of substrates selective to other MMPs, design for use cases requiring multiple protease cleavage events (pro-drug activation<a href="#ref61" class="ref-link">61,62</a>, substrate logic design<a href="#ref63" class="ref-link">63,64</a>), and systematic dissection of MMP specificity determinants, redundancies, and limits.
+      </div>
+      <div class="para-ko">
+        CleaveNet은 성과에도 불구하고 향후 연구의 방향을 제시하는 몇 가지 한계가 있다. 첫째, 현재는 합성 기질에 한정되며, 적절한 학습 데이터로 확장하면 천연 기질이나 표적 프로테아제 기질을 포함한 전장 단백질 설계로 확장 가능하다. AI 기반 단백질 구조 예측·생성 설계 모델과의 통합이 도움이 될 것이다. 둘째, 지금까지 MMP 기질 설계에만 검증되었다. 다른 프로테아제 서브클래스의 데이터셋·모델 구축으로 적용 범위를 크게 확장할 수 있다. 셋째, 높은 예측 정확도와 생성 품질에도 불구하고 실세계 적용을 위해 실험 검증은 여전히 필수이며, 따라서 CleaveNet이 in vitro 테스트의 필요성을 완전히 대체하지는 않는다. 향후 연구 방향으로는 (1) 구조 기반 도킹 분석으로 분자 수준의 인식 결정 요인 규명, (2) MMP13 외 다른 MMP의 선택적 기질 설계, (3) 다중 프로테아제 절단이 필요한 응용(전구약물 활성화, 기질 논리 회로 설계), (4) MMP 특이성의 결정 요인·중복성·한계의 체계적 해부 등이 있다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Methods (요약) ===== -->
+<div class="section" id="sec-methods">
+  <div class="section-header" onclick="toggleSection(this)">Methods (방법론, 핵심 요약) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">
+        <strong>Datasets.</strong> Training data: ~18,500 mRNA-displayed synthetic substrates with continuous cleavage Z-scores Zsm across 18 MMPs<a href="#ref47" class="ref-link">47</a>. Test sets: (i) 20% holdout from training (filtered for homology), (ii) 71 FRET-paired sequences screened against 7 recombinant MMPs<a href="#ref54" class="ref-link">54</a>.<br><br>
+        <strong>CleaveNet Predictor.</strong> Multi-output sequence-to-function regression: input amino acid sequence s → continuous Ẑsm for 18 MMPs + uncertainty σsm (ensemble of 5 models, std. of predicted Z-scores). Final transformer model: 56k parameters; both LSTM and transformer evaluated, transformer chosen for downstream analyses.<br><br>
+        <strong>CleaveNet Generator.</strong> Autoregressive transformer trained on the mRNA-display set; can generate variable-length sequences. Both transformer decoder and LSTM evaluated. Two modes: (1) <span class="vocab">unconditional generation<span class="tip">조건 없이 생성</span></span>, (2) <span class="vocab">conditional generation<span class="tip">절단 프로파일을 입력으로 받아 조건부로 생성</span></span> with conditioning tag (binary cleaved/uncleaved over 18 MMPs).<br><br>
+        <strong>Selectivity score.</strong> Cleavage of a sequence by one MMP relative to mean cleavage across other MMPs<a href="#ref47" class="ref-link">47</a>.<br><br>
+        <strong>In vitro screening.</strong> Selected substrates synthesized as fluorogenic FRET probes; assayed against recombinant MMPs by measuring fluorescence increase over time. Cleavage activity quantified by fold change in fluorescence at endpoint.<br><br>
+        <strong>Cleavage efficiency / Corrected efficiency.</strong> Computed from in vitro fluorescence data with cleavage thresholds Zt for each MMP, allowing translation of predicted Z-scores to true cleavage efficiencies (Êsm: corrected efficiency).<br><br>
+        <strong>Corrected selectivity score (CSS).</strong> Êsm modulated by selectivity term to compare substrates across MMPs.<br><br>
+        <strong>Benchmark.</strong> Cleavage classification benchmarked vs. ProsperousPlus (Suppl. Table 9), where the CleaveNet Predictor outperformed.
+      </div>
+      <div class="para-ko">
+        <strong>데이터셋.</strong> 학습 데이터: 18개 MMP에 대한 연속 절단 Z-점수(Zsm)를 가진 약 18,500개 mRNA 디스플레이 합성 기질. 테스트셋: (i) 학습셋에서 20% 무작위 분할(상동성 필터링), (ii) 7개 재조합 MMP에 스크리닝된 71개 FRET 쌍 서열.<br><br>
+        <strong>CleaveNet Predictor.</strong> 다중 출력 서열-기능 회귀 문제. 입력 아미노산 서열 s → 18개 MMP의 연속 Ẑsm + 불확실성 σsm(5개 모델 앙상블 예측 표준편차). 최종 트랜스포머 모델은 56k 파라미터. LSTM과 트랜스포머 모두 평가했고 트랜스포머를 채택.<br><br>
+        <strong>CleaveNet Generator.</strong> mRNA-display 학습셋으로 학습된 자기회귀 트랜스포머. 가변 길이 서열 생성 가능. 트랜스포머 디코더와 LSTM 모두 평가. 두 모드: (1) 비조건적 생성, (2) 조건 태그(18개 MMP에 대한 절단/비절단 이진)를 입력으로 받는 조건부 생성.<br><br>
+        <strong>선택성 점수.</strong> 한 서열이 다른 모든 MMP의 평균 절단 대비 특정 MMP에 의해 절단되는 정도.<br><br>
+        <strong>In vitro 스크리닝.</strong> 선택된 기질을 형광 FRET 프로브로 합성하고, 재조합 MMP에 대해 시간에 따른 형광 증가로 절단 활성 측정. 활성은 종료점 형광 폴드 변화로 정량화.<br><br>
+        <strong>절단 효율 / 보정 효율.</strong> in vitro 형광 데이터와 MMP별 절단 임계값 Zt로 계산해, 예측 Z-점수를 실제 절단 효율(Êsm: 보정 효율)로 변환할 수 있게 함.<br><br>
+        <strong>보정 선택성 점수(CSS).</strong> Êsm에 선택성 항을 곱해 MMP 간 기질 비교에 활용.<br><br>
+        <strong>벤치마크.</strong> 이진 절단 분류는 ProsperousPlus와 비교 평가했고(Suppl. Table 9), CleaveNet Predictor가 더 우수했다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Data & Code Availability ===== -->
+<div class="section" id="sec-data-avail">
+  <div class="section-header" onclick="toggleSection(this)">Data & Code Availability (데이터·코드 공개) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">
+        <strong>Data availability.</strong> The mRNA-display training data are publicly available<a href="#ref47" class="ref-link">47</a>. The fluorescence test set is available from the original study<a href="#ref54" class="ref-link">54</a>. In vitro screening data generated in this work are deposited as supplementary information.<br><br>
+        <strong>Code availability.</strong> CleaveNet source code is open-sourced at <a href="https://github.com/microsoft/cleavenet" target="_blank">github.com/microsoft/cleavenet</a><a href="#ref66" class="ref-link">66</a>.
+      </div>
+      <div class="para-ko">
+        <strong>데이터 공개.</strong> mRNA-display 학습 데이터는 공개되어 있다. 형광 테스트셋은 원 출처에서 이용 가능하다. 본 연구에서 생성된 in vitro 스크리닝 데이터는 보충 자료로 게재되어 있다.<br><br>
+        <strong>코드 공개.</strong> CleaveNet 소스코드는 <a href="https://github.com/microsoft/cleavenet" target="_blank">github.com/microsoft/cleavenet</a>에서 오픈소스로 공개되어 있다.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== References ===== -->
+<div class="section" id="sec-references">
+  <div class="section-header" onclick="toggleSection(this)">References (참고문헌, 66개) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div style="padding: 16px 20px;">
+    <div class="ref-item" id="ref1"><span class="ref-num">1.</span> López-Otín, C. &amp; Bond, J. S. Proteases: multifunctional enzymes in life and disease. J. Biol. Chem. 283, 30433–30437 (2008).</div>
+    <div class="ref-item" id="ref2"><span class="ref-num">2.</span> Cabral-Pacheco, G. A. et al. The roles of matrix metalloproteinases and their inhibitors in human diseases. Int. J. Mol. Sci. 21, 9739 (2020).</div>
+    <div class="ref-item" id="ref3"><span class="ref-num">3.</span> Dudani, J. S., Warren, A. D. &amp; Bhatia, S. N. Harnessing protease activity to improve cancer care. Annu. Rev. Cancer Biol. 2, 353–376 (2018).</div>
+    <div class="ref-item" id="ref4"><span class="ref-num">4.</span> Kato, D. et al. Activity-based probes that target diverse cysteine protease families. Nat. Chem. Biol. 1, 33–38 (2005).</div>
+    <div class="ref-item" id="ref5"><span class="ref-num">5.</span> O’Donoghue, A. J. et al. Global identiﬁcation of peptidase speciﬁ- city by multiplex substrate proﬁling. Nat. Methods 9, 1095–1100 (2012).</div>
+    <div class="ref-item" id="ref6"><span class="ref-num">6.</span> Bogyo, M. et al. Covalent modiﬁcation of the active site threonine of proteasomal β subunits and the Escherichia coli homolog hslV by a new class of inhibitors. Proc. Natl. Acad. Sci. USA 94, 6629–6634 (1997).</div>
+    <div class="ref-item" id="ref7"><span class="ref-num">7.</span> Leiting, B. et al. Catalytic properties and inhibition of proline- speciﬁc dipeptidyl peptidases ii, iv and vii. Biochem. J. 371, 525–532 (2003).</div>
+    <div class="ref-item" id="ref8"><span class="ref-num">8.</span> Poreba, M. Protease-activated prodrugs: strategies, challenges, and future directions. FEBS J. 287, 1936–1969 (2020).</div>
+    <div class="ref-item" id="ref9"><span class="ref-num">9.</span> Soleimany, A. P. &amp; Bhatia, S. N. Activity-based diagnostics: an emerging paradigm for disease detection and monitoring. Trends Mol. Med. 26, 450–468 (2020).</div>
+    <div class="ref-item" id="ref10"><span class="ref-num">10.</span> Hwang, E. S. et al. Clinical impact of intraoperative margin assess- ment in breast-conserving surgery with a novel pegulicianine ﬂuorescence–guided system: a nonrandomized controlled trial. JAMA Surg. 157, 573–580 (2022).</div>
+    <div class="ref-item" id="ref11"><span class="ref-num">11.</span> Kirkpatrick, J. D. et al. Urinary detection of lung cancer in mice via noninvasive pulmonary protease proﬁling. Sci. Transl. Med. 12, eaaw0262 (2020).</div>
+    <div class="ref-item" id="ref12"><span class="ref-num">12.</span> Kavanaugh, W. M. Antibody prodrugs for cancer. Expert Opin. Biol. Ther. 20, 163–171 (2020).</div>
+    <div class="ref-item" id="ref13"><span class="ref-num">13.</span> Lin, S. J. et al. Protritac is a modular and robust t cell engager prodrug platform with therapeutic index expansion observed across multiple tumor targets. Cancer Res. 81, 933–933 (2021).</div>
+    <div class="ref-item" id="ref14"><span class="ref-num">14.</span> Ngambenjawong, C., Chan, L. W., Fleming, H. E. &amp; Bhatia, S. N. Conditional antimicrobial peptide therapeutics. ACS Nano 16, 15779–15791 (2022).</div>
+    <div class="ref-item" id="ref15"><span class="ref-num">15.</span> Zhong, Q. et al. Conditional fusogenic lipid nanocarriers for cyto- solic delivery of macromolecular therapeutics. Preprint at bioRxiv https://doi.org/10.1101/2024.12.27.630514 (2024).</div>
+    <div class="ref-item" id="ref16"><span class="ref-num">16.</span> Overall, C. M. Molecular determinants of metalloproteinase sub- strate speciﬁcity: matrix metalloproteinase substrate binding domains, modules, and exosites. Mol. Biotechnol. 22, 51–86 (2002).</div>
+    <div class="ref-item" id="ref17"><span class="ref-num">17.</span> Choe, Y. et al. Substrate proﬁling of cysteine proteases using a combinatorial peptide library identiﬁes functionally unique speci- ﬁcities. J. Biol. Chem. 281, 12824–12832 (2006).</div>
+    <div class="ref-item" id="ref18"><span class="ref-num">18.</span> Ducry, L. &amp; Stump, B. Antibody- drug conjugates: linking cytotoxic payloads to monoclonal antibodies. Bioconjugate Chem. 21, 5–13 (2010).</div>
+    <div class="ref-item" id="ref19"><span class="ref-num">19.</span> Kasperkiewicz, P., Poreba, M., Groborz, K. &amp; Drag, M. Emerging challenges in the design of selective substrates, inhibitors and activity-based probes for indistinguishable proteases. FEBS J. 284, 1518–1539 (2017).</div>
+    <div class="ref-item" id="ref20"><span class="ref-num">20.</span> Turk, B. Targeting proteases: successes, failures and future pro- spects. Nat. Rev. Drug Discov. 5, 785–799 (2006).</div>
+    <div class="ref-item" id="ref21"><span class="ref-num">21.</span> Fuchs, J. E. et al. Cleavage entropy as quantitative measure of protease speciﬁcity. PLoS Comput. Biol. 9, e1003007 (2013).</div>
+    <div class="ref-item" id="ref22"><span class="ref-num">22.</span> Schechter, I. &amp; Berger, A.On the size of the active site in proteases. i. papain. Biochem. Biophys. Res. Commun. 27, 157–162 (1967).</div>
+    <div class="ref-item" id="ref23"><span class="ref-num">23.</span> Geiger, M. et al. Protease-activation using anti-idiotypic masks enables tumor speciﬁcity of a folate receptor 1-T cell bispeciﬁc antibody. Nat. Commun. 11, 3196 (2020).</div>
+    <div class="ref-item" id="ref24"><span class="ref-num">24.</span> Poreba, M. et al. Unnatural amino acids increase sensitivity and provide for the design of highly selective caspase substrates. Cell Death Differ. 21, 1482–1492 (2014).</div>
+    <div class="ref-item" id="ref25"><span class="ref-num">25.</span> Chen, S., Yim, J. J. &amp; Bogyo, M. Synthetic and biological approaches to map substrate speciﬁcities of proteases. Biol. Chem. 401, 165–182 (2019).</div>
+    <div class="ref-item" id="ref26"><span class="ref-num">26.</span> Zhou, J. et al. Deep proﬁling of protease substrate speciﬁcity enabled by dual random and scanned human proteome substrate phage libraries. Proc. Natl. Acad. Sci. USA 117, 25464–25475 (2020).</div>
+    <div class="ref-item" id="ref27"><span class="ref-num">27.</span> Kozlov, I. A. et al. A highly scalable peptide-based assay system for proteomics. PLoS ONE 7, e37441 (2012).</div>
+    <div class="ref-item" id="ref28"><span class="ref-num">28.</span> Schneider, E. L. &amp; Craik, C. S. Positional scanning synthetic com- binatorial libraries for substrate proﬁling. Methods Mol. Biol. 539, 59–78 (2009).</div>
+    <div class="ref-item" id="ref29"><span class="ref-num">29.</span> Boyd, S. E., Pike, R. N., Rudy, G. B., Whisstock, J. C. &amp; De La Banda, M. G. PoPS: a computational tool for modeling and predicting protease speciﬁcity. J. Bioinforma. Comput. Biol. 3, 551–585 (2005).</div>
+    <div class="ref-item" id="ref30"><span class="ref-num">30.</span> Ayyash, M., Tamimi, H. &amp; Ashhab, Y. Developing a powerful in silico tool for the discovery of novel caspase-3 substrates: a preliminary screening of the human proteome. BMC Bioinform. 13, 1–14 (2012).</div>
+    <div class="ref-item" id="ref31"><span class="ref-num">31.</span> Lohmüller, T. et al. Toward computer-based cleavage site predic- tion of cysteine endopeptidases. Biol. Chem. 384, 899–909 (2003).</div>
+    <div class="ref-item" id="ref32"><span class="ref-num">32.</span> Pethe, M. A., Rubenstein, A. B. &amp; Khare, S. D. Large-scale structure- based prediction and identiﬁcation of novel protease substrates using computational protein design. J. Mol. Biol. 429, 220–236 (2017).</div>
+    <div class="ref-item" id="ref33"><span class="ref-num">33.</span> Pethe, M. A., Rubenstein, A. B. &amp; Khare, S. D. Data-driven supervised learning of a viral protease speciﬁcity landscape from deep sequencing and molecular simulations. Proc. Natl. Acad. Sci. USA 116, 168–176 (2019).</div>
+    <div class="ref-item" id="ref34"><span class="ref-num">34.</span> Li, F. et al. DeepCleave: a deep learning predictor for caspase and matrix metalloprotease substrates and cleavage sites. Bioinfor- matics 36, 1057–1065 (2020).</div>
+    <div class="ref-item" id="ref35"><span class="ref-num">35.</span> Song, J. et al. PROSPERous: high-throughput prediction of sub- strate cleavage sites for 90 proteases with improved accuracy. Bioinformatics 34, 684–687 (2018).</div>
+    <div class="ref-item" id="ref36"><span class="ref-num">36.</span> Song, J. et al. Cascleave: towards more accurate prediction of caspase substrate cleavage sites. Bioinformatics 26, 752–760 (2010).</div>
+    <div class="ref-item" id="ref37"><span class="ref-num">37.</span> Li, F. et al. Procleave: predicting protease-speciﬁc substrate clea- vage sites by combining sequence and structural information. Genom. Proteom. Bioinform. 18, 52–64 (2020).</div>
+    <div class="ref-item" id="ref38"><span class="ref-num">38.</span> Li, F. et al. ProsperousPlus: a one-stop and comprehensive platform for accurate protease-speciﬁc substrate cleavage prediction and machine-learning model construction. Brief. Bioinform. 24, bbad372 (2023).</div>
+    <div class="ref-item" id="ref39"><span class="ref-num">39.</span> Michael, R. et al. A systematic analysis of regression models for protein engineering. PLoS Comput. Biol. 20, e1012061 (2024).</div>
+    <div class="ref-item" id="ref40"><span class="ref-num">40.</span> Watson, J. L. et al. De novo design of protein structure and function with RFdiffusion. Nature 620, 1089–1100 (2023).</div>
+    <div class="ref-item" id="ref41"><span class="ref-num">41.</span> Yeh, A. H.-W. et al. De novo design of luciferases using deep learning. Nature 614, 774–780 (2023).</div>
+    <div class="ref-item" id="ref42"><span class="ref-num">42.</span> Alamdari, S. et al. Protein generation with evolutionary diffusion: sequence is all you need. Preprint at bioRxiv https://doi.org/10.1101/ 2023.09.11.556673 (2023).</div>
+    <div class="ref-item" id="ref43"><span class="ref-num">43.</span> Xie, W. J. &amp; Warshel, A. Harnessing generative AI to decode enzyme catalysis and evolution for enhanced engineering. Natl. Sci. Rev. 10, nwad331 (2023).</div>
+    <div class="ref-item" id="ref44"><span class="ref-num">44.</span> Lauko, A. et al. Computational design of serine hydrolases. Science 388, eadu2454 (2025).</div>
+    <div class="ref-item" id="ref45"><span class="ref-num">45.</span> Huber, L. et al. Data-driven protease engineering by DNA-recording and epistasis-aware machine learning. Nat. Commun. 16, 5466 (2025).</div>
+    <div class="ref-item" id="ref46"><span class="ref-num">46.</span> Quintero-Fabián, S. et al. Role of matrix metalloproteinases in angiogenesis and cancer. Front. Oncol. 9, 1370 (2019).</div>
+    <div class="ref-item" id="ref47"><span class="ref-num">47.</span> Kukreja, M. et al. High-throughput multiplexed peptide-centric proﬁling illustrates both substrate cleavage redundancy and spe- ciﬁcity in the MMP family. Chem. Biol. 22, 1122–1133 (2015).</div>
+    <div class="ref-item" id="ref48"><span class="ref-num">48.</span> Hu, Q. &amp; Ecker, M. Overview of MMP-13 as a promising target for the treatment of osteoarthritis. Int. J. Mol. Sci. 22, 1742 (2021).</div>
+    <div class="ref-item" id="ref49"><span class="ref-num">49.</span> Hattori, N. et al. MMP-13 plays a role in keratinocyte migration, angiogenesis, and contraction in mouse skin wound healing. Am. J. Pathol. 175, 533–546 (2009).</div>
+    <div class="ref-item" id="ref50"><span class="ref-num">50.</span> Hochreiter, S. &amp; Schmidhuber, J. Long short-term memory. Neural Comput. 9, 1735–1780 (1997).</div>
+    <div class="ref-item" id="ref51"><span class="ref-num">51.</span> Vaswani, A. et al. Attention is all you need. In Proc. 31st International Conference on Neural Information Processing Systems (NIPS'17). 6000–6010 (Curran Associates Inc., 2017).</div>
+    <div class="ref-item" id="ref52"><span class="ref-num">52.</span> Lin, Z. et al. Evolutionary-scale prediction of atomic-level protein structure with a language model. Science 379, 1123–1130 (2023).</div>
+    <div class="ref-item" id="ref53"><span class="ref-num">53.</span> Madani, A.et al. Large language models generate functional protein sequences across diverse families. Nat. Biotechnol. 41, 1099–1106 (2023).</div>
+    <div class="ref-item" id="ref54"><span class="ref-num">54.</span> Soleimany, A. P., Martin-Alonso, C., Anahtar, M., Wang, C. S. &amp; Bhatia, S. N. Protease activity analysis: a toolkit for analyzing enzyme activity data. ACS Omega 7, 24292–24301 (2022).</div>
+    <div class="ref-item" id="ref55"><span class="ref-num">55.</span> Colaert, N., Helsens, K., Martens, L., Vandekerckhove, J. &amp; Gevaert, K. Improved visualization of protein consensus sequences by Ice- Logo. Nat. Methods 6, 786–787 (2009).</div>
+    <div class="ref-item" id="ref56"><span class="ref-num">56.</span> Eckhard, U. et al. Active site speciﬁcity proﬁling datasets of matrix metalloproteinases (MMPs) 1, 2, 3, 7, 8, 9, 12, 13 and 14. Data Brief. 7, 299–310 (2016).</div>
+    <div class="ref-item" id="ref57"><span class="ref-num">57.</span> Ratnikov, B. I. et al. Basis for substrate recognition and distinction by matrix metalloproteinases. Proc. Natl. Acad. Sci. USA 111, E4148–E4155 (2014).</div>
+    <div class="ref-item" id="ref58"><span class="ref-num">58.</span> Andreini, C., Banci, L., Bertini, I., Luchinat, C. &amp; Rosato, A. Bioinfor- matic comparison of structures and homology-models of matrix metalloproteinases. J. Proteome Res. 3, 21–31 (2004).</div>
+    <div class="ref-item" id="ref59"><span class="ref-num">59.</span> Jumper, J. et al. Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589 (2021).</div>
+    <div class="ref-item" id="ref60"><span class="ref-num">60.</span> Tunyasuvunakool, K., Adler, J., Wu, Z. et al. Highly accurate protein structure prediction for the human proteome. Nature 596, 590–596 (2021).</div>
+    <div class="ref-item" id="ref61"><span class="ref-num">61.</span> Ryppa, C. et al. In vitro and in vivo evaluation of doxorubicin con- jugates with the divalent peptide E-[c(RGDfK)2] that targets integrin αvβ3. Bioconjugate Chem. 19, 1414–1422 (2008).</div>
+    <div class="ref-item" id="ref62"><span class="ref-num">62.</span> Ueki, N. et al. Synthesis and preclinical evaluation of a highly improved anticancer prodrug activated by histone deacetylases and cathepsin L. Theranostics 6, 808 (2016).</div>
+    <div class="ref-item" id="ref63"><span class="ref-num">63.</span> Holt, B. A. &amp; Kwong, G. A. Protease circuits for processing biological information. Nat. Commun. 11, 5021 (2020).</div>
+    <div class="ref-item" id="ref64"><span class="ref-num">64.</span> Sivakumar, A. et al. AND-gated protease-activated nanosensors for programmable detection of anti-tumour immunity. Nat. Nano- technol. 20, 441–450 (2025).</div>
+    <div class="ref-item" id="ref65"><span class="ref-num">65.</span> Lakshminarayanan, B., Pritzel, A. &amp; Blundell, C. Simple and scalable predictive uncertainty estimation using deep ensembles. In Proc 31st International Conference on Neural Information Processing Systems (NIPS'17) 6405–6416 (Curran Associates Inc., 2017).</div>
+    <div class="ref-item" id="ref66"><span class="ref-num">66.</span> Martin-Alonso, C. et al. Deep learning guided design of protease substrates. https://github.com/microsoft/cleavenet. Source code available at GitHub (2025).</div>    </div>
+  </div>
+</div>
+
+<!-- ===== Glossary ===== -->
+<div class="glossary" id="sec-glossary">
+  <h2>핵심 용어 사전 (Key Terms Glossary)</h2>
+  <div class="glossary-grid">
+    <div class="glossary-item"><span class="g-en">Protease (프로테아제)</span><span class="g-ko">단백질가수분해효소. 펩타이드 결합 절단</span></div>
+    <div class="glossary-item"><span class="g-en">Substrate (기질)</span><span class="g-ko">효소가 작용하는 대상 분자</span></div>
+    <div class="glossary-item"><span class="g-en">Cleavage (절단)</span><span class="g-ko">효소에 의한 펩타이드 결합 가수분해</span></div>
+    <div class="glossary-item"><span class="g-en">MMP (matrix metalloproteinase)</span><span class="g-ko">기질금속단백질분해효소 (Zn²⁺ 의존)</span></div>
+    <div class="glossary-item"><span class="g-en">MMP13 (Collagenase-3)</span><span class="g-ko">콜라게나제-3, 암 전이·골관절염 관련</span></div>
+    <div class="glossary-item"><span class="g-en">Collagenase</span><span class="g-ko">콜라겐을 분해하는 MMP 서브클래스</span></div>
+    <div class="glossary-item"><span class="g-en">Gelatinase</span><span class="g-ko">젤라틴을 분해하는 MMP 서브클래스 (MMP2/9)</span></div>
+    <div class="glossary-item"><span class="g-en">Stromelysin</span><span class="g-ko">스트로멜라이신, MMP3/10 등</span></div>
+    <div class="glossary-item"><span class="g-en">MT-MMP</span><span class="g-ko">막관통형 MMP (MMP14, 15, 16, 24 등)</span></div>
+    <div class="glossary-item"><span class="g-en">Z-score (Zsm)</span><span class="g-ko">정규화된 절단 강도 점수</span></div>
+    <div class="glossary-item"><span class="g-en">FRET</span><span class="g-ko">형광 공명 에너지 전달 (절단 측정용)</span></div>
+    <div class="glossary-item"><span class="g-en">mRNA display</span><span class="g-ko">mRNA-펩타이드 결합으로 라이브러리 스크리닝</span></div>
+    <div class="glossary-item"><span class="g-en">Phage display</span><span class="g-ko">파지 표면에 펩타이드 표시 라이브러리 기법</span></div>
+    <div class="glossary-item"><span class="g-en">In silico</span><span class="g-ko">컴퓨터 시뮬레이션상으로</span></div>
+    <div class="glossary-item"><span class="g-en">In vitro</span><span class="g-ko">시험관 내(생체외) 실험</span></div>
+    <div class="glossary-item"><span class="g-en">LSTM</span><span class="g-ko">장단기기억 신경망 (순차 학습)</span></div>
+    <div class="glossary-item"><span class="g-en">Transformer</span><span class="g-ko">어텐션 기반 신경망 (전역 학습)</span></div>
+    <div class="glossary-item"><span class="g-en">Autoregressive</span><span class="g-ko">자기회귀 (이전 토큰 → 다음 토큰)</span></div>
+    <div class="glossary-item"><span class="g-en">Generative model</span><span class="g-ko">생성 모델 (새로운 데이터 생성)</span></div>
+    <div class="glossary-item"><span class="g-en">Conditional generation</span><span class="g-ko">조건부 생성 (입력 조건에 따른 생성)</span></div>
+    <div class="glossary-item"><span class="g-en">Conditioning tag</span><span class="g-ko">조건 태그 (생성을 유도하는 입력)</span></div>
+    <div class="glossary-item"><span class="g-en">Unconditional generation</span><span class="g-ko">비조건적 생성 (조건 없는 무작위 생성)</span></div>
+    <div class="glossary-item"><span class="g-en">Site-independent baseline</span><span class="g-ko">위치-독립 베이스라인 샘플링</span></div>
+    <div class="glossary-item"><span class="g-en">Ensemble</span><span class="g-ko">앙상블 (여러 모델의 평균)</span></div>
+    <div class="glossary-item"><span class="g-en">Uncertainty estimation</span><span class="g-ko">불확실성 추정 (예측 신뢰도)</span></div>
+    <div class="glossary-item"><span class="g-en">MAE (Mean Absolute Error)</span><span class="g-ko">평균 절대 오차</span></div>
+    <div class="glossary-item"><span class="g-en">AUC (ROC)</span><span class="g-ko">ROC 곡선 아래 면적 (분류 성능)</span></div>
+    <div class="glossary-item"><span class="g-en">Pearson's r</span><span class="g-ko">피어슨 상관계수</span></div>
+    <div class="glossary-item"><span class="g-en">KL divergence</span><span class="g-ko">쿨백-라이블러 발산 (분포 차이 측정)</span></div>
+    <div class="glossary-item"><span class="g-en">k-mer</span><span class="g-ko">k개 연속 잔기 단위</span></div>
+    <div class="glossary-item"><span class="g-en">IceLogo</span><span class="g-ko">위치별 아미노산 빈도 시각화 도구</span></div>
+    <div class="glossary-item"><span class="g-en">Subsite cooperativity</span><span class="g-ko">하위부위 협력성 (인접 위치 협력 효과)</span></div>
+    <div class="glossary-item"><span class="g-en">PXXL motif</span><span class="g-ko">표준 MMP 절단 모티프 (P-임의-임의-Leu)</span></div>
+    <div class="glossary-item"><span class="g-en">P3, P2, P1, P1', P2', P3'</span><span class="g-ko">절단 부위 기준 잔기 위치 표기 (Schechter-Berger)</span></div>
+    <div class="glossary-item"><span class="g-en">Selectivity score</span><span class="g-ko">선택성 점수 (특정 효소 vs 기타)</span></div>
+    <div class="glossary-item"><span class="g-en">Efficiency score</span><span class="g-ko">효율 점수 (절대 절단량)</span></div>
+    <div class="glossary-item"><span class="g-en">Promiscuity</span><span class="g-ko">난잡성 (다양한 기질을 절단)</span></div>
+    <div class="glossary-item"><span class="g-en">Pro-drug</span><span class="g-ko">전구약물 (특정 조건에서 활성화)</span></div>
+    <div class="glossary-item"><span class="g-en">Pearson's r ≈ 0.80</span><span class="g-ko">강한 양의 상관관계 (본 논문 핵심 성능 지표)</span></div>
+    <div class="glossary-item"><span class="g-en">CleaveNet Predictor</span><span class="g-ko">절단 점수 예측 모델 (트랜스포머 56k 파라미터)</span></div>
+    <div class="glossary-item"><span class="g-en">CleaveNet Generator</span><span class="g-ko">펩타이드 서열 생성 모델 (자기회귀 트랜스포머)</span></div>
+    <div class="glossary-item"><span class="g-en">CSS (Corrected Selectivity Score)</span><span class="g-ko">보정 선택성 점수</span></div>
+    <div class="glossary-item"><span class="g-en">Fluorogenic substrate</span><span class="g-ko">형광 발생 기질 (절단 시 형광 방출)</span></div>
+    <div class="glossary-item"><span class="g-en">Recombinant protein</span><span class="g-ko">재조합 단백질 (DNA 재조합으로 생산)</span></div>
+    <div class="glossary-item"><span class="g-en">Phylogenetic distance</span><span class="g-ko">계통학적 거리 (진화 관계)</span></div>
+    <div class="glossary-item"><span class="g-en">De novo design</span><span class="g-ko">백지 상태에서 새 서열·구조 설계</span></div>
+  </div>
+</div>
+
+<!-- ===== User Vocab ===== -->
+<div class="user-vocab" id="sec-uservocab">
+  <h2>📓 내가 추가한 단어장</h2>
+  <p>읽다가 모르는 단어를 클로드에게 알려주면 여기에 추가됩니다.</p>
+  <div id="userVocabList" style="font-size: 12px; color: #744210;">
+    <em>(아직 추가된 단어가 없습니다.)</em>
+  </div>
+</div>
+
+
+</div>
+<script>
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.toggle');
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    toggle.classList.remove('collapsed');
+    header.classList.remove('is-collapsed');
+  } else {
+    body.style.display = 'none';
+    toggle.classList.add('collapsed');
+    header.classList.add('is-collapsed');
+  }
+}
+</script>
+</body>
+</html>
