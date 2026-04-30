@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>논문 요약 — CleaveNet (Martin-Alonso et al., 2026)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #f5f7fa; color: #1a202c; line-height: 1.7; }
+
+  .header { background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #3182ce 100%); color: #fff; padding: 40px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .header .subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 14px; }
+  .header .meta { font-size: 12px; opacity: 0.85; line-height: 1.7; }
+  .header .meta a { color: #bee3f8; text-decoration: underline; }
+
+  .toc { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 2px solid #e2e8f0; padding: 12px 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  .toc-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 6px; }
+  .toc a { color: #2b6cb0; text-decoration: none; font-size: 11.5px; padding: 4px 10px; border-radius: 14px; background: #ebf8ff; transition: all 0.2s; white-space: nowrap; }
+  .toc a:hover { background: #2b6cb0; color: #fff; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px; }
+
+  .section { background: #fff; border-radius: 10px; padding: 24px 28px; margin-bottom: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .section h2 { font-size: 18px; color: #1a365d; border-bottom: 3px solid #3182ce; padding-bottom: 8px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section h2 .num { background: #2b6cb0; color: #fff; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+  .section h3 { font-size: 14.5px; color: #2c5282; margin-top: 14px; margin-bottom: 8px; }
+  .section p { font-size: 13.5px; line-height: 1.85; margin-bottom: 10px; color: #2d3748; }
+
+  .quote-box { background: #f0fff4; border-left: 4px solid #38a169; padding: 14px 18px; border-radius: 6px; margin: 12px 0; font-size: 13px; color: #22543d; }
+  .warn-box { background: #fffaf0; border-left: 4px solid #dd6b20; padding: 14px 18px; border-radius: 6px; margin: 12px 0; font-size: 12.5px; color: #7b341e; }
+  .info-box { background: #ebf8ff; border-left: 4px solid #3182ce; padding: 14px 18px; border-radius: 6px; margin: 12px 0; font-size: 13px; color: #2c5282; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12.5px; }
+  th, td { border: 1px solid #cbd5e0; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #2b6cb0; color: #fff; font-weight: 700; font-size: 12.5px; }
+  tr:nth-child(even) td { background: #f7fafc; }
+  td.center { text-align: center; }
+  td.num { text-align: right; font-family: 'Consolas', monospace; }
+
+  .highlight { background: #fff3cd; padding: 1px 5px; border-radius: 3px; color: #744210; font-weight: 600; }
+  .pipeline { background: #f7fafc; border: 1px solid #cbd5e0; border-radius: 8px; padding: 14px; margin: 12px 0; font-family: 'Consolas', 'Menlo', monospace; font-size: 13px; color: #1a365d; text-align: center; line-height: 2; }
+  .pipeline span.arrow { color: #3182ce; margin: 0 6px; }
+  .pipeline span.box { background: #fff; padding: 4px 10px; border-radius: 6px; border: 1px solid #3182ce; display: inline-block; }
+
+  .source-label { display: inline-block; background: #fed7d7; color: #742a2a; font-size: 10.5px; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 6px; }
+  .source-paper { display: inline-block; background: #c6f6d5; color: #22543d; font-size: 10.5px; padding: 2px 8px; border-radius: 10px; font-weight: 700; margin-left: 6px; }
+
+  .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 12px; }
+  .takeaway-card { background: linear-gradient(135deg, #ebf8ff, #e6fffa); border: 1px solid #bee3f8; border-radius: 8px; padding: 14px 16px; }
+  .takeaway-card .card-title { font-size: 12.5px; font-weight: 700; color: #2b6cb0; margin-bottom: 6px; }
+  .takeaway-card .card-body { font-size: 12px; color: #2d3748; line-height: 1.6; }
+
+  .footer { text-align: center; padding: 30px; color: #718096; font-size: 11.5px; }
+
+  .vocab-tip { color: #c53030; border-bottom: 2px dotted #e53e3e; cursor: help; position: relative; font-weight: 600; }
+  .vocab-tip:hover .tip { display: block; }
+  .vocab-tip .tip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #2d3748; color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; font-weight: 400; z-index: 150; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .vocab-tip .tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #2d3748; }
+
+  @media (max-width: 768px) { .container { padding: 16px; } .header { padding: 24px 18px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>논문 핵심 요약 — CleaveNet: 딥러닝 기반 프로테아제 기질 설계</h1>
+  <div class="subtitle">Martin-Alonso, C., Alamdari, S. et al., <i>Nature Communications</i> 17:54 (2026)</div>
+  <div class="meta">
+    📅 요약일: 2026.04.30 20:31 (KST)<br>
+    🔗 DOI: <a href="https://doi.org/10.1038/s41467-025-67226-1" target="_blank">10.1038/s41467-025-67226-1</a> &nbsp;·&nbsp; Source: <a href="https://github.com/microsoft/cleavenet" target="_blank">github.com/microsoft/cleavenet</a><br>
+    📄 영한대역 본문: <code>Deep learning guided design of protease substrates_영한대역.html</code><br>
+    🎯 용도: pepbind06 시스템 비교 분석 자료 + 펩타이드 생성 모델 사례 학습
+  </div>
+</div>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#sec-1">1. 한 줄 요약</a>
+    <a href="#sec-2">2. 논문 실제 구조</a>
+    <a href="#sec-3">3. 핵심 메시지</a>
+    <a href="#sec-4">4. CleaveNet 파이프라인</a>
+    <a href="#sec-5">5. 모델 구성</a>
+    <a href="#sec-6">6. 핵심 결과</a>
+    <a href="#sec-7">7. 한계·후속</a>
+    <a href="#sec-8">8. pepbind06과의 관계</a>
+    <a href="#sec-9">9. 시사점</a>
+    <a href="#sec-10">10. Key Takeaways</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- 1 -->
+<div class="section" id="sec-1">
+  <h2><span class="num">1</span> 한 줄 요약</h2>
+  <div class="quote-box">
+    <strong>표적 프로테아제(MMP)에 절단되는 펩타이드 기질을, AI가 처음부터 설계할 수 있는가?</strong><br><br>
+    Martin-Alonso et al.은 18개 MMP에 대해 학습한 <strong>CleaveNet (Predictor + Generator)</strong>을 제안하고, 효율과 선택성을 함께 최적화한 MMP13 기질을 in silico로 생성한 뒤 12개 재조합 MMP에 대한 in vitro 스크린에서 실제 절단을 검증했다. 일부 기질은 MMP13에서만 고유하게 절단되었으며, 학습 데이터에는 존재하지 않던 "고효율 + 고선택성" 영역의 기질도 발견했다.
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="section" id="sec-2">
+  <h2><span class="num">2</span> 논문 실제 구조 <span class="source-paper">원문 그대로</span></h2>
+  <div class="info-box">
+    이 논문은 Nature Communications의 표준 구성(Article)을 따릅니다. 아래는 PDF 본문에 등장하는 실제 섹션 헤더입니다.
+  </div>
+  <table>
+    <tr><th style="width:30%;">섹션</th><th style="width:15%;">위치</th><th>설명</th></tr>
+    <tr><td>Abstract</td><td class="center">p1</td><td>초록</td></tr>
+    <tr><td>(Introduction; 별도 헤더 없음)</td><td class="center">p1~2</td><td>배경 + 본 연구 개요</td></tr>
+    <tr><td><strong>Results</strong></td><td class="center">p3~10</td><td>6개 서브섹션 (Predictor / Generator 생물물리 / 생물학적 타당성 / MMP13 in vitro / 조건부 생성 / MMP13 선택성 in vitro)</td></tr>
+    <tr><td><strong>Discussion</strong></td><td class="center">p10~12</td><td>고찰 + 한계 + 향후 방향</td></tr>
+    <tr><td><strong>Methods</strong></td><td class="center">p12~15</td><td>10개 이상 서브섹션 (데이터셋·예측기·생성기 학습·선택성 점수·in vitro 등)</td></tr>
+    <tr><td>Data availability / Code availability</td><td class="center">p15</td><td>데이터·코드 공개 안내</td></tr>
+    <tr><td><strong>References</strong></td><td class="center">p15~17</td><td>총 66개</td></tr>
+    <tr><td>Acknowledgements / Author contributions / Competing interests</td><td class="center">p17</td><td>부록</td></tr>
+  </table>
+  <div class="warn-box">
+    <strong>⚠️ 참고:</strong> 이 요약 문서의 일부 표·도식(특히 §4의 파이프라인 도식, §8의 pepbind06 매핑)은 <strong>요약자(Claude)가 가독성을 위해 재구성한 것</strong>입니다. 논문 자체의 프레임워크는 위 표가 전부이며, 그 외 도식은 비공식 재구성임을 명시합니다.
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="section" id="sec-3">
+  <h2><span class="num">3</span> 4가지 핵심 메시지 <span class="source-paper">논문 명시</span></h2>
+  <table>
+    <tr><th style="width:5%;">#</th><th style="width:35%;">메시지</th><th>의미</th></tr>
+    <tr><td class="center"><strong>1</strong></td><td>기질 설계 = <span class="highlight">조합론적 문제</span></td><td>10mer 펩타이드만 해도 약 20<sup>10</sup>(≈10<sup>13</sup>)개 조합. 문헌 검색·합리적 설계는 비효율적이고 표적별 맞춤이 필요</td></tr>
+    <tr><td class="center"><strong>2</strong></td><td>기존 ML 도구는 <span class="highlight">이진 분류</span>에 머무름</td><td>"절단 vs 비절단" 예측만 가능 → 효율 순위 매김 어려움. 공학적 응용에 한계</td></tr>
+    <tr><td class="center"><strong>3</strong></td><td>CleaveNet = <span class="highlight">연속 점수 + 조건부 생성</span></td><td>18개 MMP에 대해 연속 절단 점수를 출력하는 Predictor + 원하는 절단 프로파일로 생성을 유도하는 conditioning tag 도입</td></tr>
+    <tr><td class="center"><strong>4</strong></td><td>실험 검증으로 <span class="highlight">학습셋에 없던 영역</span> 발견</td><td>"고효율 + 고선택성"이 동시에 만족되는 MMP13 기질을 발굴, 학습 데이터에는 거의 없던 영역</td></tr>
+  </table>
+</div>
+
+<!-- 4 -->
+<div class="section" id="sec-4">
+  <h2><span class="num">4</span> CleaveNet 파이프라인 <span class="source-label">요약자 재구성</span></h2>
+  <div class="warn-box">
+    아래 파이프라인 도식은 논문 Fig. 1의 내용을 요약자가 텍스트로 재정리한 것입니다.
+  </div>
+  <div class="pipeline">
+    <span class="box">표적 프로테아제 (MMP13 등)</span>
+    <span class="arrow">→</span>
+    <span class="box">CleaveNet Generator<br>(서열 생성)</span>
+    <span class="arrow">→</span>
+    <span class="box">2만개 후보</span>
+    <br><br>
+    <span class="box">2만개 후보</span>
+    <span class="arrow">→</span>
+    <span class="box">CleaveNet Predictor<br>(18 MMP 점수)</span>
+    <span class="arrow">→</span>
+    <span class="box">상위 후보 선정</span>
+    <span class="arrow">→</span>
+    <span class="box">in vitro FRET 검증</span>
+  </div>
+  <h3>모드별 차이</h3>
+  <table>
+    <tr><th style="width:20%;">모드</th><th>입력</th><th>활용</th></tr>
+    <tr><td><strong>비조건 생성</strong></td><td>없음</td><td>다양한 MMP 절단 가능 기질 풀 확보 → Predictor로 후보 추리기</td></tr>
+    <tr><td><strong>조건부 생성</strong></td><td>18개 MMP 절단/비절단 이진 프로파일 (conditioning tag)</td><td>"MMP13에서만 절단" 같은 선택성 기질 표적 설계</td></tr>
+  </table>
+</div>
+
+<!-- 5 -->
+<div class="section" id="sec-5">
+  <h2><span class="num">5</span> 모델 구성 <span class="source-paper">논문 명시</span></h2>
+  <h3>5-1. Predictor (예측 모델)</h3>
+  <table>
+    <tr><th style="width:25%;">속성</th><th>내용</th></tr>
+    <tr><td>입력</td><td>아미노산 서열 s (10mer 중심)</td></tr>
+    <tr><td>출력</td><td>18개 MMP에 대한 연속 절단 점수 Ẑsm + 불확실성 σsm</td></tr>
+    <tr><td>구조</td><td>트랜스포머 (56k 파라미터). LSTM과 비교했지만 트랜스포머 채택</td></tr>
+    <tr><td>불확실성</td><td>5개 모델 앙상블의 예측 표준편차로 σsm 산출</td></tr>
+    <tr><td>학습 데이터</td><td>약 18,500개 mRNA-display 합성 기질 × 18 MMP</td></tr>
+    <tr><td>핵심 성능</td><td>MMP13: Pearson r = <strong>0.80</strong> (mRNA-display + 형광 테스트셋 둘 다)<br>분류 AUC 최대 <strong>0.98</strong> (Zt = 2.5)</td></tr>
+  </table>
+
+  <h3>5-2. Generator (생성 모델)</h3>
+  <table>
+    <tr><th style="width:25%;">속성</th><th>내용</th></tr>
+    <tr><td>구조</td><td>자기회귀 트랜스포머 (가변 길이 생성)</td></tr>
+    <tr><td>학습 데이터</td><td>mRNA-display 학습 분할</td></tr>
+    <tr><td>비조건 생성 결과</td><td>20,000개 생성 → P3~P2' 위치별 KL 0.25 (베이스라인 0.404 대비 우수)<br>학습셋과 정확 일치 95개에 불과 → 암기 아님</td></tr>
+    <tr><td>조건부 생성</td><td>conditioning tag(18 MMP 이진)로 절단 프로파일 표적 설계 가능</td></tr>
+  </table>
+
+  <h3>5-3. 베이스라인</h3>
+  <p><strong>위치-독립 베이스라인 (site-independent baseline)</strong>: 학습 서열의 위치별 아미노산 분포에서 독립적으로 무작위 샘플링. 위치별 분포는 잘 맞지만 위치 간 협력성을 잡지 못해 PXXL 등 표준 모티프 농축이 일어나지 않음.</p>
+</div>
+
+<!-- 6 -->
+<div class="section" id="sec-6">
+  <h2><span class="num">6</span> 핵심 결과 <span class="source-paper">논문 명시</span></h2>
+  <h3>6-1. 생물물리·생물학적 타당성</h3>
+  <table>
+    <tr><th style="width:30%;">결과</th><th>수치/내용</th></tr>
+    <tr><td>표준 PXXL 모티프 재현</td><td>모든 MMP에서 두드러짐</td></tr>
+    <tr><td><span class="highlight">P4 메티오닌 새 발견</span></td><td>젤라티나제 11.4×, 콜라게나제 10.9×, MT1-MMP 14.0×, MT2-MMP 9.2×, 스트로멜라이신 12.2× (자연 빈도 대비)</td></tr>
+    <tr><td>젤라티나제 (MMP2/9) 모티프</td><td>P3 프롤린 99%, P1·P3' 작은 잔기, P2' Arg 27.5% — 기존 보고와 일치</td></tr>
+    <tr><td>3-mer 협력성</td><td>PLG가 CleaveNet·mRNA-display 모두에서 1위 3-mer, 상위 4개 공유</td></tr>
+    <tr><td>활성 클러스터링</td><td>MMP 촉매 도메인의 계통학적 거리에 따라 5개 그룹으로 묶임</td></tr>
+  </table>
+
+  <h3>6-2. MMP13 in vitro 검증</h3>
+  <p>대규모 in vitro 스크린: <strong>95개 기질 × 12 재조합 MMP</strong>. 기술 반복 신뢰도 <span class="vocab-tip">R² = 0.74~0.98<span class="tip">코드 듀플리케이트 일치도</span></span>.</p>
+  <table>
+    <tr><th style="width:35%;">평가 그룹</th><th>특징</th></tr>
+    <tr><td>CleaveNet 효율 설계 (n=40)</td><td>MMP13에 효율 높음, 그러나 다른 MMP에서도 다소 절단됨 (난잡)</td></tr>
+    <tr><td>CleaveNet 선택성 설계 (n=40)</td><td>MMP13 선택적 절단 (조건부 생성 효과 입증)</td></tr>
+    <tr><td>훈련셋 대조 (n=15)</td><td>5개 효율 양성 / 5개 선택성 양성 / 5개 비절단 음성</td></tr>
+  </table>
+  <h3>6-3. 효율 × 선택성 4분면 분석</h3>
+  <table>
+    <tr><th>4분면</th><th>n</th><th>의미</th></tr>
+    <tr><td>저효율 × 저선택성</td><td class="center">56</td><td>가장 흔한 영역 (실용성 낮음)</td></tr>
+    <tr><td>저효율 × 고선택성</td><td class="center">19</td><td>MMP13에만 반응하지만 절단 효율 낮음 (DL41, DL32, DL28: 완벽 선택성)</td></tr>
+    <tr><td>고효율 × 저선택성</td><td class="center">15</td><td>MMP13 강하게 절단하지만 다른 MMP도 많이 절단</td></tr>
+    <tr><td><strong>고효율 × 고선택성</strong></td><td class="center"><strong>5</strong></td><td><strong>학습셋에 거의 없던 영역. CleaveNet 설계만 진입 (DL48 등). 전구약물·진단 응용에 핵심</strong></td></tr>
+  </table>
+</div>
+
+<!-- 7 -->
+<div class="section" id="sec-7">
+  <h2><span class="num">7</span> 한계와 후속 방향 <span class="source-paper">논문 명시</span></h2>
+  <table>
+    <tr><th style="width:30%;">한계</th><th>저자가 제안한 보완</th></tr>
+    <tr><td>합성 기질에 한정</td><td>천연 기질·전장 단백질 기질 설계로 확장. AlphaFold 등 구조 예측 모델과 통합</td></tr>
+    <tr><td>MMP만 검증</td><td>다른 프로테아제 서브클래스(세린·시스테인 등)로 학습 데이터·모델 확장</td></tr>
+    <tr><td>실험 검증 필수</td><td>높은 예측 정확도에도 불구하고 in vitro 검증 단계는 여전히 필요</td></tr>
+    <tr><td>비천연 아미노산 미지원</td><td>비천연 아미노산 통합으로 설계 공간 확장</td></tr>
+    <tr><td>MMP13 외 적용 미입증 (in vitro)</td><td>다른 MMP·다중 프로테아제 활성 회로로 확장 (논리 회로, AND-게이트 등)</td></tr>
+  </table>
+</div>
+
+<!-- 8 -->
+<div class="section" id="sec-8">
+  <h2><span class="num">8</span> 우리 시스템(pepbind06)과의 관계 <span class="source-label">요약자 분석</span></h2>
+  <div class="warn-box">
+    아래는 본 논문 내용을 우리 펩타이드-단백질 결합 예측 시스템(pepbind06)과 매핑한 <strong>요약자 분석</strong>입니다. 논문 본문에는 우리 시스템에 대한 직접적 언급이 없습니다.
+  </div>
+
+  <h3>8-1. 두 시스템의 본질적 차이</h3>
+  <table>
+    <tr><th style="width:18%;">항목</th><th>CleaveNet (본 논문)</th><th>pepbind06 (우리)</th></tr>
+    <tr><td><strong>목표</strong></td><td>프로테아제에 의해 <strong>절단되는</strong> 기질 펩타이드 설계</td><td>표적 단백질에 <strong>결합하는</strong> 펩타이드 설계</td></tr>
+    <tr><td><strong>출력</strong></td><td>18 MMP 절단 점수 + 절단 부위</td><td>결합 친화도 (PRODIGY ΔG, Vina) + 구조 신뢰도 (ipTM)</td></tr>
+    <tr><td><strong>표적 종류</strong></td><td>효소 (활성 부위 절단)</td><td>일반 단백질 표면 (결합 인터페이스)</td></tr>
+    <tr><td><strong>구조 예측 사용</strong></td><td>X (서열 기반만)</td><td>O (ColabFold/AF-Multimer)</td></tr>
+    <tr><td><strong>실험 검증</strong></td><td>FRET 형광 in vitro (95 기질 × 12 효소)</td><td>없음 (in silico만)</td></tr>
+    <tr><td><strong>주요 모델</strong></td><td>자체 트랜스포머 (Predictor + Generator)</td><td>PepMLM (생성) + ColabFold (구조) + Vina/PRODIGY (평가)</td></tr>
+  </table>
+
+  <h3>8-2. 그래도 공통점</h3>
+  <div class="takeaway-grid">
+    <div class="takeaway-card">
+      <div class="card-title">1. 생성형 AI + 평가 모델 페어링</div>
+      <div class="card-body">CleaveNet도 Generator + Predictor로 두 모델을 연결. pepbind06도 PepMLM(생성) + 평가 모델 다중 결합. 같은 두-단계 패턴.</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">2. 후보 풀 → 가상 스크리닝 → 검증</div>
+      <div class="card-body">CleaveNet: 2만 후보 → Predictor 점수 → 24개 선택. pepbind06: 200 후보 → 다중 지표 → 상위 선정. 동일 흐름.</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">3. 단일 지표 한계 인식</div>
+      <div class="card-body">CleaveNet은 효율·선택성 별도 점수 + 4분면 분석. pepbind06은 PRODIGY·Vina·ipTM 복합 점수. 둘 다 단일 지표 회피.</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">4. in silico 한계 솔직히 인정</div>
+      <div class="card-body">CleaveNet도 "in vitro 검증은 여전히 필수"라고 명시. pepbind06의 "스크리닝 가속" 포지셔닝과 같은 결.</div>
+    </div>
+  </div>
+
+  <h3>8-3. CleaveNet에서 pepbind06이 배울 점</h3>
+  <table>
+    <tr><th style="width:30%;">CleaveNet의 시도</th><th>pepbind06 적용 가능성</th></tr>
+    <tr><td><strong>불확실성 추정 (5개 모델 앙상블 σ)</strong></td><td>PepMLM 출력에 앙상블 평균·표준편차 도입 → 신뢰도 점수 부여</td></tr>
+    <tr><td><strong>조건 태그 (conditioning tag)</strong></td><td>"이 단백질에는 결합, 저 단백질에는 결합 안 함"의 다중 표적 조건부 생성으로 확장</td></tr>
+    <tr><td><strong>k-mer 협력성 분석</strong></td><td>생성 펩타이드의 위치 간 협력성(소수성 클러스터, 전하 분포)을 정량 분석에 추가</td></tr>
+    <tr><td><strong>4분면 분석 (효율 × 선택성)</strong></td><td>(친화도 × 선택성) 또는 (Vina × ipTM) 4분면 시각화로 후보 평가 직관성 향상</td></tr>
+    <tr><td><strong>학습셋과 비교한 distinct k-mer 분석</strong></td><td>생성 서열이 학습 데이터(또는 PDB) 대비 얼마나 새로운지 정량화</td></tr>
+    <tr><td><strong>오픈소스 재현성 (GitHub 공개)</strong></td><td>pepbind06 코드·데이터·재현 가능 환경 정리 (이미 일부 진행)</td></tr>
+  </table>
+</div>
+
+<!-- 9 -->
+<div class="section" id="sec-9">
+  <h2><span class="num">9</span> 시사점 — 발표·문서화에 활용할 포인트 <span class="source-label">요약자 분석</span></h2>
+  <table>
+    <tr><th style="width:30%;">CleaveNet 사례</th><th>pepbind06 발표·논문화 시 활용</th></tr>
+    <tr><td>"이진 분류 → 연속 점수"의 한계 극복</td><td>우리도 단일 카테고리(결합/비결합)가 아닌 <strong>연속 ΔG·Vina·ipTM</strong>을 채택한 것이 분야 표준 진화 방향과 부합함을 강조</td></tr>
+    <tr><td>"학습셋에 없던 영역 발견" 강조</td><td>pepbind06이 PDB에 없는 <strong>새 결합 펩타이드</strong>를 도출할 수 있음을 동일 논리로 어필</td></tr>
+    <tr><td>대규모 in vitro 검증 (95×12)</td><td>실험 검증 한계를 솔직히 인정하되, "스크리닝 가속"의 정량적 가치 (시간·비용 절감) 제시</td></tr>
+    <tr><td>오픈소스 + 재현성</td><td>발표 슬라이드에 GitHub 링크 노출. CleaveNet의 사례를 분야 표준으로 인용</td></tr>
+    <tr><td>Predictor 단독 가치</td><td>CleaveNet은 "Predictor 단독으로도 SOTA 능가" 증명. pepbind06도 <strong>평가 모듈만 따로 떼어 활용</strong>할 수 있는 모듈식 설계임을 강조</td></tr>
+  </table>
+</div>
+
+<!-- 10 -->
+<div class="section" id="sec-10">
+  <h2><span class="num">10</span> Key Takeaways</h2>
+  <div class="takeaway-grid">
+    <div class="takeaway-card">
+      <div class="card-title">📌 분야 위치</div>
+      <div class="card-body">생성형 AI 펩타이드 설계가 <strong>"학습셋에 없던 영역"을 in vitro 검증으로 입증</strong>한 단계 — Ekambaram 리뷰가 말한 "엔드투엔드 파이프라인 시대"의 구체적 모범 사례</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 모델 구성</div>
+      <div class="card-body">Predictor (트랜스포머 + 앙상블 σ) + Generator (자기회귀 트랜스포머 + conditioning tag) — 두-단계 페어링 패턴</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 핵심 발견 1</div>
+      <div class="card-body">P4 메티오닌의 MMP 절단 효율 기여 — <strong>새 모티프 제안</strong> (자연 빈도 대비 9~14배 농축)</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 핵심 발견 2</div>
+      <div class="card-body">"고효율 + 고선택성" MMP13 기질 5개 — <strong>학습 데이터에 없던 영역</strong>까지 진입</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 실험 검증 규모</div>
+      <div class="card-body">95개 펩타이드 × 12 재조합 MMP의 형광 FRET 스크린 — Nature Communications급 검증</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 오픈소스</div>
+      <div class="card-body">github.com/microsoft/cleavenet — 모델·데이터·코드 전부 공개</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 한계</div>
+      <div class="card-body">합성 기질만, MMP만 검증, 비천연 아미노산 미지원, in vitro 검증 여전히 필수</div>
+    </div>
+    <div class="takeaway-card">
+      <div class="card-title">📌 우리 시스템과 관계</div>
+      <div class="card-body">목표는 다르지만(절단 vs 결합) 두-모델 페어링·복합 평가·in silico 한계 인식 등 <strong>구조적 동질성</strong> 큼. 불확실성·조건부 생성·4분면 분석은 pepbind06에 도입할 만한 패턴.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  📄 원문 영한대역: <code>Deep learning guided design of protease substrates_영한대역.html</code> &nbsp;·&nbsp;
+  🔗 GitHub: <a href="https://github.com/microsoft/cleavenet" target="_blank">microsoft/cleavenet</a> &nbsp;·&nbsp;
+  🎯 우리 시스템 컨텍스트: <code>CLAUDE.md</code> 참조
+</div>
+
+</body>
+</html>
