@@ -129,7 +129,7 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | 대화 유형 | 저장 위치 |
 |----------|----------|
 | BIO AI 뉴스 관련 탐색·분석 대화 | `09_ai/_sessions/` |
-| 파이프라인 개발과 직결된 논의 | `08 클로드 인수인계 문서/` |
+| 파이프라인 개발과 직결된 논의 | `07 클로드 인수인계 문서/` |
 
 ---
 
@@ -140,10 +140,10 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | pepbind05.py | `00 코드/` | 메인 파이프라인 코드 |
 | RULES.md | `00 코드/` | 코딩 규칙 (한국어, snake_case 등) |
 | PLIP 분석 보고서 | `03 파이프라인 모델 설명서/보고서/` | PLIP 보조지표 전환 근거 |
-| GBSA 이상값 조사 보고서 | `08 클로드 인수인계 문서/` | GBSA 이슈 분석 |
-| pepbind05 Walkthrough | `08 클로드 인수인계 문서/` | 코드 구현 설명 |
+| GBSA 이상값 조사 보고서 | `07 클로드 인수인계 문서/` | GBSA 이슈 분석 |
+| pepbind05 Walkthrough | `07 클로드 인수인계 문서/` | 코드 구현 설명 |
 | 내부 파이프라인 구성 계획서 | `05 구성 계획서/` | To Do, 이슈, 코드 수정 아이디어 |
-| PRD | `08 클로드 인수인계 문서/` | 프로젝트 요구사항 정의서 |
+| PRD | `07 클로드 인수인계 문서/` | 프로젝트 요구사항 정의서 |
 
 ---
 
@@ -154,14 +154,15 @@ FinalScore = 0.50 × norm(PRODIGY) + 0.25 × norm(Vina) + 0.15 × norm(PLIP) + 0
 | 2026.03.10 | 초기 문서 작성 | CLAUDE.md |
 | 2026.03.10 | PLIP → 보조 지표 전환 확정 (교수님 승인) | PLIP_분석_보고서_20260304_1646.docx |
 | 2026.03.10 | ADCP 도입 검토 시작 (주영님 제안) | - |
-| 2026.03.10 | 폴더 정리: CLAUDE.md 루트 이동, `10 PRD` → `08`에 통합, `04 데이터 설명서` 삭제 | CLAUDE.md |
+| 2026.03.10 | 폴더 정리: CLAUDE.md 루트 이동, `10 PRD` → `07`에 통합, `04 데이터 설명서` 삭제 | CLAUDE.md |
 | 2026.03.20 | Vina score_only 모드로 변경 (도킹 탐색 제거, 스코어링만 수행) | pepbind06.py |
 | 2026.03.20 | 노션 새 페이지 구조 생성 (내부/외부), 6개 모델 설명 코드 기반 검증 및 수정 | 노션 |
 | 2026.03.20 | PLIP FinalScore 제외 코드 반영 (가중치: PRODIGY 60%, Vina 30%, ipTM 10%) | pepbind06.py |
 | 2026.03.20 | ADCP(AutoDock CrankPep) STEP 4b로 코드 추가 (비교 평가용, 기본 비활성화) | pepbind06.py |
-| 2026.04.10 | 세션 간 대화 요약 저장 규칙 추가 (뉴스 대화 → 09_ai_news/_sessions/, 파이프라인 논의 → 08) | CLAUDE.md |
+| 2026.04.10 | 세션 간 대화 요약 저장 규칙 추가 (뉴스 대화 → 09_ai/_sessions/, 파이프라인 논의 → 07) | CLAUDE.md |
 | 2026.04.10 | BMPR1A 벤치마크 연구 분석 — Contact Recapitulation 지표 도입 검토 아이디어 도출 | 대화요약_BioAI논문분석_20260410_2036.md |
 | 2026.04.10 | PepMLM Nature Biotechnology 실험 검증 확인 (ELISA: NCAM1/AMHR2 나노몰 결합, 세포 분해 40% 히트율) | 대화요약_BioAI논문분석_20260410_2036.md |
 | 2026.04.12 | 09_ai_news 폴더 파일명 규칙 추가 (`[YYYY-MM-DD] AI 핵심뉴스.html` 형식) | CLAUDE.md |
 | 2026.04.21 | 09_ai_news → 09_ai 폴더 재구조화 (01_news, 02_paper, _sessions 서브폴더 생성) | CLAUDE.md |
 | 2026.04.21 | 스케줄 작업(weekly-ai_news, weekly-bio_ai_news) 저장 경로 09_ai/01_news 로 수정 | - |
+| 2026.04.30 | `08 클로드 인수인계 문서` → `07 클로드 인수인계 문서`로 통합 (08 폴더 비움) | CLAUDE.md |
