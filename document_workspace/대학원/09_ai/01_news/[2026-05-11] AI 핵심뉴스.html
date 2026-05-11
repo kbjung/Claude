@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-05-11] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0d1b2e 0%, #162540 50%, #0d1b2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 30px 40px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-left h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+  .header-left h1 span { color: var(--accent1); }
+  .header-left p { margin-top: 5px; color: var(--text-muted); font-size: 0.87rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.82rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px; white-space: nowrap;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+
+  .top-banner {
+    background: linear-gradient(135deg, #0f2035, #162840);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 14px; padding: 20px 26px;
+    display: flex; gap: 18px; align-items: flex-start;
+    margin-bottom: 30px;
+  }
+  .top-banner .icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .top-banner h2 { font-size: 1rem; font-weight: 700; color: var(--accent1); margin-bottom: 5px; }
+  .top-banner p { font-size: 0.875rem; color: #cdd9e5; line-height: 1.65; }
+
+  .section-label {
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .grid-wide { display: grid; grid-template-columns: repeat(auto-fill, minmax(490px, 1fr)); gap: 16px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 0.95rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.865rem; color: #cdd9e5; line-height: 1.68; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.71rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.855rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.78rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.855rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.82rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.76rem; padding: 16px 0 32px; }
+
+  @media (max-width: 620px) {
+    header { padding: 20px 16px 16px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide { grid-template-columns: 1fr; }
+    .top-banner { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>⚡ <span>AI</span> 핵심뉴스</h1>
+      <p>지난 한 주간의 AI 주요 동향 — 모델 출시 · 비즈니스 · 정책 · 연구</p>
+    </div>
+    <div class="date-badge">2026-05-11 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- 이번 주 요약 배너 -->
+  <div class="top-banner">
+    <div class="icon">🔥</div>
+    <div>
+      <h2>이번 주 핵심 요약</h2>
+      <p>OpenAI, GPT-5.5 Instant를 ChatGPT 기본 모델로 교체 (5/5) / Anthropic, Goldman Sachs·Blackstone과 15억 달러 엔터프라이즈 AI 합작사 출범 + SpaceX Colossus 1 컴퓨팅 제휴 (22만 Nvidia GPU) / OpenAI도 "The Deployment Company" 40억 달러 규모로 맞대응 / EU AI Omnibus 합의 — AI Act 고위험 AI 의무 연기 (5/7) / Trump 행정부, Anthropic Mythos 모델 국가안보 우려로 AI 규제 검토로 전환 / 중국 AI 모델, 주간 글로벌 토큰 사용량에서 미국 추월</p>
+    </div>
+  </div>
+
+  <!-- ① 모델 출시 / 업데이트 -->
+  <div class="section-label"><span class="sdot"></span> Model Releases &amp; Updates</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0f1f0f;">🟢</div>
+        <h3>OpenAI GPT-5.5 Instant — ChatGPT 기본 모델 전면 교체</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-05</span>
+        <span class="tag">OpenAI</span>
+        <span class="tag g">모델 출시</span>
+      </div>
+      <div class="card-body">
+        OpenAI가 <strong>GPT-5.5 Instant</strong>를 ChatGPT 전체 사용자의 기본 모델로 교체했다. AIME 2025 수학 벤치마크에서 81.2점(기존 GPT-5.3 Instant 65.4점), MMMU-Pro 멀티모달 추론 76점(기존 69.2점)으로 성능이 대폭 향상됐다.
+      </div>
+      <ul class="blist">
+        <li>과거 대화·파일·Gmail 연동 개인화 검색 기능 추가 (Plus·Pro 우선)</li>
+        <li class="g">GPT-5.5 공개 후 6주 만의 후속 릴리즈 — 릴리즈 사이클 가속화</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1020;">🐉</div>
+        <h3>중국 4개 랩 오픈웨이트 코딩 모델 연속 출시 — DeepSeek V4·Kimi K2.6·GLM-5.1·MiniMax M2.7</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-04-07~24</span>
+        <span class="tag">DeepSeek / Moonshot / Z.ai / MiniMax</span>
+        <span class="tag p">오픈웨이트</span>
+      </div>
+      <div class="card-body">
+        중국 4개 AI 랩이 12일 사이에 오픈웨이트 코딩 모델을 릴리즈했다. <strong>Kimi K2.6</strong>(Moonshot, 4/20)은 오픈웨이트 최초로 GPT-5.4(xhigh)를 SWE-Bench Pro에서 추월했다. <strong>DeepSeek V4</strong>는 Flash($0.14/M input)·Pro($3.48/M output) 두 변형을 제공한다.
+      </div>
+      <ul class="blist">
+        <li>4/27~5/3 주간 중국 모델 토큰 사용량 7.94조 — 전주 대비 81.7%↑로 미국 추월</li>
+        <li>Tencent Hy3 preview 3.03조 토큰(주간 799%↑)으로 글로벌 1위 등극</li>
+        <li class="y">서방 프런티어 대비 대폭 낮은 추론 비용 — 가격경쟁 심화</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1535;">💜</div>
+        <h3>Anthropic "Dreaming" — 에이전트 자기 개선 기법 공개</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05 초</span>
+        <span class="tag">Anthropic</span>
+        <span class="tag p">에이전틱 AI</span>
+      </div>
+      <div class="card-body">
+        Anthropic이 자율 에이전트가 세션 사이에 <strong>과거 행동 패턴을 검토·학습</strong>하는 "dreaming" 기법을 도입했다. 장기 실행 워크플로우를 담당하는 Managed Agents가 스스로 성능을 개선하는 구조로, 에이전틱 AI 신뢰성 향상이 목표다.
+      </div>
+      <ul class="blist">
+        <li class="g">반복 작업에서 시간 경과에 따른 성능 자동 향상 기대</li>
+        <li>Claude Code 5시간 레이트 리밋 2배 확대(5/7) — Pro·Max·Team·Enterprise 대상</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ② 비즈니스 / 파트너십 -->
+  <div class="section-label"><span class="sdot g"></span> Business &amp; Partnerships</div>
+  <div class="grid-wide">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0e1f18;">💼</div>
+        <h3>Anthropic + Goldman Sachs·Blackstone·Apollo — 15억 달러 엔터프라이즈 AI 합작사 출범</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-04~05</span>
+        <span class="tag">Anthropic</span>
+        <span class="tag g">합작사 설립</span>
+        <span class="tag">월스트리트</span>
+      </div>
+      <div class="card-body">
+        Anthropic이 골드만삭스·블랙스톤·아폴로·제너럴애틀랜틱 등 월스트리트 주요 PE·투자사들과 <strong>15억 달러 규모 엔터프라이즈 AI 합작사</strong>를 출범했다. PE가 보유한 수백 개 기업에 Claude 기반 AI를 빠르게 도입하는 구조다. CEO 다리오 아모데이는 1분기 매출이 연간화 기준 <strong>80배 성장</strong>했다고 밝혔다.
+      </div>
+      <ul class="blist">
+        <li>MS 365 완전 통합 + Moody's 데이터 파트너십으로 금융 특화 에이전트 공개</li>
+        <li>SpaceX Colossus 1(Memphis, Nvidia GPU 22만개) 컴퓨팅 자원 전면 활용 계약 (5/6)</li>
+        <li class="g">900억 달러 기업가치 기준 50억 달러 신규 펀딩 라운드 막바지</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1000;">🏢</div>
+        <h3>OpenAI "The Deployment Company" — 40억 달러 규모 기업 AI 합작사 맞대응</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-04</span>
+        <span class="tag">OpenAI</span>
+        <span class="tag y">합작사 설립</span>
+        <span class="tag">엔터프라이즈</span>
+      </div>
+      <div class="card-body">
+        OpenAI도 <strong>The Deployment Company</strong>를 론칭, 기업 AI 도입에 특화된 합작사를 구성했다. TPG·브룩필드·어드벤트·베인캐피탈 등 19개 투자사 참여, <strong>100억 달러 기업가치에 40억 달러</strong> 조달을 목표로 한다. Anthropic 합작사보다 규모가 2.5배 이상 크다.
+      </div>
+      <ul class="blist">
+        <li>은행·로펌·소프트웨어·헬스케어·정부기관 전방위 기업 고객 공략</li>
+        <li class="y">양사의 엔터프라이즈 직접 서비스 경쟁 — AI 컨설팅 시장 구도 재편 예고</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책 / 규제 -->
+  <div class="section-label"><span class="sdot y"></span> Policy &amp; Regulation</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1400;">⚖️</div>
+        <h3>Trump 행정부, AI 규제 검토로 전환 — Mythos 모델 국가안보 우려</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-06</span>
+        <span class="tag">미국 정책</span>
+        <span class="tag r">규제 변화</span>
+      </div>
+      <div class="card-body">
+        트럼프 행정부가 기존 반규제 기조를 뒤집고 첨단 AI 모델 심사를 검토하기 시작했다. 계기는 Anthropic의 <strong>Mythos</strong> 모델이 네트워크 취약점을 자동 탐지·악용하는 능력을 보인 것으로, 당국은 이를 <strong>FDA 의약품 승인 절차</strong>에 비유한 사전 심사안을 검토 중이다.
+      </div>
+      <ul class="blist">
+        <li>상무부, 자발적 AI 테스트 프로그램을 Google·Microsoft·xAI·OpenAI·Anthropic 등으로 확대</li>
+        <li class="r">국가안보 리스크 모델에 대한 강제 심사 행정명령 초안 작성 중</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0f1e2a;">🇪🇺</div>
+        <h3>EU AI Omnibus 합의 — AI Act 고위험 AI 의무·인증 절차 간소화</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-07</span>
+        <span class="tag">EU 정책</span>
+        <span class="tag y">규제 완화</span>
+      </div>
+      <div class="card-body">
+        EU 입법자들이 6개월 협상 끝에 <strong>AI Omnibus 합의</strong>에 도달했다. 핵심은 고위험 AI 시스템 의무 적용 시기 연기 및 인증 절차 간소화다. 또한 <strong>EU AI Office</strong>로 집행 권한을 중앙화하고, EU 레벨 규제 샌드박스를 신설한다. 중소기업(SME) 혜택이 중소형 중견기업(small mid-cap)까지 확대된다.
+      </div>
+      <ul class="blist">
+        <li class="g">기업 부담 경감 — 의무 이행 일정 완화로 AI 도입 촉진 기대</li>
+        <li>EU, ChatGPT를 DSA 엄격 플랫폼 규칙 대상으로 분류 검토 (EU 내 MAU 1.2억+)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0e1f14;">🏥</div>
+        <h3>FDA Elsa 4.0 출시 — 전 직원 대상 내부 AI 도구 대규모 업그레이드</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-06</span>
+        <span class="tag">FDA</span>
+        <span class="tag g">의료 AI</span>
+      </div>
+      <div class="card-body">
+        미국 FDA가 내부 AI 도구 <strong>Elsa 4.0</strong>을 출시하며 AI 역량 확대와 데이터 플랫폼 통합을 공식 발표했다. 전 FDA 직원이 사용 가능한 대화형 AI로, 의약품·의료기기 심사 업무 효율화가 목적이다.
+      </div>
+      <ul class="blist">
+        <li class="g">규제 기관 자체 AI 내재화 — 신약·기기 심사 속도 향상 기대</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ④ 연구 / 기술 -->
+  <div class="section-label"><span class="sdot p"></span> Research &amp; Technology</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1535;">🧠</div>
+        <h3>에이전틱 AI 오케스트레이션 베이지안 일관성 논문 — 30인 공동 저술</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-04</span>
+        <span class="tag">arXiv</span>
+        <span class="tag p">에이전틱 AI</span>
+      </div>
+      <div class="card-body">
+        산업계 연구자 <strong>30명</strong>이 공동 저술한 포지션 페이퍼 <em>"Agentic AI Orchestration Should be Bayes-consistent"</em>가 arXiv에 공개됐다. LLM 자체를 베이지안화하기보다, 툴 호출 우선순위·자원 배분을 결정하는 <strong>오케스트레이션 레이어</strong>에 베이지안 원칙을 적용해야 한다는 주장이다.
+      </div>
+      <ul class="blist">
+        <li>에이전트 시스템 제어 레이어 표준화 논의에 불씨 — 다학제 공동 제안</li>
+        <li class="g">산업계 30명 공동 저술로 실용성 높은 가이드라인 제시</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0f1e12;">🤖</div>
+        <h3>뉴로심볼릭 AI — Tufts 대학, ICRA 2026 빈 발표</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05</span>
+        <span class="tag">Tufts University</span>
+        <span class="tag g">로봇 AI 연구</span>
+      </div>
+      <div class="card-body">
+        Tufts 대학 연구팀이 국제 로봇공학·자동화학회(<strong>ICRA 2026</strong>, 빈 개최)에서 신경망과 기호 추론을 결합한 <strong>뉴로심볼릭 AI</strong> 연구를 발표했다. 효율성과 정확성 모두를 향상시키는 하이브리드 접근법으로, 로봇 작업 수행 능력 개선에 초점을 맞췄다.
+      </div>
+      <ul class="blist">
+        <li>순수 딥러닝 대비 해석 가능성·일반화 성능 개선 가능성 제시</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1000;">📊</div>
+        <h3>AI 글로벌 보급률 17.8% 도달 — Microsoft "State of AI Diffusion" 보고서</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-07</span>
+        <span class="tag">Microsoft</span>
+        <span class="tag y">시장 동향</span>
+      </div>
+      <div class="card-body">
+        Microsoft의 <em>State of Global AI Diffusion 2026</em> 보고서에 따르면 2026년 1분기 AI 글로벌 사용률이 <strong>16.3% → 17.8%</strong>(+1.5%p)로 상승했다. 생산가능인구(working-age) 기준이며, 지역별 격차가 뚜렷하게 나타났다.
+      </div>
+      <ul class="blist">
+        <li>AI 도입 가속에도 지역·소득별 "AI 격차(AI Divide)" 확대가 병행 진행</li>
+        <li class="y">IBM Think 2026 — "AI 격차(AI Divide)" 키워드로 엔터프라이즈 AI 사업 전략 공표</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ⑤ 인프라 / 기업 동향 -->
+  <div class="section-label"><span class="sdot r"></span> Infrastructure &amp; Enterprise</div>
+  <div class="grid-wide">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a0e0e;">🖥️</div>
+        <h3>IBM Think 2026 — watsonx Orchestrate 차세대 + Workday AI 에이전트 수백 개 공개</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-05</span>
+        <span class="tag">IBM / Workday</span>
+        <span class="tag r">엔터프라이즈 AI</span>
+      </div>
+      <div class="card-body">
+        IBM Think 2026에서 <strong>차세대 watsonx Orchestrate</strong>(멀티에이전트 오케스트레이션), IBM Confluent(실시간 데이터 AI 연동), IBM Concert(지능형 운영), IBM Sovereign Core(운영 독립성) 등을 발표했다. Workday는 HR·재무·IT·법무 전반에 걸쳐 수백 개 AI 에이전트를 공개하고, 대화형 AI 인터페이스 <strong>Sana(GA)</strong>를 출시했다.
+      </div>
+      <ul class="blist">
+        <li>급여·재무감사·플래닝·계약협상 전담 전문 에이전트 라인업 구성</li>
+        <li class="r">엔터프라이즈 SaaS 전반에서 AI 에이전트 레이어 내재화 본격화</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0e1a12;">🚀</div>
+        <h3>SpaceX Colossus 1 × Anthropic 제휴 — 300MW·Nvidia GPU 22만 개 공급</h3>
+      </div>
+      <div class="tags">
+        <span class="tag">2026-05-06</span>
+        <span class="tag">SpaceX / Anthropic</span>
+        <span class="tag g">컴퓨팅 인프라</span>
+      </div>
+      <div class="card-body">
+        Anthropic이 SpaceX의 <strong>Colossus 1</strong>(멤피스, 테네시) 데이터센터 전체 컴퓨팅 자원을 활용하는 계약을 체결했다. 약 <strong>300MW 용량, Nvidia GPU 22만 개 이상</strong>에 해당한다. Elon Musk의 OpenAI 소송 진행 중에 이루어진 이례적 파트너십이다.
+      </div>
+      <ul class="blist">
+        <li>Anthropic의 1분기 80배 급성장에 따른 컴퓨팅 수요 대응이 목적</li>
+        <li class="g">AI 인프라 확보 경쟁 격화 — 대형 데이터센터 직접 계약 트렌드 부상</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources">
+    <h2>📎 Sources</h2>
+    <ul>
+      <li><a href="https://techcrunch.com/2026/05/05/openai-releases-gpt-5-5-instant-a-new-default-model-for-chatgpt/" target="_blank">OpenAI releases GPT-5.5 Instant, a new default model for ChatGPT — TechCrunch (2026-05-05)</a></li>
+      <li><a href="https://www.cnbc.com/2026/05/04/anthropic-goldman-blackstone-ai-venture.html" target="_blank">Anthropic teams with Goldman, Blackstone and others on $1.5 billion AI venture — CNBC (2026-05-04)</a></li>
+      <li><a href="https://fortune.com/2026/05/05/anthropic-wall-street-financial-services-agents-jamie-dimon/" target="_blank">Anthropic deepens push into Wall Street with new AI agents — Fortune (2026-05-05)</a></li>
+      <li><a href="https://www.aljazeera.com/economy/2026/5/6/spacex-backs-anthropic-with-data-centre-deal-amidst-musks-openai-lawsuit" target="_blank">SpaceX backs Anthropic with data centre deal — Al Jazeera (2026-05-06)</a></li>
+      <li><a href="https://www.cnbc.com/2026/05/06/anthropic-ceo-dario-amodei-says-company-crew-80-fold-in-first-quarter.html" target="_blank">Anthropic CEO says 80-fold growth in first quarter — CNBC (2026-05-06)</a></li>
+      <li><a href="https://techcrunch.com/2026/05/04/anthropic-and-openai-are-both-launching-joint-ventures-for-enterprise-ai-services/" target="_blank">Anthropic and OpenAI are both launching joint ventures for enterprise AI — TechCrunch (2026-05-04)</a></li>
+      <li><a href="https://fortune.com/2026/05/06/trump-administration-embraces-ai-oversight-policies-it-once-rejected-anthropic-mythos-caisi/" target="_blank">Trump administration suddenly embraces AI oversight ideas it once rejected — Fortune (2026-05-06)</a></li>
+      <li><a href="https://www.techpolicy.press/what-the-eu-ai-omnibus-deal-changes-for-the-ai-act-and-what-lies-ahead/" target="_blank">What the EU AI Omnibus Deal Changes for the AI Act — TechPolicy.Press (2026-05-07)</a></li>
+      <li><a href="https://www.fda.gov/news-events/press-announcements/fda-expands-ai-capabilities-and-completes-data-platform-consolidation" target="_blank">FDA Expands AI Capabilities and Completes Data Platform Consolidation — FDA.gov (2026-05-06)</a></li>
+      <li><a href="https://newsroom.ibm.com/2026-05-05-think-2026-ibm-delivers-the-blueprint-for-the-ai-operating-model-as-the-ai-divide-widens" target="_blank">Think 2026: IBM Delivers the Blueprint for the AI Operating Model — IBM Newsroom (2026-05-05)</a></li>
+      <li><a href="https://blogs.microsoft.com/on-the-issues/2026/05/07/the-state-of-global-ai-diffusion-in-2026/" target="_blank">The state of global AI diffusion in 2026 — Microsoft On the Issues (2026-05-07)</a></li>
+      <li><a href="https://medium.com/@candemir13/three-weeks-four-chinese-coding-models-whats-actually-real-and-what-s-overstated-4cb58199e83d" target="_blank">Three Weeks, Four Chinese Coding Models — Medium (2026-05)</a></li>
+      <li><a href="https://finance.biggo.com/news/nWlD9J0B6tLPsnrZBCc6" target="_blank">Chinese AI Models Surpass US in Global Usage Volume — BigGo Finance</a></li>
+      <li><a href="https://www.marketingprofs.com/opinions/2026/54655/ai-update-may-8-2026-ai-news-and-views-from-the-past-week" target="_blank">AI Update, May 8, 2026 — MarketingProfs</a></li>
+      <li><a href="https://www.neuralbuddies.com/p/ai-news-recap-may-8-2026" target="_blank">AI News Recap: May 8, 2026 — NeuralBuddies</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>자동 생성 · 2026-05-11 KST · weekly-ai_news 스케줄 태스크</footer>
+
+</body>
+</html>
