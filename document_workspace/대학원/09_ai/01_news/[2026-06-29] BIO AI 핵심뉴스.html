@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[2026-06-29] BIO AI 핵심뉴스</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #7ee787;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --tag-bg: rgba(88,166,255,0.12);
+      --tag-border: rgba(88,166,255,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: 5%;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(210,168,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .header-left { flex: 1; min-width: 0; }
+    .header-date-badge {
+      flex-shrink: 0;
+      align-self: center;
+      background: rgba(126,231,135,0.08);
+      border: 1px solid rgba(126,231,135,0.25);
+      color: var(--accent2);
+      font-size: 0.88rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .header-badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .header-date {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (min-width: 620px) {
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-num {
+      font-size: 27px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-count {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .news-grid, .news-grid-2, .news-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 620px) {
+      .news-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .news-card.full { grid-column: 1 / -1; }
+
+    @media (max-width: 619px) {
+      .news-grid, .news-grid-2, .news-grid-3 { grid-template-columns: 1fr; }
+      .news-card.full { grid-column: 1; }
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .news-card.blue::before { background: linear-gradient(90deg, var(--accent), var(--accent4)); }
+    .news-card.green::before { background: linear-gradient(90deg, var(--accent2), #3fb950); }
+    .news-card.orange::before { background: linear-gradient(90deg, var(--accent5), #e3b341); }
+    .news-card.red::before { background: linear-gradient(90deg, var(--accent3), #f0883e); }
+    .news-card.purple::before { background: linear-gradient(90deg, var(--accent4), var(--accent)); }
+
+    .news-card:hover {
+      border-color: #444c56;
+      transform: translateY(-2px);
+    }
+    .news-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .news-emoji {
+      font-size: 25px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .news-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+    .news-card-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .news-card-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .tag.blue { background: rgba(88,166,255,0.12); border: 1px solid rgba(88,166,255,0.25); color: var(--accent); }
+    .tag.green { background: rgba(126,231,135,0.1); border: 1px solid rgba(126,231,135,0.25); color: var(--accent2); }
+    .tag.orange { background: rgba(255,166,87,0.1); border: 1px solid rgba(255,166,87,0.25); color: var(--accent5); }
+    .tag.red { background: rgba(247,129,102,0.1); border: 1px solid rgba(247,129,102,0.25); color: var(--accent3); }
+    .tag.purple { background: rgba(210,168,255,0.1); border: 1px solid rgba(210,168,255,0.25); color: var(--accent4); }
+
+    .news-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .news-card-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .news-card-meta a:hover { text-decoration: underline; }
+    .meta-dot { color: var(--border); }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(210,168,255,0.04) 100%);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .highlight-box-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .highlight-table th {
+      text-align: left;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .highlight-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(48,54,61,0.5);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .highlight-table td:first-child {
+      color: var(--text-primary);
+      font-weight: 600;
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table td:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table tr:last-child td { border-bottom: none; }
+
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-top: 40px;
+    }
+    .sources-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sources-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sources-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .sources-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .sources-list a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">BIO AI</span>
+        <span class="header-date">2026년 6월 22일 ~ 6월 29일</span>
+      </div>
+      <h1>🧬 <span>BIO AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">빅파마 AI 파트너십 · 신약개발 플랫폼 · 펩타이드·단백질 AI 연구 · 국내 동향</p>
+    </div>
+    <div class="header-date-badge">2026-06-29</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 요약 통계 -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent);">5</div>
+      <div class="stat-label">카테고리</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent2);">12</div>
+      <div class="stat-label">주요 뉴스</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent5);">$4B+</div>
+      <div class="stat-label">주요 딜 규모</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent4);">3</div>
+      <div class="stat-label">논문 업데이트</div>
+    </div>
+  </div>
+
+  <!-- 이번 주 하이라이트 -->
+  <div class="highlight-box">
+    <div class="highlight-box-title">⚡ 이번 주 핵심 하이라이트</div>
+    <table class="highlight-table">
+      <thead>
+        <tr>
+          <th>회사/기관</th>
+          <th>내용</th>
+          <th>규모/날짜</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SK바이오팜 × Insilico</td>
+          <td>AI CNS 신약개발 협력 계약 — 파마.AI 플랫폼으로 신경면역 신약 후보물질 3종 발굴</td>
+          <td style="white-space:nowrap;">$2.57B / 2026.06.22~</td>
+        </tr>
+        <tr>
+          <td>Isomorphic Labs</td>
+          <td>Series B 완료 — AlphaFold 개발사 스핀오프, IsoDDE로 단백질-리간드 예측 정확도 2배</td>
+          <td style="white-space:nowrap;">$2.1B / 2026.05</td>
+        </tr>
+        <tr>
+          <td>Novo Nordisk × OpenAI</td>
+          <td>복잡한 데이터셋 분석·약물 후보 발굴·연구~환자 접근 단축 AI 협력</td>
+          <td style="white-space:nowrap;">2026.04</td>
+        </tr>
+        <tr>
+          <td>BIO 2026 (샌디에이고)</td>
+          <td>50주년 AI 서밋 — 20건 AI 세션, "AI가 바이오텍 생태계 전 구성요소에 핵심 역할"</td>
+          <td style="white-space:nowrap;">2026.06.22~25</td>
+        </tr>
+        <tr>
+          <td>GC녹십자 (국내)</td>
+          <td>과기부 신약개발 AI 플랫폼 국책과제 선정 — 멀티 에이전트 기반 177억원 규모</td>
+          <td style="white-space:nowrap;">177억원 / 2026.05</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 섹션 1: 빅파마 AI 파트너십 & M&A -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(88,166,255,0.12);">🤝</div>
+    <div class="section-title">빅파마 AI 파트너십 & 투자</div>
+    <div class="section-count">3건</div>
+  </div>
+  <div class="news-grid">
+
+    <div class="news-card blue full">
+      <div class="news-card-top">
+        <div class="news-emoji">💊</div>
+        <div class="news-card-title">SK바이오팜 × Insilico Medicine, AI CNS 신약개발 최대 $2.57B 규모 협력</div>
+      </div>
+      <div class="tags">
+        <span class="tag blue">파트너십</span>
+        <span class="tag blue">CNS 신약</span>
+        <span class="tag blue">파마.AI</span>
+        <span class="tag blue">K-바이오</span>
+      </div>
+      <p class="news-card-body">
+        SK바이오팜이 AI 신약개발 기업 <strong>Insilico Medicine</strong>과 최대 <strong>3조9488억원(약 $25억 7250만)</strong> 규모의 공동연구개발 계약을 체결했다. SK바이오팜은 신경면역(Neuro-Immune) 영역의 <strong>신약 후보물질 3종</strong>을 발굴하기 위해 Insilico의 AI 신약개발 플랫폼 <strong>파마.AI</strong>를 활용할 예정이다. 파마.AI는 세계 상위 20대 빅파마 중 13곳이 도입한 플랫폼으로, Sanofi에 최대 $12억 계약을 체결하는 등 검증된 성과를 보유한다. BIO USA 2026에서 전략을 공개한 직후 체결된 이번 계약은 K-바이오의 AI 기반 글로벌 신약개발 역량을 상징한다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06.22~</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.hitnews.co.kr/news/articleView.html?idxno=67698" target="_blank">히트뉴스</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.dataeconomy.co.kr/news/articleView.html?idxno=35686" target="_blank">한국데이터경제신문</a>
+        <span class="meta-dot">·</span>
+        <a href="https://innobiolab.com/news/?bmode=view&idx=171961306" target="_blank">이노바이오랩</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <div class="news-emoji">🤖</div>
+        <div class="news-card-title">Novo Nordisk × OpenAI, 약물 연구 가속화 AI 협력</div>
+      </div>
+      <div class="tags">
+        <span class="tag blue">파트너십</span>
+        <span class="tag blue">OpenAI</span>
+        <span class="tag blue">데이터 분석</span>
+      </div>
+      <p class="news-card-body">
+        세계 최대 당뇨·비만 치료제 기업 <strong>Novo Nordisk</strong>가 <strong>OpenAI</strong>와 협력해 약물 연구를 가속화한다고 발표했다. 협력의 핵심은 복잡한 데이터셋 분석, 잠재 약물 후보 식별, 연구에서 환자 접근까지의 시간 단축이다. AI를 신약 발굴 도구를 넘어 <strong>R&D 전주기를 연결하는 인프라</strong>로 위치시키는 빅파마의 전략적 전환을 보여주는 사례다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.04</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.euronews.com/health/2026/04/14/novo-nordisk-joins-forces-with-openai-to-fast-track-drug-research" target="_blank">Euronews</a>
+      </div>
+    </div>
+
+    <div class="news-card purple">
+      <div class="news-card-top">
+        <div class="news-emoji">🏗️</div>
+        <div class="news-card-title">Nvidia × Eli Lilly, $10억 공동 혁신 랩 — 자율 습식-건식 연구소 AI 연결</div>
+      </div>
+      <div class="tags">
+        <span class="tag purple">NVIDIA</span>
+        <span class="tag purple">Eli Lilly</span>
+        <span class="tag purple">AI 인프라</span>
+        <span class="tag purple">자동화 연구소</span>
+      </div>
+      <p class="news-card-body">
+        <strong>Nvidia</strong>와 <strong>Eli Lilly</strong>가 <strong>$10억 규모의 공동 혁신 랩</strong>을 구축한다고 발표했다. 이 랩은 <strong>지속적 학습 시스템(Continuous Learning System)</strong>을 핵심으로, 24시간 AI 에이전트 기반 건식 실험실(계산)과 습식 실험실(실제 실험)을 자율적으로 연결한다. AI가 계산 예측을 하면 로봇 습식 실험실이 즉시 검증하고, 결과가 다시 AI 모델을 학습시키는 폐쇄 루프 방식이다. 신약 발굴의 계산-실험 사이클을 대폭 단축할 것으로 기대된다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06</span>
+        <span class="meta-dot">·</span>
+        <a href="https://intuitionlabs.ai/articles/big-pharma-hyperscaler-ai-deals-tracker-2026" target="_blank">IntuitionLabs 딜 트래커</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 섹션 2: AI 신약개발 플랫폼 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(210,168,255,0.12);">🤖</div>
+    <div class="section-title">AI 신약개발 플랫폼 동향</div>
+    <div class="section-count">3건</div>
+  </div>
+  <div class="news-grid">
+
+    <div class="news-card purple full">
+      <div class="news-card-top">
+        <div class="news-emoji">🚀</div>
+        <div class="news-card-title">Isomorphic Labs, Series B $21억 완료 — IsoDDE로 AlphaFold3 대비 단백질-리간드 예측 2배↑</div>
+      </div>
+      <div class="tags">
+        <span class="tag purple">Isomorphic Labs</span>
+        <span class="tag purple">Series B</span>
+        <span class="tag purple">단백질-리간드</span>
+        <span class="tag purple">AlphaFold</span>
+      </div>
+      <p class="news-card-body">
+        Google DeepMind 스핀오프인 <strong>Isomorphic Labs</strong>가 <strong>Series B $21억(약 £16억)</strong> 투자 유치를 완료했다. Thrive Capital 주도, Alphabet·Abu Dhabi MGX·싱가포르 Temasek·영국 국부 AI 펀드가 참여했다. 핵심 기술인 <strong>IsoDDE(Drug Design Engine)</strong>는 AlphaFold 3 대비 까다로운 단백질-리간드 구조 예측 벤치마크에서 <strong>정확도 2배 이상</strong>을 달성하고, 소분자 결합 친화도 예측에서 금본위 물리 기반 방법을 초과하는 성능을 보였다. 현재 임상시험을 진행 중인 AI 설계 후보물질도 보유하고 있다.
+        <br><br>
+        <strong>📌 기관:</strong> Isomorphic Labs (영국, DeepMind 스핀오프) · Thrive Capital, Alphabet 공동 주도
+      </p>
+      <div class="news-card-meta">
+        <span>2026.05</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.isomorphiclabs.com/articles/the-isomorphic-labs-drug-design-engine-unlocks-a-new-frontier" target="_blank">Isomorphic Labs 공식</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.galengrowth.com/isomorphic-labs-2-1bn-series-b-ai-drug-discovery/" target="_blank">Galen Growth</a>
+        <span class="meta-dot">·</span>
+        <a href="https://letsdatascience.com/blog/isomorphic-labs-2-1-billion-thrive-capital-ai-drug-design" target="_blank">Let's Data Science</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <div class="news-emoji">🧠</div>
+        <div class="news-card-title">BIO 2026 AI 서밋 — 바이오텍 50주년, "AI가 생태계 모든 구성요소에 핵심 역할"</div>
+      </div>
+      <div class="tags">
+        <span class="tag blue">BIO 2026</span>
+        <span class="tag blue">AI 서밋</span>
+        <span class="tag blue">산업 트렌드</span>
+      </div>
+      <p class="news-card-body">
+        6월 22~25일 미국 샌디에이고에서 열린 <strong>BIO International Convention 2026</strong>(바이오텍 50주년)은 2회 연속 AI 서밋으로 시작됐다. 7개 주요 패널을 포함한 <strong>20개 AI 세션</strong>이 진행됐으며, BIO 최고정책책임자는 "AI 시스템이 앞으로 수년 내 바이오텍 생태계 거의 모든 구성요소에서 핵심 역할을 할 것"이라고 발언했다. 2만 명의 참가자와 7만 건의 파트너링 미팅이 이루어졌다. Genentech CEO와 NVIDIA 헬스케어 VP의 세션이 주목받았다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06.22~25</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.statnews.com/2026/06/25/bio-2026-biotech-conference-san-diego-key-takeaways/" target="_blank">STAT News</a>
+        <span class="meta-dot">·</span>
+        <a href="https://bio.news/latest-news/bio-2026-begins-in-san-diego-marking-50-years-of-biotech-innovation/" target="_blank">BIO.news</a>
+      </div>
+    </div>
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <div class="news-emoji">🏛️</div>
+        <div class="news-card-title">FDA, AI 신약개발 가이드라인 개정 착수 — '설명 가능한 AI(XAI)' 원칙 도입, 하반기 초안</div>
+      </div>
+      <div class="tags">
+        <span class="tag orange">FDA</span>
+        <span class="tag orange">규제</span>
+        <span class="tag orange">XAI</span>
+        <span class="tag orange">가이드라인</span>
+      </div>
+      <p class="news-card-body">
+        미국 <strong>FDA</strong>가 AI 기반 신약 개발 및 임상시험 설계에 관한 새로운 가이드라인 개정 논의를 공식 시작했다. 핵심은 <strong>설명 가능한 AI(XAI, Explainable AI)</strong> 원칙 도입으로, 2026년 하반기 중 초안 발표가 예정돼 있다. 또한 FDA는 6월 30일까지 전 센터에 생성형 AI 플랫폼을 구축하는 내부 디지털 전환도 진행 중이다. AI 기반 임상시험 설계와 신약 심사 단축을 동시에 추진하는 양면 전략이다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.koreaiin.com/news/901776" target="_blank">한국IT산업뉴스</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.kpanews.co.kr/news/articleView.html?idxno=537234" target="_blank">약사공론</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 섹션 3: 펩타이드·단백질 AI 연구 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(126,231,135,0.12);">🧪</div>
+    <div class="section-title">펩타이드·단백질 AI 연구</div>
+    <div class="section-count">3건</div>
+  </div>
+  <div class="news-grid">
+
+    <div class="news-card green full">
+      <div class="news-card-top">
+        <div class="news-emoji">🦠</div>
+        <div class="news-card-title">딥러닝으로 프리온 단백질에서 항균 펩타이드 발굴 — Nature Microbiology</div>
+      </div>
+      <div class="tags">
+        <span class="tag green">항균 펩타이드</span>
+        <span class="tag green">딥러닝</span>
+        <span class="tag green">Nature Microbiology</span>
+        <span class="tag green">논문</span>
+      </div>
+      <p class="news-card-body">
+        <em>Nature Microbiology</em>(DOI: 10.1038/s41564-026-02408-1)에 게재된 연구에서 딥러닝 모델로 <strong>1930만 개의 프리온 관련 단백질 단편</strong>을 스크리닝해 <strong>1,179개</strong>의 항균 펩타이드(AMP) 후보를 발굴했다. 합성한 75개 후보 중 <strong>59개</strong>가 세균 병원체에 억제 효과를 보였고, <strong>2개</strong>는 쥐 모델에서 Acinetobacter baumannii 감염을 감소시켰다. AI가 기존에는 항균 활성으로 알려지지 않은 단백질 서열에서 신규 AMP를 발굴한 첫 대규모 사례다.
+        <br><br>
+        <strong>📌 기관:</strong> 다기관 공동연구 · 게재: Nature Microbiology (2026)
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.nature.com/articles/s41564-026-02408-1" target="_blank">Nature Microbiology</a>
+        <span class="meta-dot">·</span>
+        <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12926305/" target="_blank">PMC — AI 생성 펩타이드 연구·임상 리뷰</a>
+      </div>
+    </div>
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <div class="news-emoji">🔬</div>
+        <div class="news-card-title">AI 기반 대사 펩타이드 치료제 발굴 총설 — ScienceDirect 2026</div>
+      </div>
+      <div class="tags">
+        <span class="tag green">대사 질환</span>
+        <span class="tag green">생체활성 펩타이드</span>
+        <span class="tag green">AI 발굴</span>
+        <span class="tag green">총설</span>
+      </div>
+      <p class="news-card-body">
+        <em>ScienceDirect</em>에 게재된 총설(2026)은 <strong>AI 기반 차세대 대사 바이오치료제</strong>로서 생체활성 펩타이드 발굴 동향을 정리했다. 트랜스포머 기반 단백질 언어 모델이 서열 활성 예측, 이차 구조 모델링, 기능 주석에서 기존 방법 대비 크게 향상된 성능을 보이며 펩타이드 설계의 새 표준으로 자리잡고 있다. 특히 GLP-1 계열 비만·당뇨 펩타이드 치료제 분야에서 AI 최적화 연구가 활발하다.
+        <br><br>
+        <strong>📌 기관:</strong> ScienceDirect (Elsevier) 게재 · 2026년 발표
+      </p>
+      <div class="news-card-meta">
+        <span>2026</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.sciencedirect.com/science/article/pii/S2772502225005967" target="_blank">ScienceDirect</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <div class="news-emoji">🔗</div>
+        <div class="news-card-title">단백질 AI 현황 총설 — Frontiers 2026, 구조 예측에서 실용 적용까지</div>
+      </div>
+      <div class="tags">
+        <span class="tag blue">단백질 AI</span>
+        <span class="tag blue">구조 예측</span>
+        <span class="tag blue">Frontiers</span>
+        <span class="tag blue">총설</span>
+      </div>
+      <p class="news-card-body">
+        <em>Frontiers in Molecular Biosciences</em>(2026)에 게재된 총설은 AI 기반 단백질 구조 예측의 생화학적 기초부터 실용 응용까지를 포괄적으로 정리했다. AlphaFold3, ESMFold, RoseTTAFold 등 최신 모델의 성능 비교와 함께, <strong>신약 발굴·항체 엔지니어링·단백질-단백질 상호작용 스크리닝·질환 메커니즘 연구</strong>에서의 실제 활용 사례를 제시했다. 2026년 현재 AI 단백질 예측은 가상 스크리닝 정확도를 크게 높이는 단계를 넘어, 표적 발굴 자체를 AI가 주도하는 방향으로 이동 중이다.
+        <br><br>
+        <strong>📌 기관:</strong> Frontiers in Molecular Biosciences · 2026년 게재
+      </p>
+      <div class="news-card-meta">
+        <span>2026</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.frontiersin.org/journals/molecular-biosciences/articles/10.3389/fmolb.2026.1767821/full" target="_blank">Frontiers Mol. Biosci.</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.patsnap.com/resources/blog/articles/ai-protein-structure-prediction-landscape-2026/" target="_blank">PatSnap — 2026 단백질 AI 현황</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 섹션 4: AI 임상 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(255,166,87,0.12);">📋</div>
+    <div class="section-title">AI 임상·규제 동향</div>
+    <div class="section-count">1건</div>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card orange full">
+      <div class="news-card-top">
+        <div class="news-emoji">💉</div>
+        <div class="news-card-title">AI 설계 신약, 2026년 내 최초 인체 임상 진입 예정 — 업계 전환점</div>
+      </div>
+      <div class="tags">
+        <span class="tag orange">임상시험</span>
+        <span class="tag orange">AI 설계 신약</span>
+        <span class="tag orange">마일스톤</span>
+        <span class="tag orange">2026 전환점</span>
+      </div>
+      <p class="news-card-body">
+        AI 신약개발 업계의 분석에 따르면 <strong>AI가 완전히 설계한 최초의 신약이 2026년 말까지 인체 임상시험에 진입</strong>할 예정이다. Isomorphic Labs, Insilico Medicine, Recursion 등 복수의 AI 신약 기업이 AI 설계 후보물질을 임상 단계로 진행시키고 있으며, 특히 Insilico Medicine은 이미 AI 설계 화합물로 임상 2상을 성공적으로 완료한 선례가 있다. 2026년은 "AI가 신약 발굴 개념을 입증"하는 단계에서 "AI 신약이 실제 환자에게 도달하는" 단계로의 전환점이 될 것으로 전망된다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.buildmvpfast.com/blog/ai-drug-discovery-clinical-trials-pharma-2026" target="_blank">AI Drug Discovery 2026 분석</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.hkn24.com/news/articleView.html?idxno=345924" target="_blank">헬스코리아뉴스 — AI 설계 신약 임상 2상 성공</a>
+        <span class="meta-dot">·</span>
+        <a href="https://intuitionlabs.ai/articles/isomorphic-labs-alphafold-ai-drug-discovery-trials" target="_blank">IntuitionLabs — Isomorphic Labs 임상 현황</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 섹션 5: 국내 BIO AI 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(247,129,102,0.12);">🇰🇷</div>
+    <div class="section-title">국내 BIO AI 동향</div>
+    <div class="section-count">2건</div>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card red">
+      <div class="news-card-top">
+        <div class="news-emoji">🏆</div>
+        <div class="news-card-title">GC녹십자, 과기부 AI 신약개발 플랫폼 국책과제 — 멀티 에이전트 177억원</div>
+      </div>
+      <div class="tags">
+        <span class="tag red">GC녹십자</span>
+        <span class="tag red">멀티 에이전트</span>
+        <span class="tag red">국책과제</span>
+        <span class="tag red">AI 플랫폼</span>
+      </div>
+      <p class="news-card-body">
+        <strong>GC녹십자</strong>가 과학기술정보통신부(과기부) 주관 '신약 개발 AI 플랫폼' 구축 국책과제에 선정됐다. 과제 규모는 <strong>177억원</strong>으로, 핵심 키워드는 <strong>자율형 멀티 에이전트(Multi-Agent)</strong>다. 단일 AI 모델의 한계를 넘어 자율적으로 협업하는 AI 에이전트 시스템을 신약개발에 적용하는 것을 목표로 한다. 목암생명과학연구소도 동일 과제에 참여하며 국내 AI 신약 인프라가 국가급 자본 투입과 함께 확장되고 있다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.05</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.dataeconomy.co.kr/news/articleView.html?idxno=40197" target="_blank">한국데이터경제신문</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.medifonews.com/news/article.html?no=213631" target="_blank">메디포뉴스</a>
+      </div>
+    </div>
+
+    <div class="news-card red">
+      <div class="news-card-top">
+        <div class="news-emoji">🌏</div>
+        <div class="news-card-title">K-바이오, 6월 4주차 파이프라인 확장 — 유한양행 100주년·이노퓨틱스 KDDF 선정</div>
+      </div>
+      <div class="tags">
+        <span class="tag red">K-바이오</span>
+        <span class="tag red">유한양행</span>
+        <span class="tag red">파킨슨병</span>
+        <span class="tag red">파이프라인</span>
+      </div>
+      <p class="news-card-body">
+        2026년 6월 4주차(6월 22~28일) K-바이오 주요 뉴스로는 <strong>유한양행 창립 100주년 도약 선언</strong>, <strong>이노퓨틱스</strong>의 파킨슨병 유전자치료제 KDDF(한국보건산업진흥원) 과제 선정이 이어졌다. AI 기반 분석과 구조 예측 도구를 활용한 파이프라인 발굴이 국내 제약·바이오 전반으로 확산되고 있다. 또한 SK바이오팜-메디데이터는 BIO USA 2026에서 AI 기반 임상시험 설계 혁신 전략을 공동 발표해 주목받았다.
+      </p>
+      <div class="news-card-meta">
+        <span>2026.06.22~28</span>
+        <span class="meta-dot">·</span>
+        <a href="https://innobiolab.com/news/?bmode=view&idx=171961306" target="_blank">이노바이오랩 — 6월 4주차 뉴스</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.kjob.news/news/498145" target="_blank">전국인력신문 — SK바이오팜·메디데이터</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources-section">
+    <div class="sources-title">📎 주요 참고 출처</div>
+    <ul class="sources-list">
+      <li><a href="https://www.hitnews.co.kr/news/articleView.html?idxno=67698" target="_blank">히트뉴스 — SK바이오팜 × Insilico Medicine AI CNS 신약개발 협력 (2026.06)</a></li>
+      <li><a href="https://innobiolab.com/news/?bmode=view&idx=171961306" target="_blank">이노바이오랩 — 2026년 6월 4주차 K-바이오 주요 뉴스</a></li>
+      <li><a href="https://www.euronews.com/health/2026/04/14/novo-nordisk-joins-forces-with-openai-to-fast-track-drug-research" target="_blank">Euronews — Novo Nordisk × OpenAI 약물 연구 가속화 (2026.04)</a></li>
+      <li><a href="https://intuitionlabs.ai/articles/big-pharma-hyperscaler-ai-deals-tracker-2026" target="_blank">IntuitionLabs — 빅파마·하이퍼스케일러 AI 딜 트래커 2026</a></li>
+      <li><a href="https://www.isomorphiclabs.com/articles/the-isomorphic-labs-drug-design-engine-unlocks-a-new-frontier" target="_blank">Isomorphic Labs 공식 — IsoDDE 새 프론티어 공개</a></li>
+      <li><a href="https://www.galengrowth.com/isomorphic-labs-2-1bn-series-b-ai-drug-discovery/" target="_blank">Galen Growth — Isomorphic Labs $21억 Series B 분석</a></li>
+      <li><a href="https://www.statnews.com/2026/06/25/bio-2026-biotech-conference-san-diego-key-takeaways/" target="_blank">STAT News — BIO 2026 주요 시사점 (2026.06.25)</a></li>
+      <li><a href="https://bio.news/latest-news/bio-2026-begins-in-san-diego-marking-50-years-of-biotech-innovation/" target="_blank">BIO.news — BIO 2026 샌디에이고 개막 (2026.06.22)</a></li>
+      <li><a href="https://www.koreaiin.com/news/901776" target="_blank">한국IT산업뉴스 — FDA AI 신약개발 가이드라인 개정 착수</a></li>
+      <li><a href="https://www.nature.com/articles/s41564-026-02408-1" target="_blank">Nature Microbiology — 딥러닝 프리온 단백질 항균 펩타이드 발굴 (2026)</a></li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12926305/" target="_blank">PMC — AI 생성 펩타이드 연구 및 임상 실제 리뷰</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/pii/S2772502225005967" target="_blank">ScienceDirect — AI 기반 대사 바이오치료제 펩타이드 발굴 총설 (2026)</a></li>
+      <li><a href="https://www.frontiersin.org/journals/molecular-biosciences/articles/10.3389/fmolb.2026.1767821/full" target="_blank">Frontiers Mol. Biosci. — AI 단백질 구조 예측 실용 응용 총설 (2026)</a></li>
+      <li><a href="https://www.buildmvpfast.com/blog/ai-drug-discovery-clinical-trials-pharma-2026" target="_blank">BuildMVPFast — AI 신약 임상시험·파마 2026 현황</a></li>
+      <li><a href="https://www.hkn24.com/news/articleView.html?idxno=345924" target="_blank">헬스코리아뉴스 — AI 설계 신약 세계 최초 임상 2상 성공</a></li>
+      <li><a href="https://www.dataeconomy.co.kr/news/articleView.html?idxno=40197" target="_blank">한국데이터경제신문 — GC녹십자 멀티에이전트 국책과제 선정 (2026.05)</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  BIO AI 핵심뉴스 · 2026-06-29 · 매주 월요일 자동 업데이트 · 수집 기간: 2026.06.22 ~ 2026.06.29
+</footer>
+
+</body>
+</html>

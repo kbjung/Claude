@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<!-- 이전 버전: (신규 생성) -->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 단백질 구조 예측 (Yin et al. 2026) 영한 대역 학습 문서</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #f5f7fa; color: #333; line-height: 1.7; }
+  .top-nav { position: sticky; top: 0; z-index: 100; background: #1a365d; color: #fff; padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .nav-inner { max-width: 1440px; margin: 0 auto; padding: 0 24px; }
+  .nav-links { display: flex; flex-wrap: wrap; gap: 5px; }
+  .nav-links a { color: #bee3f8; text-decoration: none; font-size: 11px; padding: 3px 9px; border-radius: 12px; background: rgba(255,255,255,0.1); transition: all 0.2s; white-space: nowrap; }
+  .nav-links a:hover { background: #3182ce; color: #fff; }
+  .container { max-width: 1440px; margin: 0 auto; padding: 20px; }
+  .paper-meta { background: linear-gradient(135deg, #ebf8ff, #f0fff4); border: 1px solid #bee3f8; border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+  .paper-meta .meta-title { font-size: 17px; font-weight: 700; color: #1a365d; margin-bottom: 12px; line-height: 1.5; }
+  .paper-meta .meta-row { margin-bottom: 8px; font-size: 13px; line-height: 1.6; }
+  .paper-meta .meta-label { font-weight: 700; color: #2b6cb0; }
+  .paper-meta .meta-aff { font-size: 11.5px; color: #555; margin: 2px 0 2px 16px; }
+  .paper-meta a { color: #2b6cb0; text-decoration: underline; }
+  .section { margin-bottom: 12px; background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: visible; }
+  .section-header { border-radius: 10px 10px 0 0; background: #2b6cb0; color: #fff; padding: 12px 20px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .section-header:hover { background: #2c5282; }
+  .section-header .toggle { font-size: 16px; transition: transform 0.3s; }
+  .section-header .toggle.collapsed { transform: rotate(-90deg); }
+  .section-header.is-collapsed { border-radius: 10px; }
+  .section-body { overflow: visible; position: relative; }
+  .section-body:last-child { border-radius: 0 0 10px 10px; }
+  .section-header .vocab .tip { z-index: 200; }
+  .section-header.level-3 .vocab { border-bottom: 2px dotted #e53e3e; color: #e53e3e; font-weight: 600; cursor: pointer; }
+  .section-header:not(.level-3) .vocab { border-bottom: none; color: inherit; font-weight: inherit; cursor: pointer; }
+  .section.level-2-section { margin: 0 16px; margin-bottom: 0; box-shadow: none; border-radius: 0; }
+  .section-header.level-2 { background: #3182ce; font-size: 13.5px; padding: 10px 20px 10px 24px; border-radius: 0; }
+  .section-header.level-2:hover { background: #2b6cb0; }
+  .para-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e2e8f0; overflow: visible; }
+  .para-row:last-child { border-bottom: none; }
+  .para-en, .para-ko { padding: 14px 20px; font-size: 13.5px; line-height: 1.85; overflow: visible; position: relative; }
+  .para-en { background: #fafbfc; border-right: 2px solid #e2e8f0; color: #2d3748; }
+  .para-ko { background: #fff; color: #1a202c; }
+  .vocab { border-bottom: 2px dotted #e53e3e; color: #c53030; font-weight: 600; cursor: help; position: relative; }
+  .vocab .tip { display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #2d3748; color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; font-weight: 400; z-index: 150; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .vocab .tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #2d3748; }
+  .vocab:hover .tip { display: block; }
+  .km { color: #3182ce; font-size: 12px; font-weight: 600; }
+  .fig-row { grid-column: 1 / -1; padding: 16px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: center; }
+  .fig-row img { max-width: 100%; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .fig-caption { margin-top: 8px; font-size: 12px; color: #555; line-height: 1.6; text-align: left; }
+  .fig-caption-ko { margin-top: 4px; font-size: 12px; color: #2b6cb0; line-height: 1.6; text-align: left; }
+  .data-table { grid-column: 1 / -1; padding: 16px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+  .data-table table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 8px; }
+  .data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; vertical-align: top; }
+  .data-table th { background: #edf2f7; font-weight: 700; color: #2b6cb0; text-align: center; }
+  .glossary { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 28px; }
+  .glossary h2 { font-size: 16px; color: #1a365d; margin-bottom: 14px; border-bottom: 2px solid #2b6cb0; padding-bottom: 6px; }
+  .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 6px; }
+  .glossary-item { display: grid; grid-template-columns: 180px 1fr; padding: 5px 10px; border-radius: 4px; font-size: 12px; }
+  .glossary-item:nth-child(odd) { background: #f7fafc; }
+  .glossary-item .g-en { font-weight: 700; color: #c53030; }
+  .glossary-item .g-ko { color: #2d3748; }
+  .user-vocab { background: #fffbeb; border: 2px dashed #d69e2e; border-radius: 10px; padding: 20px; margin-bottom: 28px; }
+  .user-vocab h2 { font-size: 16px; color: #975a16; margin-bottom: 10px; }
+  .user-vocab p { font-size: 12px; color: #744210; margin-bottom: 10px; }
+  a.ref-link { color: #2b6cb0; text-decoration: none; font-size: 12px; }
+  a.ref-link:hover { text-decoration: underline; }
+  .ref-item { font-size: 12.5px; margin-bottom: 6px; line-height: 1.6; }
+  .ref-item .ref-num { font-weight: 700; color: #2b6cb0; }
+  .section[id], .paper-meta[id], .glossary[id], .user-vocab[id] { scroll-margin-top: 90px; }
+  .ref-item[id] { scroll-margin-top: 90px; }
+  @media (max-width: 768px) { .para-row { grid-template-columns: 1fr; } .para-en { border-right: none; border-bottom: 1px solid #e2e8f0; } }
+  @media print { .top-nav, .user-vocab { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a href="#sec-meta">논문정보</a>
+      <a href="#sec-abstract">Abstract</a>
+      <a href="#sec-1">1. 서론</a>
+      <a href="#sec-2">2. 전통적 방법</a>
+      <a href="#sec-3">3. AI 혁신</a>
+      <a href="#sec-4">4. 응용</a>
+      <a href="#sec-5">5. 결론</a>
+      <a href="#sec-references">References</a>
+      <a href="#sec-glossary">용어사전</a>
+      <a href="#sec-uservocab">내 단어장</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+<div class="paper-meta" style="margin-bottom: 16px;">
+  <div class="meta-title" style="margin-bottom: 8px;">AI 단백질 구조 예측 논문 영한 대역 | Yin et al., Frontiers in Molecular Biosciences (2026)</div>
+  <div style="font-size: 12px; color: #4a5568;">📅 문서 작성일: 2026-06-20 &nbsp;|&nbsp; 최종 수정일: 2026-06-20</div>
+</div>
+
+<div class="paper-meta" id="sec-meta">
+  <div class="meta-title">
+    Protein structure prediction powered by artificial intelligence: from biochemical foundations to practical applications<br>
+    <span style="font-size:14px; color:#2b6cb0; font-weight:600;">인공지능으로 구동되는 단백질 구조 예측: 생화학적 기초에서 실용적 응용까지</span>
+  </div>
+  <div class="meta-row"><span class="meta-label">저자 (Authors):</span> Tianxiang Yin¹*†, Yunxuan Chen²†, Yuhang Wang³†, Hongyu Su⁴, Chengxu Duan⁵, Jingrui Liu⁶ (†동등 기여)</div>
+  <div class="meta-aff">¹ Dept. of Health Technology and Informatics, The Hong Kong Polytechnic University, Hong Kong SAR, China</div>
+  <div class="meta-aff">² Zonglian College, Xi'an Jiaotong University · ³ College of Optoelectronic Engineering, Chongqing University</div>
+  <div class="meta-aff">⁴ West China Hospital, Sichuan University · ⁵ School of Mechanical Engineering, Xi'an Jiaotong University · ⁶ College of Engineering and Applied Science, University of Cincinnati, USA</div>
+  <div class="meta-row"><span class="meta-label">저널:</span> Frontiers in Molecular Biosciences 13:1767821 (2026) · 유형: Mini Review</div>
+  <div class="meta-row"><span class="meta-label">접수/수정/게재:</span> 2025-12-15 접수 · 2026-01-27 수정 · 2026-02-13 채택 · 2026-03-09 게재</div>
+  <div class="meta-row"><span class="meta-label">DOI:</span> <a href="https://doi.org/10.3389/fmolb.2026.1767821" target="_blank">10.3389/fmolb.2026.1767821</a> &nbsp;(Open Access, CC BY)</div>
+  <div class="meta-row"><span class="meta-label">Keywords:</span> AlphaFold, artificial intelligence, ESMFold, protein language models, protein structure prediction, RoseTTAFold</div>
+</div>
+
+<!-- ABSTRACT -->
+<div class="section" id="sec-abstract">
+  <div class="section-header" onclick="toggleSection(this)">Abstract (초록) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">The three-dimensional structure of a protein underpins its biological function, making structure determination and prediction central challenges in structural biology. Although experimental techniques such as <span class="vocab">X-ray crystallography<span class="tip">X선 결정학</span></span>, <span class="vocab">nuclear magnetic resonance (NMR)<span class="tip">핵자기공명</span></span>, and <span class="vocab">cryo-electron microscopy (cryo-EM)<span class="tip">극저온 전자현미경</span></span> can yield high-resolution structures, they are limited by low throughput, high cost, and demanding sample preparation. Likewise, traditional computational methods often perform poorly in the absence of <span class="vocab">homologous templates<span class="tip">상동 주형(유사 서열의 기존 구조)</span></span> or under complex folding dynamics. Recent advances in <span class="vocab">deep learning<span class="tip">심층학습</span></span> and large-scale <span class="vocab">protein language models<span class="tip">단백질 언어모델</span></span> have transformed protein structure prediction. Models such as AlphaFold3 and RoseTTAFold achieve near-experimental accuracy by integrating evolutionary information, geometric constraints, and end-to-end neural architectures, while single-sequence approaches such as ESMFold offer substantial gains in speed and scalability. This review summarizes the biochemical foundations of protein folding, recent AI-driven methodological advances, and representative applications in drug discovery, enzyme engineering, and disease research, and discusses current challenges and future directions.</div>
+      <div class="para-ko">단백질의 3차원 구조는 그 생물학적 기능의 토대를 이루며, 따라서 구조 규명과 예측은 구조생물학의 핵심 과제이다. <span class="km">X선 결정학(X-ray crystallography)</span>, <span class="km">핵자기공명(NMR)</span>, <span class="km">극저온 전자현미경(cryo-EM)</span>과 같은 실험 기법들은 고해상도 구조를 산출할 수 있지만, 낮은 처리량(throughput), 높은 비용, 까다로운 시료 준비라는 한계를 가진다. 마찬가지로 전통적 계산 방법들은 <span class="km">상동 주형(homologous templates)</span>이 없거나 복잡한 폴딩 동역학 상황에서 성능이 떨어지는 경우가 많다. 최근 <span class="km">심층학습(deep learning)</span>과 대규모 <span class="km">단백질 언어모델(protein language models)</span>의 발전은 단백질 구조 예측을 변혁시켰다. AlphaFold3, RoseTTAFold와 같은 모델들은 진화 정보, 기하학적 제약, 종단간(end-to-end) 신경망 구조를 통합하여 실험에 근접하는 정확도를 달성하며, ESMFold와 같은 단일서열(single-sequence) 접근법은 속도와 확장성에서 상당한 이점을 제공한다. 본 리뷰는 단백질 폴딩의 생화학적 기초, 최근 AI 기반 방법론적 진전, 그리고 신약 개발·효소 공학·질병 연구에서의 대표적 응용을 정리하고, 현재의 과제와 향후 방향을 논의한다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section" id="sec-1">
+  <div class="section-header" onclick="toggleSection(this)">1 Introduction (서론) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">Proteins are fundamental structural and functional units of living systems, and their three-dimensional conformations largely determine biological activity and specificity. Protein misfolding or structural distortion is closely associated with numerous diseases, including <span class="vocab">Alzheimer's disease<span class="tip">알츠하이머병</span></span> and <span class="vocab">cystic fibrosis<span class="tip">낭포성 섬유증</span></span> <a href="#ref18" class="ref-link">[Khan and Khan, 2022]</a> <a href="#ref33" class="ref-link">[Patton-Parfyonov et al., 2025]</a>. Over past decades, advances in structural biology—most notably X-ray crystallography <a href="#ref35" class="ref-link">[Russell et al., 2004]</a>, nuclear magnetic resonance (NMR) spectroscopy, and cryo-electron microscopy (cryo-EM) <a href="#ref11" class="ref-link">[Eisenstein, 2025]</a>—have enabled detailed investigations of protein structures and have driven progress in molecular biology, medicinal chemistry, and enzymology.</div>
+      <div class="para-ko">단백질은 생명 시스템의 근본적인 구조적·기능적 단위이며, 그 3차원 형태(conformation)가 생물학적 활성과 특이성을 크게 좌우한다. 단백질의 <span class="km">오폴딩(misfolding)</span>이나 구조적 변형은 알츠하이머병, 낭포성 섬유증을 비롯한 수많은 질병과 밀접하게 연관되어 있다 <a href="#ref18" class="ref-link">[Khan·Khan, 2022]</a> <a href="#ref33" class="ref-link">[Patton-Parfyonov 외, 2025]</a>. 지난 수십 년간 구조생물학의 발전, 특히 X선 결정학 <a href="#ref35" class="ref-link">[Russell 외, 2004]</a>, 핵자기공명(NMR) 분광법, 극저온 전자현미경(cryo-EM) <a href="#ref11" class="ref-link">[Eisenstein, 2025]</a>은 단백질 구조의 정밀한 규명을 가능하게 했고, 분자생물학·의약화학·효소학의 진전을 이끌었다.</div>
+    </div>
+    <div class="para-row"><div class="fig-row">
+      <img src="images/page2_img1.jpeg" alt="Figure 1">
+      <div class="fig-caption"><b>Figure 1.</b> Overview of AI-based protein structure prediction frameworks and emerging trends.</div>
+      <div class="fig-caption-ko"><b>그림 1.</b> AI 기반 단백질 구조 예측 프레임워크 및 신흥 동향 개관. (① 전통적 방법의 한계 → ② AI 혁명: 구조와 돌파구(AlphaFold3·RoseTTAFold·ESMFold) → ③ 신흥 동향과 통합(다중모델 융합·다중모달 학습) → ④ 생의학에서의 영향력 있는 응용(신약개발·효소공학·질병연구) → ⑤ 미래 전망: 물리 정보 기반 AI의 Design-Build-Test 순환)</div>
+    </div></div>
+    <div class="para-row">
+      <div class="para-en">X-ray crystallography can achieve atomic-level resolution but requires high-quality crystals, which remain difficult to obtain for many proteins, particularly membrane proteins, large macromolecular complexes, or intrinsically flexible systems. NMR spectroscopy is well suited for determining protein structures in solution, yet its applicability is generally limited to proteins smaller than approximately 30 kDa (∼270 amino acids) due to spectral overlap and signal attenuation. Cryo-EM has emerged as a powerful technique for studying large macromolecular assemblies, benefiting from recent improvements in detector technology and image processing; however, it remains costly and faces challenges related to sample preparation, image complexity, and resolution for flexible regions. Collectively, these experimental approaches are characterized by low throughput, high cost, and restricted applicability.</div>
+      <div class="para-ko">X선 결정학은 원자 수준의 해상도를 달성할 수 있으나 고품질 결정을 필요로 하는데, 많은 단백질, 특히 막단백질(membrane protein), 거대 고분자 복합체, 본질적으로 유연한 시스템에서는 결정을 얻기 어렵다. NMR 분광법은 용액 상태의 단백질 구조 규명에 적합하지만, 스펙트럼 중첩과 신호 감쇠로 인해 일반적으로 약 30 kDa(~270개 아미노산) 미만의 단백질에만 적용이 제한된다. Cryo-EM은 검출기 기술과 영상 처리의 최근 향상에 힘입어 거대 고분자 집합체 연구에 강력한 기법으로 부상했으나, 여전히 비용이 높고 시료 준비·영상 복잡성·유연 영역의 해상도 측면에서 어려움이 있다. 종합하면 이들 실험적 접근법은 낮은 처리량, 높은 비용, 제한된 적용 범위로 특징지어진다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">In contrast, the growth of protein sequence databases has far outpaced that of experimentally resolved structures, creating an urgent need for high-throughput, cost-effective structure prediction methods. Artificial intelligence, particularly deep learning, is rapidly transforming the field of protein structure prediction. AlphaFold2 achieved near-experimental accuracy for approximately two-thirds of the targets in the <span class="vocab">CASP14<span class="tip">단백질 구조 예측 정밀평가 대회(14회)</span></span> competition <a href="#ref29" class="ref-link">[Lupas et al., 2021]</a>, and its developers subsequently reported confident structural coverage (<span class="vocab">pLDDT<span class="tip">예측 국소 거리차 검정 — 모델 신뢰도 지표</span></span> > 70) for approximately 98.5% of the human proteome, though not all regions within these models exhibit high confidence <a href="#ref40" class="ref-link">[Tunyasuvunakool et al., 2021]</a>. Recent reviews further highlight deep learning-based protein structure prediction and design as a major research frontier <a href="#ref16" class="ref-link">[Hou et al., 2025]</a> <a href="#ref28" class="ref-link">[Liu et al., 2025]</a>. The overall organization and key topics discussed in this article are summarized in Figure 1.</div>
+      <div class="para-ko">반면, 단백질 서열 데이터베이스의 성장은 실험적으로 규명된 구조의 증가를 크게 앞질러, 고처리량이면서 비용 효율적인 구조 예측 방법에 대한 시급한 수요를 낳았다. 인공지능, 특히 심층학습은 단백질 구조 예측 분야를 빠르게 변혁하고 있다. AlphaFold2는 <span class="km">CASP14</span> 대회에서 표적의 약 2/3에 대해 실험에 근접한 정확도를 달성했고 <a href="#ref29" class="ref-link">[Lupas 외, 2021]</a>, 개발진은 이후 인간 프로테옴의 약 98.5%에 대해 신뢰도 있는 구조 커버리지(<span class="km">pLDDT</span> > 70)를 보고했다(다만 이들 모델의 모든 영역이 높은 신뢰도를 보이는 것은 아니다) <a href="#ref40" class="ref-link">[Tunyasuvunakool 외, 2021]</a>. 최근 리뷰들은 심층학습 기반 단백질 구조 예측 및 설계를 주요 연구 최전선으로 강조한다 <a href="#ref16" class="ref-link">[Hou 외, 2025]</a> <a href="#ref28" class="ref-link">[Liu 외, 2025]</a>. 본 논문에서 논의하는 전체 구성과 핵심 주제는 그림 1에 요약되어 있다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section" id="sec-2">
+  <div class="section-header" onclick="toggleSection(this)">2 Traditional methods for determining protein structures (단백질 구조 규명의 전통적 방법) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">The <span class="vocab">primary structure<span class="tip">1차 구조(아미노산 서열)</span></span> of a protein consists of a specific amino acid sequence, which folds into secondary, tertiary, and quaternary structures through a range of intra- and intermolecular physicochemical interactions. According to <span class="vocab">Anfinsen's thermodynamic hypothesis<span class="tip">앤핀슨 열역학 가설</span></span> <a href="#ref13" class="ref-link">[Gambardella et al., 2022]</a>, the native folded state of a protein is determined primarily by its amino acid sequence, corresponding to the global minimum of free energy under physiological conditions.</div>
+      <div class="para-ko">단백질의 <span class="km">1차 구조(primary structure)</span>는 특정 아미노산 서열로 이루어지며, 이는 분자 내·분자 간 물리화학적 상호작용을 통해 2차·3차·4차 구조로 폴딩된다. <span class="km">앤핀슨의 열역학 가설(Anfinsen's thermodynamic hypothesis)</span>에 따르면 <a href="#ref13" class="ref-link">[Gambardella 외, 2022]</a>, 단백질의 천연 폴딩 상태는 주로 아미노산 서열에 의해 결정되며, 이는 생리 조건 하에서 자유에너지의 전역 최솟값(global minimum)에 해당한다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Common secondary structure elements include <span class="vocab">α-helices and β-sheets<span class="tip">알파나선과 베타시트</span></span>, while tertiary structure formation arises from the collective effects of <span class="vocab">hydrophobic interactions<span class="tip">소수성 상호작용</span></span>, hydrogen bonding, van der Waals forces, and electrostatic interactions. Hydrophobic residues tend to be buried within the protein core to minimize solvent exposure, whereas hydrophilic residues are generally exposed on the surface to reduce free energy <a href="#ref9" class="ref-link">[Dill, 1990]</a>. Hydrogen bonds stabilize secondary structures by constraining the protein backbone, van der Waals interactions provide fine-scale packing stability, and electrostatic interactions—including ionic bonds and dipole interactions—are particularly important in active sites and surface recognition regions. For proteins composed of multiple subunits, quaternary structures arise from subunit assembly, further increasing structural complexity and functional diversity.</div>
+      <div class="para-ko">일반적인 2차 구조 요소로는 <span class="km">알파나선(α-helix)과 베타시트(β-sheet)</span>가 있으며, 3차 구조 형성은 <span class="km">소수성 상호작용(hydrophobic interactions)</span>, 수소결합, 반데르발스 힘, 정전기적 상호작용의 집합적 효과로부터 발생한다. 소수성 잔기는 용매 노출을 최소화하기 위해 단백질 코어 안쪽에 묻히는 경향이 있고, 친수성 잔기는 자유에너지를 낮추기 위해 일반적으로 표면에 노출된다 <a href="#ref9" class="ref-link">[Dill, 1990]</a>. 수소결합은 단백질 골격(backbone)을 제약하여 2차 구조를 안정화하고, 반데르발스 상호작용은 미세 규모의 충전(packing) 안정성을 제공하며, 이온결합과 쌍극자 상호작용을 포함한 정전기적 상호작용은 활성부위와 표면 인식 영역에서 특히 중요하다. 여러 소단위(subunit)로 구성된 단백질의 경우 4차 구조는 소단위 조립으로부터 발생하여 구조적 복잡성과 기능적 다양성을 더욱 증가시킨다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Traditional structure determination methods rely on experimental techniques such as X-ray crystallography, which reconstructs electron density maps from diffraction data but requires crystalline samples and is often time-consuming with high failure rates. NMR spectroscopy is suitable for small proteins in solution but is limited by molecular size and spectral complexity. Cryo-EM involves imaging vitrified samples at cryogenic temperatures and has rapidly expanded its scope, though challenges remain in sample heterogeneity, data processing, and resolving flexible regions.</div>
+      <div class="para-ko">전통적 구조 규명 방법은 X선 결정학과 같은 실험 기법에 의존하는데, 이는 회절 데이터로부터 전자밀도 지도(electron density map)를 재구성하지만 결정질 시료를 필요로 하며 시간이 오래 걸리고 실패율이 높은 경우가 많다. NMR 분광법은 용액 내 작은 단백질에 적합하나 분자 크기와 스펙트럼 복잡성에 의해 제한된다. Cryo-EM은 극저온에서 유리화(vitrified)된 시료를 영상화하며 적용 범위를 빠르게 확장했으나, 시료 이질성, 데이터 처리, 유연 영역의 해상도 측면에서 여전히 과제가 남아 있다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Classical computational approaches to structure prediction include <span class="vocab">homology modeling<span class="tip">상동성 모델링</span></span>, <span class="vocab">fold recognition (threading)<span class="tip">폴드 인식(스레딩)</span></span>, and <span class="vocab">ab initio modeling<span class="tip">제1원리(초기상태) 모델링</span></span>. Template-based methods perform well when closely related homologous structures are available, but their accuracy deteriorates for novel or orphan proteins lacking structural analogs. Ab initio approaches, which include physics-based simulations (e.g., <span class="vocab">molecular dynamics<span class="tip">분자동역학(MD)</span></span>) and fragment-assembly methods (e.g., Rosetta), are theoretically general in the sense that they do not rely on homologous templates and can, in principle, predict structures for any protein sequence. However, they are computationally expensive and often exhibit limited accuracy in practice, especially for larger proteins, due to challenges in conformational sampling, force field approximations, and the vastness of the folding landscape. Overall, traditional experimental methods are low throughput, while conventional computational techniques face scalability and precision limitations, underscoring the transformative potential of AI-based approaches <a href="#ref43" class="ref-link">[Zheng et al., 2025]</a> <a href="#ref24" class="ref-link">[Lee et al., 2023]</a> <a href="#ref8" class="ref-link">[Dauparas et al., 2022]</a>.</div>
+      <div class="para-ko">구조 예측에 대한 고전적 계산 접근법으로는 <span class="km">상동성 모델링(homology modeling)</span>, <span class="km">폴드 인식(스레딩, fold recognition/threading)</span>, <span class="km">제1원리 모델링(ab initio modeling)</span>이 있다. 주형 기반(template-based) 방법은 밀접하게 연관된 상동 구조가 있을 때 잘 작동하지만, 구조적 유사체가 없는 신규(novel) 또는 고아(orphan) 단백질에 대해서는 정확도가 떨어진다. <span class="km">분자동역학(molecular dynamics)</span> 같은 물리 기반 시뮬레이션과 Rosetta 같은 단편 조립(fragment-assembly) 방법을 포함하는 ab initio 접근법은 상동 주형에 의존하지 않으므로 원리적으로는 어떤 단백질 서열에 대해서도 구조를 예측할 수 있다는 점에서 이론적으로 일반적이다. 그러나 이들은 계산 비용이 크고, 형태 표본추출(conformational sampling)·힘장(force field) 근사·폴딩 지형(landscape)의 방대함이라는 어려움 때문에 실제로는, 특히 큰 단백질에 대해, 정확도가 제한적인 경우가 많다. 종합하면 전통적 실험 방법은 처리량이 낮고 기존 계산 기법은 확장성과 정밀도의 한계에 직면하는데, 이는 AI 기반 접근법의 변혁적 잠재력을 부각한다 <a href="#ref43" class="ref-link">[Zheng 외, 2025]</a> <a href="#ref24" class="ref-link">[Lee 외, 2023]</a> <a href="#ref8" class="ref-link">[Dauparas 외, 2022]</a>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section" id="sec-3">
+  <div class="section-header" onclick="toggleSection(this)">3 Breakthroughs in AI-based protein structure prediction (AI 기반 단백질 구조 예측의 돌파구) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">In recent years, several AI-based architectures have emerged for protein structure prediction. These include: integrating physical and biological knowledge of protein structures with <span class="vocab">multiple sequence alignments (MSA)<span class="tip">다중 서열 정렬</span></span> to design deep learning algorithms that capture geometric information (AlphaFold Series) <a href="#ref17" class="ref-link">[Jumper et al., 2021]</a>; employing three-track or multi-scale networks to learn sequence–distance–coordinate representations (RoseTTAFold) <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>; and using large-scale protein language models for end-to-end single-sequence prediction (ESMFold/ESM-2) <a href="#ref27" class="ref-link">[Lin et al., 2023]</a>. The predictive capability of AlphaFold3 is rooted in its next-generation architecture, which includes an improved version of the <span class="vocab">Evoformer<span class="tip">AlphaFold의 진화정보 처리 핵심 모듈</span></span> module. This deep learning architecture played a crucial role in the success of its predecessor, AlphaFold2, and has been further optimized to enhance performance. The model employs a <span class="vocab">diffusion network<span class="tip">확산(노이즈 제거 기반 생성) 신경망</span></span> process, starting from an atomic cloud and gradually converging to the most accurate molecular structure. This approach enables AlphaFold3 to generate the joint three-dimensional (3D) structure of the input molecules, revealing their overall compatibility <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>.</div>
+      <div class="para-ko">최근 몇 년간 단백질 구조 예측을 위한 여러 AI 기반 아키텍처가 등장했다. 여기에는 ① 단백질 구조의 물리·생물학적 지식을 <span class="km">다중 서열 정렬(MSA)</span>과 통합하여 기하학적 정보를 포착하는 심층학습 알고리즘 설계(AlphaFold 시리즈) <a href="#ref17" class="ref-link">[Jumper 외, 2021]</a>, ② 서열–거리–좌표 표현을 학습하기 위해 3트랙 또는 다중 스케일 네트워크를 사용하는 방식(RoseTTAFold) <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>, ③ 종단간 단일서열 예측을 위해 대규모 단백질 언어모델을 사용하는 방식(ESMFold/ESM-2) <a href="#ref27" class="ref-link">[Lin 외, 2023]</a>이 포함된다. AlphaFold3의 예측 능력은 개선된 <span class="km">Evoformer</span> 모듈을 포함하는 차세대 아키텍처에 뿌리를 둔다. 이 심층학습 구조는 전작인 AlphaFold2의 성공에 핵심적 역할을 했으며, 성능 향상을 위해 한층 더 최적화되었다. 이 모델은 원자 구름(atomic cloud)에서 시작해 점진적으로 가장 정확한 분자 구조로 수렴하는 <span class="km">확산 신경망(diffusion network)</span> 과정을 사용한다. 이 접근법은 AlphaFold3가 입력 분자들의 공동(joint) 3차원 구조를 생성하여 그들의 전반적 적합성을 드러낼 수 있게 한다 <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">RoseTTAFold, on the other hand, employs a three-track network to transform and integrate one-dimensional sequences, two-dimensional distance matrices, and three-dimensional coordinate layers, enabling faster and more generalizable predictions <a href="#ref33" class="ref-link">[Patton-Parfyonov et al., 2025]</a>. In the language model-based approach, some methods combine protein language model representations with natural polypeptide geometric descriptions to efficiently explore sequence–structure relationships, as exemplified by <span class="vocab">RGN2<span class="tip">언어모델+기하 표현 기반 예측 모델</span></span> <a href="#ref27" class="ref-link">[Lin et al., 2023]</a>.</div>
+      <div class="para-ko">한편 RoseTTAFold는 3트랙 네트워크를 사용하여 1차원 서열, 2차원 거리 행렬, 3차원 좌표 층을 변환·통합함으로써 더 빠르고 일반화 가능한 예측을 가능하게 한다 <a href="#ref33" class="ref-link">[Patton-Parfyonov 외, 2025]</a>. 언어모델 기반 접근법에서는 일부 방법이 단백질 언어모델 표현과 천연 폴리펩타이드의 기하학적 기술을 결합하여 서열–구조 관계를 효율적으로 탐색하는데, <span class="km">RGN2</span>가 그 대표적 예이다 <a href="#ref27" class="ref-link">[Lin 외, 2023]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Regarding predictive performance, AlphaFold3 achieves atomic-level accuracy in single-structure prediction, and exhibits faster inference speed and performs more reliably on protein–protein interactions, multi-domain proteins, mutated or post-translationally modified proteins, as well as orphan proteins lacking homologous sequences than AlphaFold2 <a href="#ref18" class="ref-link">[Khan and Khan, 2022]</a> <a href="#ref11" class="ref-link">[Eisenstein, 2025]</a> <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>. One of the most significant advancements of AlphaFold three is its expanded predictive capability. The model is now capable of accurately predicting protein-molecule complexes that include various biological molecules such as DNA and RNA. This expansion is crucial for applications in genomics research and drug discovery, providing researchers with a powerful tool for more rapid and accurate predictions <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>. Compared with AlphaFold3, RoseTTAFold demonstrates superior performance in predicting mutated protein structures and offers faster prediction, albeit with slightly lower accuracy <a href="#ref42" class="ref-link">[Yang et al., 2023]</a>. Language model-based approaches, led by RGN, achieve orders-of-magnitude improvements in prediction speed and perform better on orphan proteins lacking homologous sequences; however, these models suffer from lower interpretability and reliability, and the correctness of their predictions remains uncertain <a href="#ref7" class="ref-link">[Chowdhury et al., 2022]</a>.</div>
+      <div class="para-ko">예측 성능 측면에서, AlphaFold3는 단일 구조 예측에서 원자 수준 정확도를 달성하며, AlphaFold2보다 더 빠른 추론 속도를 보이고 단백질–단백질 상호작용, 다중 도메인 단백질, 돌연변이 또는 번역후수식(post-translational modification) 단백질, 그리고 상동 서열이 없는 고아 단백질에 대해 더 신뢰성 있게 작동한다 <a href="#ref18" class="ref-link">[Khan·Khan, 2022]</a> <a href="#ref11" class="ref-link">[Eisenstein, 2025]</a> <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>. AlphaFold3의 가장 중요한 발전 중 하나는 확장된 예측 능력이다. 이제 이 모델은 DNA, RNA 같은 다양한 생체분자를 포함하는 단백질–분자 복합체를 정확히 예측할 수 있다. 이러한 확장은 유전체학 연구와 신약 개발에 매우 중요하며, 연구자에게 더 빠르고 정확한 예측을 위한 강력한 도구를 제공한다 <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>. AlphaFold3와 비교하면 RoseTTAFold는 돌연변이 단백질 구조 예측에서 우수한 성능을 보이고 더 빠른 예측을 제공하지만 정확도는 약간 낮다 <a href="#ref42" class="ref-link">[Yang 외, 2023]</a>. RGN이 주도하는 언어모델 기반 접근법은 예측 속도에서 수십~수백 배의 개선을 달성하고 상동 서열이 없는 고아 단백질에서 더 나은 성능을 보이지만, 이들 모델은 해석가능성과 신뢰성이 낮고 예측의 정확성이 불확실하다는 단점이 있다 <a href="#ref7" class="ref-link">[Chowdhury 외, 2022]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Overall, these models have advanced the performance of template-free predictions, marking a breakthrough from known-to-unknown protein structure inference. Furthermore, they have promoted transparency in structural information through databases and open-source platforms <a href="#ref37" class="ref-link">[Service, 2021]</a>. These models are summarized in Table 1. It is important to note that protein structure prediction, protein–ligand docking, protein design, database construction, and evaluation tools represent distinct methodological tasks rather than a single continuous pipeline. While AI-based structure prediction can facilitate downstream analyses, each step involves different assumptions, sources of uncertainty, and validation requirements. Treating these approaches as a unified workflow may overstate the current capabilities of the field.</div>
+      <div class="para-ko">종합하면, 이들 모델은 주형 없는(template-free) 예측의 성능을 발전시켜 알려진 것에서 알려지지 않은 단백질 구조를 추론하는 돌파구를 이루었다. 나아가 데이터베이스와 오픈소스 플랫폼을 통해 구조 정보의 투명성을 촉진했다 <a href="#ref37" class="ref-link">[Service, 2021]</a>. 이들 모델은 표 1에 요약되어 있다. 한 가지 중요하게 유의할 점은, 단백질 구조 예측, 단백질–리간드 도킹, 단백질 설계, 데이터베이스 구축, 평가 도구가 하나의 연속된 파이프라인이 아니라 서로 구별되는 방법론적 과제들이라는 것이다. AI 기반 구조 예측이 하류(downstream) 분석을 촉진할 수는 있지만, 각 단계는 서로 다른 가정·불확실성 원천·검증 요구를 수반한다. 이들 접근법을 하나의 통합 워크플로우로 취급하는 것은 현 분야의 역량을 과장할 수 있다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Unlike the early single-method prediction algorithms, modern approaches not only integrate homology-based sequence alignment methods with ab initio modeling guided by physical laws but also develop deep learning models on this basis <a href="#ref42" class="ref-link">[Yang et al., 2023]</a> <a href="#ref36" class="ref-link">[Senior et al., 2020]</a>. These models can automatically learn the sequence–structure mapping while capturing long-range residue dependencies and co-evolutionary features through <span class="vocab">attention mechanisms<span class="tip">어텐션(주의) 메커니즘</span></span>. For example, AlphaFold three employs a unique iterative refinement technique called "recycling", which significantly enhances its accuracy. This process involves repeatedly applying the final loss to the output and then recursively feeding it back into the network <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>. This method enables continuous refinement and development of highly accurate protein structures with precise atomic details. Similarly, the multi-track network in RoseTTAFold overcomes the limitations of conventional single-channel neural networks in modeling spatial geometry, with the three-dimensional structure representation layer improving residue–residue angle prediction accuracy <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>.</div>
+      <div class="para-ko">초기의 단일 방법 예측 알고리즘과 달리, 현대적 접근법은 상동성 기반 서열 정렬 방법과 물리 법칙에 의해 인도되는 ab initio 모델링을 통합할 뿐 아니라 이를 토대로 심층학습 모델을 개발한다 <a href="#ref42" class="ref-link">[Yang 외, 2023]</a> <a href="#ref36" class="ref-link">[Senior 외, 2020]</a>. 이들 모델은 서열–구조 매핑을 자동으로 학습하는 동시에 <span class="km">어텐션 메커니즘(attention mechanisms)</span>을 통해 장거리 잔기 의존성과 공진화(co-evolutionary) 특징을 포착할 수 있다. 예를 들어 AlphaFold3는 "재활용(recycling)"이라 불리는 독특한 반복 정제 기법을 사용하여 정확도를 크게 높인다. 이 과정은 최종 손실(loss)을 출력에 반복 적용한 뒤 이를 재귀적으로 네트워크에 다시 입력하는 것을 수반한다 <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>. 이 방법은 정밀한 원자 수준 세부사항을 갖춘 고정확도 단백질 구조의 지속적 정제와 발전을 가능하게 한다. 마찬가지로 RoseTTAFold의 다중 트랙 네트워크는 공간 기하 모델링에서 기존 단일 채널 신경망의 한계를 극복하며, 3차원 구조 표현 층이 잔기–잔기 각도 예측 정확도를 향상시킨다 <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">In recent years, multi-model fusion and generative architectures have further expanded structural prediction. Diffusion-based models such as <span class="vocab">DiffDock<span class="tip">확산 기반 도킹 모델</span></span> and ProtDiffusion explore conformational space via diffusion sampling, providing new approaches for protein–ligand complex prediction and protein design <a href="#ref5" class="ref-link">[Buttenschoen et al., 2024]</a> <a href="#ref41" class="ref-link">[Wang et al., 2024]</a>. Beyond diffusion models, alternative generative frameworks are also emerging. For instance, the <span class="vocab">Boltz series<span class="tip">MIT의 전원자 공동폴딩 모델(Boltz-1/2, BoltzGen)</span></span> (e.g., Boltz-1, Boltz-2 and BoltzGen) from MIT employs a full-atom co-folding approach trained on structural data. These models offer the distinct advantage of co-folding a protein with a user-specified ligand while simultaneously predicting binding affinities with high accuracy. Moreover, large language models, including Meta AI ESMFold, ProGen2, and Salesforce ProtGPT2, demonstrate capabilities to infer structure from sequence and predict function from structure, blurring the boundary between structure prediction and protein design <a href="#ref31" class="ref-link">[Nijkamp et al., 2023]</a> <a href="#ref12" class="ref-link">[Ferruz et al., 2022]</a>.</div>
+      <div class="para-ko">최근 몇 년간 다중 모델 융합과 생성형(generative) 아키텍처가 구조 예측을 더욱 확장했다. <span class="km">DiffDock</span>, ProtDiffusion 같은 확산 기반 모델은 확산 표본추출을 통해 형태 공간을 탐색하여 단백질–리간드 복합체 예측과 단백질 설계에 새로운 접근법을 제공한다 <a href="#ref5" class="ref-link">[Buttenschoen 외, 2024]</a> <a href="#ref41" class="ref-link">[Wang 외, 2024]</a>. 확산 모델을 넘어 대안적 생성형 프레임워크도 등장하고 있다. 예컨대 MIT의 <span class="km">Boltz 시리즈</span>(Boltz-1, Boltz-2, BoltzGen)는 구조 데이터로 학습된 전원자(full-atom) 공동폴딩(co-folding) 접근법을 사용한다. 이들 모델은 사용자가 지정한 리간드와 단백질을 함께 폴딩하는 동시에 결합 친화도(binding affinity)를 높은 정확도로 예측한다는 뚜렷한 이점을 제공한다. 더 나아가 Meta AI ESMFold, ProGen2, Salesforce ProtGPT2 등 대규모 언어모델은 서열로부터 구조를 추론하고 구조로부터 기능을 예측하는 능력을 보이며, 구조 예측과 단백질 설계의 경계를 흐리고 있다 <a href="#ref31" class="ref-link">[Nijkamp 외, 2023]</a> <a href="#ref12" class="ref-link">[Ferruz 외, 2022]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Multi-model fusion manifests not only in multiple models performing the same function but also in the refinement of individual models to achieve multifunctional integration. Enhancing existing models has become a trend in the development of multifunctional frameworks. For instance, following the release of AlphaFold2, <span class="vocab">AlphaLink<span class="tip">실험적 거리 제약(가교 MS) 통합 모델</span></span> integrates experimental distance constraints to improve prediction accuracy <a href="#ref38" class="ref-link">[Stahl et al., 2023]</a>; <span class="vocab">AlphaFill<span class="tip">AlphaFold 모델에 리간드/보조인자 보강</span></span> enriches AlphaFold models with ligands and cofactors, supplementing small-molecule coordinates <a href="#ref15" class="ref-link">[Hekkelman et al., 2023]</a>; and <span class="vocab">AF-Cluster<span class="tip">MSA 군집화로 다중 형태 예측</span></span> performs multiple-conformation prediction by clustering MSAs based on sequence similarity <a href="#ref39" class="ref-link">[Wayment-Steele et al., 2024]</a>.</div>
+      <div class="para-ko">다중 모델 융합은 여러 모델이 같은 기능을 수행하는 형태뿐 아니라, 개별 모델을 정제하여 다기능 통합을 달성하는 형태로도 나타난다. 기존 모델의 강화는 다기능 프레임워크 개발의 추세가 되었다. 예를 들어 AlphaFold2 출시 이후 <span class="km">AlphaLink</span>는 실험적 거리 제약을 통합하여 예측 정확도를 높이고 <a href="#ref38" class="ref-link">[Stahl 외, 2023]</a>, <span class="km">AlphaFill</span>은 AlphaFold 모델에 리간드와 보조인자(cofactor)를 보강하여 소분자 좌표를 보충하며 <a href="#ref15" class="ref-link">[Hekkelman 외, 2023]</a>, <span class="km">AF-Cluster</span>는 서열 유사도에 기반해 MSA를 군집화함으로써 다중 형태 예측을 수행한다 <a href="#ref39" class="ref-link">[Wayment-Steele 외, 2024]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">A second trend is multi-modal, multi-task learning. Structural prediction is increasingly integrated with function annotation, dynamics simulation, and position-based recognition within unified network frameworks. Notable examples include AlphaFold 3, UniFold, and DeepMind AlphaFold-Multimer, which enable breakthroughs in complex structure prediction and binding energy calculation <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a> <a href="#ref32" class="ref-link">[Pándy-Szekeres et al., 2024]</a>. Such models provide a reliable computational foundation for predicting protein–protein and protein–nucleic acid interactions <a href="#ref38" class="ref-link">[Stahl et al., 2023]</a>. Significant progress has been made with the release of AlphaFold 3, which employs a unified diffusion-based architecture to directly model the joint structure of biomolecular complexes. It shows improved accuracy in predicting protein-protein and protein-nucleic acid interactions, and shows enhanced capability in handling multi-domain proteins. However, challenges remain, particularly in capturing the full conformational dynamics of interfaces and in the prediction of structures involving small molecules or post-translational modifications without explicit templates.</div>
+      <div class="para-ko">두 번째 추세는 다중 모달·다중 과제 학습이다. 구조 예측은 통합 네트워크 프레임워크 안에서 기능 주석(function annotation), 동역학 시뮬레이션, 위치 기반 인식과 점점 더 통합되고 있다. 대표적 예로 AlphaFold3, UniFold, DeepMind AlphaFold-Multimer가 있으며, 이들은 복합체 구조 예측과 결합에너지 계산에서 돌파구를 가능하게 한다 <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a> <a href="#ref32" class="ref-link">[Pándy-Szekeres 외, 2024]</a>. 이러한 모델은 단백질–단백질 및 단백질–핵산 상호작용 예측을 위한 신뢰성 있는 계산적 토대를 제공한다 <a href="#ref38" class="ref-link">[Stahl 외, 2023]</a>. AlphaFold3 출시로 상당한 진전이 이루어졌는데, 이는 통합된 확산 기반 아키텍처를 사용하여 생체분자 복합체의 공동 구조를 직접 모델링한다. 단백질–단백질 및 단백질–핵산 상호작용 예측에서 향상된 정확도를 보이고, 다중 도메인 단백질 처리 능력이 강화되었다. 그러나 특히 계면(interface)의 완전한 형태 동역학을 포착하는 것, 그리고 명시적 주형 없이 소분자나 번역후수식을 포함하는 구조를 예측하는 것에는 여전히 과제가 남아 있다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Overall, AI-based protein structure prediction has evolved from "monomeric folding" toward "system-level modeling," integrating generative models, molecular dynamics, and language models. This development suggests that structure prediction will not be limited to reproducing static conformations but will advance toward dynamic conformational sampling, energy landscape exploration, and function-guided design <a href="#ref40b" class="ref-link">[Tunyasuvunakool, 2022]</a>.</div>
+      <div class="para-ko">종합하면, AI 기반 단백질 구조 예측은 "단량체 폴딩(monomeric folding)"에서 "시스템 수준 모델링(system-level modeling)"으로 진화하여 생성형 모델·분자동역학·언어모델을 통합하고 있다. 이러한 발전은 구조 예측이 정적 형태의 재현에 머무르지 않고 동적 형태 표본추출, 에너지 지형 탐색, 기능 지향 설계로 나아갈 것임을 시사한다 <a href="#ref40b" class="ref-link">[Tunyasuvunakool, 2022]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">A third trend is the critical role of databases and the high demand for information integration and exchange. Unlike early physics-based structural prediction algorithms, modern AI architectures—such as AlphaFold3, RoseTTAFold, and ESMFold—require extensive data extraction and integration prior to deep learning and model training. Large-scale amino acid sequence and structural datasets are a key factor behind AlphaFold2 success, enabling the exploration of sequence–structure dependencies and information exchange within MSAs to capture co-evolutionary signals <a href="#ref42" class="ref-link">[Yang et al., 2023]</a>. RoseTTAFold incorporates cropped MSAs, allowing information flow across the three tracks to enable systematic structural reasoning <a href="#ref1" class="ref-link">[Abramson et al., 2024]</a>. ESMFold relies on extensive textual data to train protein language models, achieving sequence–structure interaction via end-to-end single-sequence predictors. In summary, AI models for protein structure prediction depend on robust database support and comprehensive information integration. Current platforms, such as the Encyclopedia of Protein Domains and Foldseek, facilitate management and analysis of predicted protein models <a href="#ref30" class="ref-link">[Michel et al., 2024]</a> <a href="#ref6" class="ref-link">[Callaway, 2022]</a> <a href="#ref23" class="ref-link">[Lau et al., 2024]</a> <a href="#ref41b" class="ref-link">[Van Kempen et al., 2024]</a>, not only enabling resource sharing across biology, medicine, and other disciplines but also promoting database expansion, model updates, and iterative improvements. Future development of protein structure prediction models will impose even higher requirements on databases and deep learning frameworks for information integration <a href="#ref4" class="ref-link">[Cao et al., 2025]</a>.</div>
+      <div class="para-ko">세 번째 추세는 데이터베이스의 결정적 역할과 정보 통합·교환에 대한 높은 수요이다. 초기의 물리 기반 구조 예측 알고리즘과 달리, AlphaFold3·RoseTTAFold·ESMFold 같은 현대 AI 아키텍처는 심층학습 및 모델 훈련에 앞서 광범위한 데이터 추출과 통합을 요구한다. 대규모 아미노산 서열·구조 데이터셋은 AlphaFold2 성공의 핵심 요인으로, 서열–구조 의존성 탐색과 MSA 내 정보 교환을 통해 공진화 신호를 포착할 수 있게 한다 <a href="#ref42" class="ref-link">[Yang 외, 2023]</a>. RoseTTAFold는 잘라낸(cropped) MSA를 통합하여 3개 트랙 간 정보 흐름을 허용함으로써 체계적인 구조적 추론을 가능하게 한다 <a href="#ref1" class="ref-link">[Abramson 외, 2024]</a>. ESMFold는 단백질 언어모델 훈련을 위해 방대한 텍스트 데이터에 의존하며, 종단간 단일서열 예측기를 통해 서열–구조 상호작용을 달성한다. 요컨대, 단백질 구조 예측을 위한 AI 모델은 견고한 데이터베이스 지원과 포괄적 정보 통합에 의존한다. 단백질 도메인 백과사전(Encyclopedia of Protein Domains)과 Foldseek 같은 현 플랫폼은 예측된 단백질 모델의 관리와 분석을 촉진하여 <a href="#ref30" class="ref-link">[Michel 외, 2024]</a> <a href="#ref6" class="ref-link">[Callaway, 2022]</a> <a href="#ref23" class="ref-link">[Lau 외, 2024]</a> <a href="#ref41b" class="ref-link">[Van Kempen 외, 2024]</a>, 생물학·의학 및 기타 분야 간 자원 공유를 가능하게 할 뿐 아니라 데이터베이스 확장·모델 업데이트·반복적 개선을 촉진한다. 향후 단백질 구조 예측 모델의 발전은 정보 통합을 위한 데이터베이스와 심층학습 프레임워크에 더욱 높은 요구를 부과할 것이다 <a href="#ref4" class="ref-link">[Cao 외, 2025]</a>.</div>
+    </div>
+
+    <!-- TABLE 1 -->
+    <div class="para-row"><div class="data-table">
+      <div class="fig-caption"><b>Table 1.</b> Selected AI-based methods and resources related to protein structure prediction and downstream analysis.</div>
+      <div class="fig-caption-ko"><b>표 1.</b> 단백질 구조 예측 및 하류 분석과 관련된 주요 AI 기반 방법·자원 (영/한 병기)</div>
+      <table>
+        <tr><th>모델/방법<br>Model/Method</th><th>핵심 구조·혁신<br>Core architecture / Innovation</th><th>장점<br>Advantages</th><th>응용·방향<br>Applications / Directions</th></tr>
+        <tr>
+          <td><b>AlphaFold 시리즈</b><br>(AlphaFold Series)</td>
+          <td>AF2: MSA + 구조 모듈 결합 / AlphaLink: 가교 MS 데이터 통합 / AlphaFill: 소분자 리간드 이식 / AF-Cluster: MSA 군집화로 다중 형태 예측 / AlphaFold 3: 통합 확산 기반 모델</td>
+          <td>원자 수준 정확도, 실험 데이터 통합, 리간드 이식, 다중 형태 예측, 다성분 복합체 모델링</td>
+          <td>대규모 구조 예측, 실험 통합, 다성분 복합체 모델링, 신약 개발 플랫폼</td>
+        </tr>
+        <tr>
+          <td><b>RoseTTAFold</b></td>
+          <td>1D 서열 · 2D 거리지도 · 3D 좌표 정보를 통합하는 3트랙 네트워크</td>
+          <td>고속, 단백질 복합체·돌연변이 예측에 적합, 강한 일반화</td>
+          <td>단백질–단백질 복합체 예측, X선/cryo-EM 보조 모델링</td>
+        </tr>
+        <tr>
+          <td><b>단백질 언어모델 시리즈</b><br>(Protein LM Series)</td>
+          <td>ESMFold: 종단간 예측용 대규모 언어모델 / RGN2: 언어모델+기하 표현 / ProT-Diff: 언어모델+확산 생성 / ProGen2·ProtGPT2: 대규모 생성형 언어모델</td>
+          <td>극히 빠른 예측, 고아 단백질에 적합, MSA 불필요, 서열 생성·설계 지원</td>
+          <td>메타게놈 구조 조사, 단백질 설계·공학, 항균 펩타이드 발굴</td>
+        </tr>
+        <tr>
+          <td><b>AlphaFold (초기)</b><br>(Initial)</td>
+          <td>잔기–잔기 거리지도를 구성하는 거리 기반 심층학습 방법</td>
+          <td>CASP13에서 강력한 성능, 주형 없는 예측의 유의미한 개선</td>
+          <td>초기 AI 기반 구조 예측의 이정표</td>
+        </tr>
+        <tr>
+          <td><b>평가·도구 플랫폼</b><br>(Evaluation & Tools)</td>
+          <td>PoseBusters: 물리적 타당성 평가 / Foldseek: 고속 구조 정렬 / TED: 도메인 분석·분류</td>
+          <td>표준화된 평가 프레임워크, 고속 검색 도구, 구조 도메인 자원 통합</td>
+          <td>방법 표준화, 대규모 데이터 분석, 도메인 진화 연구</td>
+        </tr>
+        <tr>
+          <td><b>데이터베이스·자원</b><br>(Databases & Resources)</td>
+          <td>GproteinDb: GPCR–G단백질 복합체 DB / CASP14 영향 리뷰</td>
+          <td>구조 주형·커플링 데이터 제공, 구조 기반 실험의 일상적 활용 촉진</td>
+          <td>GPCR 연구, 실험–계산 통합, 구조생물학 도구셋 개발</td>
+        </tr>
+        <tr>
+          <td><b>단백질–리간드 도킹 방법</b><br>(Docking)</td>
+          <td>SurfDock: 표면 정보 기반 확산 생성 모델</td>
+          <td>높은 도킹 성공률·물리적 타당성, 미지 단백질·예측 apo 구조에 적응</td>
+          <td>신약 개발, 가상 스크리닝, 단백질–리간드 상호작용 연구</td>
+        </tr>
+      </table>
+    </div></div>
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section" id="sec-4">
+  <div class="section-header" onclick="toggleSection(this)">4 Applications of artificial intelligence in biochemistry and medicine (생화학·의학에서의 인공지능 응용) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">Breakthroughs in artificial intelligence (AI)-driven protein structure prediction have opened up broad prospects for biological and medical research. Accurate structural information enables in-depth analysis of protein functions and interaction mechanisms, while also guiding and accelerating experimental workflows. As a result, drug discovery and enzymatic mechanism studies can be conducted at lower cost, higher speed, and improved precision, facilitating the rational design of therapeutics and the exploration of disease mechanisms <a href="#ref42" class="ref-link">[Yang et al., 2023]</a>.</div>
+      <div class="para-ko">인공지능(AI) 기반 단백질 구조 예측의 돌파구는 생물학·의학 연구에 폭넓은 전망을 열었다. 정확한 구조 정보는 단백질 기능과 상호작용 기전의 심층 분석을 가능하게 하는 동시에, 실험 워크플로우를 인도하고 가속한다. 그 결과 신약 개발과 효소 기전 연구를 더 낮은 비용, 더 빠른 속도, 향상된 정밀도로 수행할 수 있어, 치료제의 합리적 설계와 질병 기전 탐구가 촉진된다 <a href="#ref42" class="ref-link">[Yang 외, 2023]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Despite the rapid adoption of AI-based protein structure prediction tools, it is essential to recognize their limitations before applying predicted models to downstream tasks. Current methods typically generate a single static conformation and do not capture the conformational ensembles that proteins often populate in solution. Moreover, prediction confidence metrics (e.g., pLDDT) primarily reflect internal model consistency and should not be interpreted as guarantees of functional accuracy, interaction fidelity, or binding-site correctness. As a result, AI-predicted structures should not be blindly trusted in applications such as drug discovery or enzyme engineering. Instead, they should be treated as <span class="vocab">hypothesis-generating models<span class="tip">가설 생성용 모델</span></span> that require expert interpretation, careful refinement, and integration with experimental data.</div>
+      <div class="para-ko">AI 기반 단백질 구조 예측 도구가 빠르게 채택되고 있음에도, 예측 모델을 하류 과제에 적용하기 전에 그 한계를 인식하는 것이 필수적이다. 현재의 방법들은 일반적으로 단일 정적 형태를 생성하며, 단백질이 용액에서 흔히 형성하는 형태 앙상블(conformational ensembles)을 포착하지 못한다. 더욱이 pLDDT 같은 예측 신뢰도 지표는 주로 모델 내부의 일관성을 반영하는 것이지 기능적 정확성, 상호작용 충실도, 결합부위 정확성의 보장으로 해석되어서는 안 된다. 따라서 AI가 예측한 구조를 신약 개발이나 효소 공학 같은 응용에서 맹목적으로 신뢰해서는 안 된다. 오히려 이들은 전문가의 해석, 신중한 정제, 실험 데이터와의 통합을 요구하는 <span class="km">가설 생성 모델(hypothesis-generating models)</span>로 취급되어야 한다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">In drug discovery, AI-based protein structure prediction substantially improves the accuracy of target identification and virtual screening. For example, AlphaFold2 is capable of generating near-experimental-level structural predictions within a short time frame. By deeply embedding evolutionary information and amino acid sequences, its Evoformer module processes both intra-sequence and inter-sequence relationships, while the structure module iteratively refines a three-dimensional protein model using the features extracted by the Evoformer. The final output is a high-quality computational structural model that often captures the overall fold and domain organization of the target protein. However, such models should be regarded as predictions rather than experimentally determined atomic-resolution structures, and they typically require further refinement and experimental validation before being used in <span class="vocab">structure-based drug design (SBDD)<span class="tip">구조 기반 신약 설계</span></span> <a href="#ref37b" class="ref-link">[Skolnick et al., 2021]</a>.</div>
+      <div class="para-ko">신약 개발에서 AI 기반 단백질 구조 예측은 표적 동정(target identification)과 가상 스크리닝(virtual screening)의 정확도를 크게 향상시킨다. 예를 들어 AlphaFold2는 짧은 시간 안에 실험에 근접한 수준의 구조 예측을 생성할 수 있다. 진화 정보와 아미노산 서열을 깊이 임베딩함으로써, Evoformer 모듈은 서열 내·서열 간 관계를 모두 처리하고, 구조 모듈은 Evoformer가 추출한 특징을 사용해 3차원 단백질 모델을 반복적으로 정제한다. 최종 산출물은 표적 단백질의 전반적 폴드와 도메인 구성을 흔히 포착하는 고품질 계산 구조 모델이다. 그러나 이러한 모델은 실험적으로 규명된 원자 해상도 구조가 아니라 예측으로 간주되어야 하며, <span class="km">구조 기반 신약 설계(SBDD)</span>에 사용되기 전에 일반적으로 추가 정제와 실험적 검증을 필요로 한다 <a href="#ref37b" class="ref-link">[Skolnick 외, 2021]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">In particular, inaccuracies are frequently observed in loop regions, side-chain conformations, flexible domains, and binding-site geometry, and predicted models generally lack ligands, cofactors, structured water molecules, and information on alternative conformational states, all of which are critical for reliable SBDD. With continued advances, protein structure prediction is evolving from a "computational service" into a global scientific "infrastructure." A representative example is the AlphaFold Protein Structure Database (<span class="vocab">AlphaFoldDB<span class="tip">알파폴드 단백질 구조 데이터베이스</span></span>), jointly developed by DeepMind and the European Molecular Biology Laboratory - European Bioinformatics Institute (EMBL-EBI). This open and freely accessible resource contains precomputed structures for a vast number of proteins, analogous to public genome sequence repositories. AlphaFoldDB <a href="#ref41c" class="ref-link">[Varadi et al., 2022]</a> currently includes over 214 million predicted structures, covering a wide range of organisms and metagenomic samples. By providing atomic coordinates, predicted Local Distance Difference Test (pLDDT) scores, and predicted alignment error maps, the database has been widely adopted in medicinal chemistry, virology, and structural immunology.</div>
+      <div class="para-ko">특히 루프 영역, 곁사슬(side-chain) 형태, 유연 도메인, 결합부위 기하에서 부정확성이 자주 관찰되며, 예측 모델은 일반적으로 리간드, 보조인자, 구조화된 물 분자, 대체 형태 상태에 대한 정보를 결여하는데, 이 모두가 신뢰성 있는 SBDD에 결정적이다. 지속적 발전과 함께 단백질 구조 예측은 "계산 서비스(computational service)"에서 전 지구적 과학 "인프라(infrastructure)"로 진화하고 있다. 대표적 예는 DeepMind와 유럽분자생물학연구소-유럽생물정보학연구소(EMBL-EBI)가 공동 개발한 AlphaFold 단백질 구조 데이터베이스(<span class="km">AlphaFoldDB</span>)이다. 이 개방적이고 무료로 접근 가능한 자원은 공개 유전체 서열 저장소와 유사하게 방대한 수의 단백질에 대한 사전 계산 구조를 담고 있다. AlphaFoldDB <a href="#ref41c" class="ref-link">[Varadi 외, 2022]</a>는 현재 2억 1,400만 개 이상의 예측 구조를 포함하며, 광범위한 생물종과 메타게놈 시료를 아우른다. 원자 좌표, 예측 국소 거리차 검정(pLDDT) 점수, 예측 정렬 오차 지도를 제공함으로써, 이 데이터베이스는 의약화학·바이러스학·구조면역학에서 널리 채택되었다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">While many regions exhibit high confidence (pLDDT > 70), substantial portions of some predictions may have low confidence scores, reflecting inherent prediction uncertainty. Importantly, commonly reported confidence scores such as pLDDT assess local structural consistency rather than functional correctness, and high-confidence predictions may still be unreliable for modeling protein–ligand interactions, interface geometry, or dynamic regions. It is worth noting that some studies directly use structures predicted by AlphaFold3 for molecular docking without considering conformational flexibility, binding pocket deformation, or ligand-induced conformational changes, resulting in lower hit rates in virtual screening. Therefore, in high-risk applications (such as antibody design or targeted therapy development), it is recommended to incorporate experimental constraints, conformational sampling, or multiple model integration to enhance the reliability of predictions. In antibody engineering and protein-protein interaction prediction, models such as RoseTTAFold and AlphaFold-Multimer enable more accurate structural modeling of protein complexes, significantly enhancing predictive capabilities in biopharmaceutical research <a href="#ref2" class="ref-link">[Baek et al., 2024]</a> <a href="#ref39b" class="ref-link">[Tang et al., 2025]</a>.</div>
+      <div class="para-ko">많은 영역이 높은 신뢰도(pLDDT > 70)를 보이지만, 일부 예측의 상당 부분은 낮은 신뢰도 점수를 가질 수 있으며 이는 예측에 내재된 불확실성을 반영한다. 중요한 점은, pLDDT 같이 흔히 보고되는 신뢰도 점수는 기능적 정확성이 아니라 국소적 구조 일관성을 평가한다는 것이며, 높은 신뢰도의 예측이라 해도 단백질–리간드 상호작용, 계면 기하, 동적 영역의 모델링에는 여전히 신뢰할 수 없을 수 있다. 일부 연구는 형태 유연성, 결합 포켓 변형, 리간드 유도 형태 변화를 고려하지 않고 AlphaFold3가 예측한 구조를 분자 도킹에 직접 사용하여, 가상 스크리닝에서 더 낮은 적중률(hit rate)을 초래한다는 점도 주목할 만하다. 따라서 항체 설계나 표적 치료제 개발 같은 고위험 응용에서는 예측의 신뢰성을 높이기 위해 실험적 제약, 형태 표본추출, 또는 다중 모델 통합을 도입하는 것이 권장된다. 항체 공학과 단백질–단백질 상호작용 예측에서 RoseTTAFold, AlphaFold-Multimer 같은 모델은 단백질 복합체의 더 정확한 구조 모델링을 가능하게 하여 바이오의약품 연구의 예측 능력을 크게 향상시킨다 <a href="#ref2" class="ref-link">[Baek 외, 2024]</a> <a href="#ref39b" class="ref-link">[Tang 외, 2025]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">AI has also played a transformative role in enzyme engineering and directed evolution. By integrating natural and artificially designed enzymes, researchers have employed ESMFold, developed by Meta AI, to rapidly predict high-accuracy three-dimensional enzyme structures. <span class="vocab">Geometric graph neural networks (GNNs)<span class="tip">기하 그래프 신경망</span></span> and attention-based models are then applied to focus on a limited number of key nodes—specific amino acid residues—predicted to be catalytic residues, thereby guiding experimental selection and mutation screening <a href="#ref32b" class="ref-link">[Pancino et al., 2024]</a> <a href="#ref27" class="ref-link">[Lin et al., 2023]</a>. In addition, molecular dynamics (MD) simulations are used to investigate the dynamic behavior of enzyme active sites, including the stability of substrate-binding pockets and interactions among critical residues, which can further inform the targeted screening of high-activity mutants <a href="#ref16b" class="ref-link">[Ito et al., 2025]</a>.</div>
+      <div class="para-ko">AI는 효소 공학과 유도 진화(directed evolution)에서도 변혁적 역할을 했다. 천연 효소와 인공 설계 효소를 통합하여, 연구자들은 Meta AI가 개발한 ESMFold를 사용해 고정확도 3차원 효소 구조를 빠르게 예측해 왔다. 그런 다음 <span class="km">기하 그래프 신경망(GNNs)</span>과 어텐션 기반 모델을 적용하여, 촉매 잔기로 예측되는 소수의 핵심 노드—특정 아미노산 잔기—에 집중함으로써 실험적 선택과 돌연변이 스크리닝을 인도한다 <a href="#ref32b" class="ref-link">[Pancino 외, 2024]</a> <a href="#ref27" class="ref-link">[Lin 외, 2023]</a>. 아울러 분자동역학(MD) 시뮬레이션은 기질 결합 포켓의 안정성과 핵심 잔기 간 상호작용을 포함한 효소 활성부위의 동적 거동을 조사하는 데 사용되며, 이는 고활성 돌연변이체의 표적 스크리닝에 추가 정보를 제공할 수 있다 <a href="#ref16b" class="ref-link">[Ito 외, 2025]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">AI methods have also been applied to mutation prediction to assist researchers in selecting more stable or more soluble enzymes. <span class="vocab">ProteinMPNN<span class="tip">메시지 전달 신경망 기반 단백질 서열 설계</span></span>, a novel protein sequence design method based on message passing neural networks, outperforms previous mainstream approaches in terms of speed, accuracy, and success rate through innovations in network architecture and training strategies. ProteinMPNN can directly generate highly foldable, stable, and soluble sequences and is currently regarded as one of the most powerful tools for de novo design of stable enzyme sequences <a href="#ref38b" class="ref-link">[Sumida et al., 2024]</a>. Nevertheless, inaccuracies in predicted active-site geometry and the absence of conformational dynamics remain major challenges, and experimental validation remains indispensable for confirming catalytic mechanisms and functional effects of designed mutations.</div>
+      <div class="para-ko">AI 방법은 더 안정적이거나 더 잘 녹는(soluble) 효소를 선택하는 연구자를 돕기 위해 돌연변이 예측에도 적용되어 왔다. 메시지 전달 신경망(message passing neural networks)에 기반한 새로운 단백질 서열 설계 방법인 <span class="km">ProteinMPNN</span>은 네트워크 구조와 훈련 전략의 혁신을 통해 속도·정확도·성공률 면에서 기존 주류 접근법을 능가한다. ProteinMPNN은 높은 폴딩성, 안정성, 용해성을 갖춘 서열을 직접 생성할 수 있으며, 현재 안정적 효소 서열의 신생(de novo) 설계를 위한 가장 강력한 도구 중 하나로 평가된다 <a href="#ref38b" class="ref-link">[Sumida 외, 2024]</a>. 그럼에도 예측된 활성부위 기하의 부정확성과 형태 동역학의 부재는 여전히 주요 과제이며, 설계된 돌연변이의 촉매 기전과 기능적 효과를 확인하기 위해서는 실험적 검증이 여전히 필수불가결하다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">In disease research, structure-prediction AI facilitates the understanding of pathogenic protein misfolding and mutations. For instance, the structural features of <span class="vocab">amyloid-β (Aβ)<span class="tip">아밀로이드-베타(알츠하이머 관련 응집체)</span></span> aggregates associated with Alzheimer disease have been investigated by combining AlphaFold2 predictions with molecular dynamics simulations to explore different β-sheet arrangements induced by mutations. Similarly, AI-predicted structures enable rapid investigation of mutation-induced stability changes in tumor-related proteins such as p53, KRAS, and BRCA1, thereby contributing to mechanistic insights into disease progression and supporting the development of targeted and therapeutic drugs <a href="#ref8" class="ref-link">[Dauparas et al., 2022]</a>.</div>
+      <div class="para-ko">질병 연구에서 구조 예측 AI는 병원성 단백질의 오폴딩과 돌연변이 이해를 촉진한다. 예를 들어 알츠하이머병과 연관된 <span class="km">아밀로이드-베타(Aβ)</span> 응집체의 구조적 특징은 AlphaFold2 예측과 분자동역학 시뮬레이션을 결합하여 돌연변이가 유도하는 서로 다른 베타시트 배열을 탐색함으로써 조사되어 왔다. 마찬가지로 AI 예측 구조는 p53, KRAS, BRCA1 같은 종양 관련 단백질에서 돌연변이가 유도하는 안정성 변화를 신속히 조사할 수 있게 하여, 질병 진행에 대한 기전적 통찰에 기여하고 표적·치료 약물 개발을 뒷받침한다 <a href="#ref8" class="ref-link">[Dauparas 외, 2022]</a>.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Beyond individual applications, the openness and automation of AI-based structure prediction are reshaping the research ecosystem. Major pharmaceutical companies, including Pfizer, Novartis, and AstraZeneca, have begun integrating AlphaFold and RoseTTAFold models into their internal drug discovery pipelines to automate structure prediction, molecular docking, and candidate compound screening <a href="#ref6b" class="ref-link">[Callaway, 2025]</a> <a href="#ref41d" class="ref-link">[Varadi and Velankar, 2022]</a>. By combining AI-derived predictions with experimental validation techniques—such as cryo-electron microscopy, in vivo cross-linking mass spectrometry, and NMR-based restraints—an integrated in vitro experimental design paradigm is emerging <a href="#ref18b" class="ref-link">[Khan et al., 2024]</a> <a href="#ref3" class="ref-link">[Bley et al., 2022]</a>. Collectively, these developments demonstrate that AI has become a foundational tool in modern structural biochemistry and precision medicine.</div>
+      <div class="para-ko">개별 응용을 넘어, AI 기반 구조 예측의 개방성과 자동화는 연구 생태계를 재편하고 있다. Pfizer, Novartis, AstraZeneca를 포함한 주요 제약회사들은 구조 예측·분자 도킹·후보 화합물 스크리닝을 자동화하기 위해 AlphaFold와 RoseTTAFold 모델을 내부 신약 개발 파이프라인에 통합하기 시작했다 <a href="#ref6b" class="ref-link">[Callaway, 2025]</a> <a href="#ref41d" class="ref-link">[Varadi·Velankar, 2022]</a>. AI 유래 예측을 극저온 전자현미경, 생체 내(in vivo) 가교 질량분석, NMR 기반 제약 같은 실험적 검증 기법과 결합함으로써, 통합된 인 비트로(in vitro) 실험 설계 패러다임이 부상하고 있다 <a href="#ref18b" class="ref-link">[Khan 외, 2024]</a> <a href="#ref3" class="ref-link">[Bley 외, 2022]</a>. 종합하면 이러한 발전은 AI가 현대 구조생화학과 정밀의학에서 기초적 도구가 되었음을 보여준다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section" id="sec-5">
+  <div class="section-header" onclick="toggleSection(this)">5 Conclusion (결론) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div class="para-row">
+      <div class="para-en">AI-driven protein structure prediction represents a turning point in structural biology. The transition from physics-based energy modeling to deep learning-based sequence-structure inference has yielded dramatic improvements in both accuracy and speed. Models such as AlphaFold, RoseTTAFold, and ESMFold demonstrate the capacity of deep learning to generalize molecular reasoning across complex biological systems.</div>
+      <div class="para-ko">AI 기반 단백질 구조 예측은 구조생물학의 전환점을 나타낸다. 물리 기반 에너지 모델링에서 심층학습 기반 서열–구조 추론으로의 전환은 정확도와 속도 양면에서 극적인 개선을 가져왔다. AlphaFold, RoseTTAFold, ESMFold 같은 모델은 복잡한 생물학적 시스템 전반에 걸쳐 분자적 추론을 일반화하는 심층학습의 역량을 입증한다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Despite these advances, significant challenges remain. Current models typically output a single static conformation, whereas proteins in vivo populate dynamic conformational ensembles. Protein-ligand and protein-nucleic acid interaction prediction remains in an early stage, and model interpretability and reliability are not yet sufficient to replace experimental validation. Additionally, dataset bias and imbalance—particularly underrepresentation of membrane proteins and <span class="vocab">intrinsically disordered regions<span class="tip">본질적 무질서 영역(고정 구조가 없는 부위)</span></span>—continue to limit generalization.</div>
+      <div class="para-ko">이러한 진전에도 불구하고 중대한 과제가 남아 있다. 현재의 모델은 일반적으로 단일 정적 형태를 출력하지만, 생체 내(in vivo) 단백질은 동적 형태 앙상블을 형성한다. 단백질–리간드 및 단백질–핵산 상호작용 예측은 여전히 초기 단계에 있으며, 모델의 해석가능성과 신뢰성은 아직 실험적 검증을 대체할 만큼 충분하지 않다. 또한 데이터셋의 편향과 불균형—특히 막단백질과 <span class="km">본질적 무질서 영역(intrinsically disordered regions)</span>의 과소 대표—은 일반화를 계속 제약한다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">Future research directions include <a href="#ref43" class="ref-link">[Zheng et al., 2025]</a> <a href="#ref41e" class="ref-link">[Vignesh et al., 2024]</a> <a href="#ref29b" class="ref-link">[Mao et al., 2025]</a>: (i) tighter integration with physical modeling through molecular dynamics and quantum chemical methods to unify structure, energy, and dynamics; (ii) development of multi-state prediction frameworks incorporating sequence, structure, function, and experimental constraints to enhance interpretability; and (iii) establishment of automated design-validation-optimization pipelines enabling generative protein engineering.</div>
+      <div class="para-ko">향후 연구 방향은 다음을 포함한다 <a href="#ref43" class="ref-link">[Zheng 외, 2025]</a> <a href="#ref41e" class="ref-link">[Vignesh 외, 2024]</a> <a href="#ref29b" class="ref-link">[Mao 외, 2025]</a>: (i) 분자동역학과 양자화학적 방법을 통한 물리 모델링과의 더 긴밀한 통합으로 구조·에너지·동역학을 통일하는 것; (ii) 서열·구조·기능·실험적 제약을 통합하는 다중 상태(multi-state) 예측 프레임워크를 개발하여 해석가능성을 높이는 것; (iii) 생성형 단백질 공학을 가능하게 하는 자동화된 설계–검증–최적화 파이프라인을 구축하는 것.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en">With the emergence of models such as AlphaFold3 and rapid advances in generative protein models, AI-driven structure prediction is poised to evolve from static reconstruction toward dynamic understanding, providing foundational support for precision medicine, synthetic biology, and intelligent drug discovery.</div>
+      <div class="para-ko">AlphaFold3 같은 모델의 등장과 생성형 단백질 모델의 빠른 발전과 함께, AI 기반 구조 예측은 정적 재구성에서 동적 이해로 진화할 태세를 갖추었으며, 정밀의학·합성생물학·지능형 신약 개발에 기초적 지지를 제공한다.</div>
+    </div>
+    <div class="para-row">
+      <div class="para-en"><b>Author contributions / Funding / Acknowledgements / Conflict of interest / Generative AI statement / Publisher's note</b> — TY, YC, YW, HS, CD, JL contributed to writing (original draft and/or review & editing). No financial support was received. The authors thank editors and reviewers. No competing interests were declared. Generative AI was not used in creating the manuscript (figure alt text was AI-assisted by Frontiers). All claims are those of the authors.</div>
+      <div class="para-ko"><b>저자 기여 / 연구비 / 감사의 글 / 이해상충 / 생성형 AI 진술 / 발행인 주석</b> — TY·YC·YW·HS·CD·JL이 원고 작성(초안 및/또는 검토·편집)에 기여했다. 본 연구에 대한 재정적 지원은 없었다. 저자들은 편집진과 심사위원에게 감사를 표한다. 이해상충은 없다. 원고 작성에 생성형 AI는 사용되지 않았다(그림 대체텍스트는 Frontiers가 AI 보조로 생성). 모든 주장은 저자들의 것이다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- REFERENCES -->
+<div class="section" id="sec-references">
+  <div class="section-header" onclick="toggleSection(this)">References (참고문헌 · 40편) <span class="toggle">▼</span></div>
+  <div class="section-body">
+    <div style="padding:16px 20px;">
+      <div class="ref-item" id="ref1"><span class="ref-num">[1]</span> Abramson, J., et al. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. <i>Nature</i> 630, 493–500. doi:10.1038/s41586-024-07487-w</div>
+      <div class="ref-item" id="ref2"><span class="ref-num">[2]</span> Baek, M., et al. (2024). Accurate prediction of protein-nucleic acid complexes using RoseTTAFoldNA. <i>Nat. Methods</i> 21, 117–121. doi:10.1038/s41592-023-02086-5</div>
+      <div class="ref-item" id="ref3"><span class="ref-num">[3]</span> Bley, C. J., et al. (2022). Architecture of the cytoplasmic face of the nuclear pore. <i>Science</i> 376, eabm9129. doi:10.1126/science.abm9129</div>
+      <div class="ref-item" id="ref5"><span class="ref-num">[5]</span> Buttenschoen, M., Morris, G. M., Deane, C. M. (2024). PoseBusters: AI-Based docking methods fail to generate physically valid poses or generalise to novel sequences. <i>Chem. Sci.</i> 15, 3130–3139. doi:10.1039/D3SC04185A</div>
+      <div class="ref-item" id="ref6"><span class="ref-num">[6]</span> Callaway, E. (2022). AlphaFold's new rival? Meta AI predicts shape of 600 million proteins. <i>Nature</i> 611, 211–212. doi:10.1038/d41586-022-03539-1</div>
+      <div class="ref-item" id="ref6b"><span class="ref-num">[6b]</span> Callaway, E. (2025). AlphaFold is running out of data — so drug firms are building their own version. <i>Nature</i> 640 (8058), 297–298. doi:10.1038/d41586-025-00868-9</div>
+      <div class="ref-item" id="ref4"><span class="ref-num">[4]</span> Cao, D., et al. (2025). SurfDock is a surface-informed diffusion generative model for reliable and accurate protein-ligand complex prediction. <i>Nat. Methods</i> 22, 310–322. doi:10.1038/s41592-024-02516-y</div>
+      <div class="ref-item" id="ref7"><span class="ref-num">[7]</span> Chowdhury, R., et al. (2022). Single-sequence protein structure prediction using a language model and deep learning. <i>Nat. Biotechnol.</i> 40, 1617–1623. doi:10.1038/s41587-022-01432-w</div>
+      <div class="ref-item" id="ref8"><span class="ref-num">[8]</span> Dauparas, J., et al. (2022). Robust deep learning-based protein sequence design using ProteinMPNN. <i>Science</i> 378 (6615), 49–56. doi:10.1126/science.add2187</div>
+      <div class="ref-item" id="ref9"><span class="ref-num">[9]</span> Dill, K. A. (1990). Dominant forces in protein folding. <i>Biochemistry</i> 29, 7133–7155. doi:10.1021/bi00483a001</div>
+      <div class="ref-item" id="ref11"><span class="ref-num">[11]</span> Eisenstein, M. (2025). Freeze frame: cracking molecular motion. <i>Nature</i> 642 (8068), 827–829. doi:10.1038/d41586-025-01889-0</div>
+      <div class="ref-item" id="ref12"><span class="ref-num">[12]</span> Ferruz, N., Schmidt, S., Höcker, B. (2022). ProtGPT2 is a deep unsupervised language model for protein design. <i>Nat. Commun.</i> 13, 4348. doi:10.1038/s41467-022-32007-7</div>
+      <div class="ref-item" id="ref13"><span class="ref-num">[13]</span> Gambardella, G., et al. (2022). The Anfinsen dogma: intriguing details sixty-five years later. <i>IJMS</i> 23, 7759. doi:10.3390/ijms23147759</div>
+      <div class="ref-item" id="ref15"><span class="ref-num">[15]</span> Hekkelman, M. L., et al. (2023). AlphaFill: enriching AlphaFold models with ligands and cofactors. <i>Nat. Methods</i> 20, 205–213. doi:10.1038/s41592-022-01685-y</div>
+      <div class="ref-item" id="ref16"><span class="ref-num">[16]</span> Hou, M., et al. (2025). High-accuracy protein complex structure modeling based on sequence-derived structure complementarity. <i>Nat. Commun.</i> 16 (1), 10182. doi:10.1038/s41467-025-65090-7</div>
+      <div class="ref-item" id="ref16b"><span class="ref-num">[16b]</span> Ito, S., Kobayashi, C., Yagi, K., Sugita, Y. (2025). Toward understanding whole enzymatic reaction cycles using multi-scale molecular simulations. <i>Curr. Opin. Struct. Biol.</i> 95, 103153. doi:10.1016/j.sbi.2025.103153</div>
+      <div class="ref-item" id="ref17"><span class="ref-num">[17]</span> Jumper, J., et al. (2021). Highly accurate protein structure prediction with AlphaFold. <i>Nature</i> 596, 583–589. doi:10.1038/s41586-021-03819-2</div>
+      <div class="ref-item" id="ref18"><span class="ref-num">[18]</span> Khan, A. N., Khan, R. H. (2022). Protein misfolding and related human diseases: a comprehensive review of toxicity, proteins involved, and current therapeutic strategies. <i>Int. J. Biol. Macromol.</i> 223, 143–160. doi:10.1016/j.ijbiomac.2022.11.031</div>
+      <div class="ref-item" id="ref18b"><span class="ref-num">[18b]</span> Khan, R. T., et al. (2024). Analysis of mutations in precision oncology using the automated, accurate, and user-friendly web tool PredictONCO. <i>Comput. Struct. Biotechnol. J.</i> 24, 734–738. doi:10.1016/j.csbj.2024.11.026</div>
+      <div class="ref-item" id="ref23"><span class="ref-num">[23]</span> Lau, A. M., et al. (2024). Exploring structural diversity across the protein universe with the Encyclopedia of domains. <i>Science</i> 386, eadq4946. doi:10.1126/science.adq4946</div>
+      <div class="ref-item" id="ref24"><span class="ref-num">[24]</span> Lee, J.-W., et al. (2023). DeepFold: enhancing protein structure prediction through optimized loss functions, improved template features, and re-optimized energy function. <i>Bioinformatics</i> 39 (12), btad712. doi:10.1093/bioinformatics/btad712</div>
+      <div class="ref-item" id="ref27"><span class="ref-num">[27]</span> Lin, Z., et al. (2023). Evolutionary-scale prediction of atomic-level protein structure with a language model. <i>Science</i> 379, 1123–1130. doi:10.1126/science.ade2574</div>
+      <div class="ref-item" id="ref28"><span class="ref-num">[28]</span> Liu, Y., Chen, L., Chen, Q., Liu, H. (2025). Designing flexible protein structures and sampling protein conformations with a unified model using vector quantization and diffusion. <i>Natl. Sci. Rev.</i> 12 (11), nwaf290. doi:10.1093/nsr/nwaf290</div>
+      <div class="ref-item" id="ref29"><span class="ref-num">[29]</span> Lupas, A. N., et al. (2021). The breakthrough in protein structure prediction. <i>Biochem. J.</i> 478 (10), 1885–1890. doi:10.1042/BCJ20200963</div>
+      <div class="ref-item" id="ref29b"><span class="ref-num">[29b]</span> Mao, Y., et al. (2025). A multimodal model for protein function prediction. <i>Sci. Rep.</i> 15, 10465. doi:10.1038/s41598-025-94612-y</div>
+      <div class="ref-item" id="ref30"><span class="ref-num">[30]</span> Michel, van K., Stephanie, S. K., Charlotte, T. (2024). Fast and accurate protein structure search with Foldseek. <i>Nat. Biotechnol.</i> 42 (2), 243–246. doi:10.1038/s41587-023-01773-0</div>
+      <div class="ref-item" id="ref31"><span class="ref-num">[31]</span> Nijkamp, E., et al. (2023). ProGen2: exploring the boundaries of protein language models. <i>Cell Syst.</i> 14, 968–978.e3. doi:10.1016/j.cels.2023.10.002</div>
+      <div class="ref-item" id="ref32b"><span class="ref-num">[32b]</span> Pancino, N., et al. (2024). Protein–Protein interfaces: a graph neural network approach. <i>IJMS</i> 25, 5870. doi:10.3390/ijms25115870</div>
+      <div class="ref-item" id="ref32"><span class="ref-num">[32]</span> Pándy-Szekeres, G., et al. (2024). GproteinDb in 2024: new G protein-GPCR couplings, AlphaFold2-multimer models and interface interactions. <i>Nucleic Acids Res.</i> 52, D466–D475. doi:10.1093/nar/gkad1089</div>
+      <div class="ref-item" id="ref33"><span class="ref-num">[33]</span> Patton-Parfyonov, D. F., et al. (2025). Cystic Fibrosis-related neurodegenerative disease associated with tauopathy and cognitive decline in aged cf mice. <i>J. Cyst. Fibros.</i> 24 (4), 778–786. doi:10.1016/j.jcf.2025.04.003</div>
+      <div class="ref-item" id="ref35"><span class="ref-num">[35]</span> Russell, R. B., et al. (2004). A structural perspective on protein-protein interactions. <i>Curr. Opin. Struct. Biol.</i> 14 (3), 313–324. doi:10.1016/j.sbi.2004.04.006</div>
+      <div class="ref-item" id="ref36"><span class="ref-num">[36]</span> Senior, A. W., et al. (2020). Improved protein structure prediction using potentials from deep learning. <i>Nature</i> 577, 706–710. doi:10.1038/s41586-019-1923-7</div>
+      <div class="ref-item" id="ref37"><span class="ref-num">[37]</span> Service, R. F. (2021). Protein structures for all. <i>Science</i> 374, 1426–1427. doi:10.1126/science.acz9822</div>
+      <div class="ref-item" id="ref37b"><span class="ref-num">[37b]</span> Skolnick, J., Gao, M., Zhou, H., Singh, S. (2021). AlphaFold 2: why it works and its implications for understanding the relationships of protein sequence, structure, and function. <i>J. Chem. Inf. Model.</i> 61, 4827–4831. doi:10.1021/acs.jcim.1c01114</div>
+      <div class="ref-item" id="ref38"><span class="ref-num">[38]</span> Stahl, K., et al. (2023). Protein structure prediction with in-cell photo-crosslinking mass spectrometry and deep learning. <i>Nat. Biotechnol.</i> 41, 1810–1819. doi:10.1038/s41587-023-01704-z</div>
+      <div class="ref-item" id="ref38b"><span class="ref-num">[38b]</span> Sumida, K. H., et al. (2024). Improving protein expression, stability, and function with ProteinMPNN. <i>J. Am. Chem. Soc.</i> 146, 2054–2061. doi:10.1021/jacs.3c10941</div>
+      <div class="ref-item" id="ref39b"><span class="ref-num">[39b]</span> Tang, T., et al. (2025). Prediction of protein–protein interaction based on interaction-specific learning and hierarchical information. <i>BMC Biol.</i> 23, 236. doi:10.1186/s12915-025-02359-9</div>
+      <div class="ref-item" id="ref40b"><span class="ref-num">[40b]</span> Tunyasuvunakool, K. (2022). The prospects and opportunities of protein structure prediction with AI. <i>Nat. Rev. Mol. Cell Biol.</i> 23, 445–446. doi:10.1038/s41580-022-00488-5</div>
+      <div class="ref-item" id="ref40"><span class="ref-num">[40]</span> Tunyasuvunakool, K., et al. (2021). Highly accurate protein structure prediction for the human proteome. <i>Nature</i> 596 (7873), 590–596. doi:10.1038/s41586-021-03828-1</div>
+      <div class="ref-item" id="ref41b"><span class="ref-num">[41b]</span> Van Kempen, M., et al. (2024). Fast and accurate protein structure search with foldseek. <i>Nat. Biotechnol.</i> 42, 243–246. doi:10.1038/s41587-023-0173-0</div>
+      <div class="ref-item" id="ref41d"><span class="ref-num">[41d]</span> Varadi, M., Velankar, S. (2022). The impact of AlphaFold protein structure database on the fields of life sciences. <i>PROTEOMICS</i> 23 (17), e2200128. doi:10.1002/pmic.202200128</div>
+      <div class="ref-item" id="ref41c"><span class="ref-num">[41c]</span> Varadi, M., et al. (2022). AlphaFold Protein Structure Database: massively expanding the structural coverage of protein-sequence space with high-accuracy models. <i>Nucleic Acids Res.</i> 50, D439–D444. doi:10.1093/nar/gkab1061</div>
+      <div class="ref-item" id="ref41e"><span class="ref-num">[41e]</span> Vignesh, U., Parvathi, R., Gokul Ram, K. (2024). Ensemble deep learning model for protein secondary structure prediction using NLP metrics and explainable AI. <i>Results Eng.</i> 24, 103435. doi:10.1016/j.rineng.2024.103435</div>
+      <div class="ref-item" id="ref41"><span class="ref-num">[41]</span> Wang, X., et al. (2024). ProT-Diff: a Modularized and Efficient Strategy for de novo Generation of Antimicrobial Peptide Sequences by Integrating Protein Language and Diffusion Models. <i>Adv. Sci.</i> 11, 2406305. doi:10.1002/advs.202406305</div>
+      <div class="ref-item" id="ref39"><span class="ref-num">[39]</span> Wayment-Steele, H. K., et al. (2024). Predicting multiple conformations via sequence clustering and AlphaFold2. <i>Nature</i> 625, 832–839. doi:10.1038/s41586-023-06832-9</div>
+      <div class="ref-item" id="ref42"><span class="ref-num">[42]</span> Yang, Z., Zeng, X., Zhao, Y., Chen, R. (2023). AlphaFold2 and its applications in the fields of biology and medicine. <i>Sig Transduct. Target Ther.</i> 8, 115. doi:10.1038/s41392-023-01381-z</div>
+      <div class="ref-item" id="ref43"><span class="ref-num">[43]</span> Zheng, W., et al. (2025). Deep-learning-based single-domain and multidomain protein structure prediction with D-I-TASSER. <i>Nat. Biotechnol.</i> doi:10.1038/s41587-025-02654-4</div>
+      <div style="font-size:11px;color:#888;margin-top:10px;">※ 참조 번호는 본문 인용 추적을 위해 부여한 것으로, 원 논문의 알파벳순 배열을 따릅니다. 일부 항목(예: 6b, 16b, 41c~e)은 동일 저자 다년도 문헌을 구분하기 위한 편의 표기입니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div class="glossary" id="sec-glossary">
+  <h2>핵심 용어 사전 (Key Terms Glossary)</h2>
+  <div class="glossary-grid">
+    <div class="glossary-item"><span class="g-en">X-ray crystallography</span><span class="g-ko">X선 결정학 — 원자 수준 해상도, 결정 필요</span></div>
+    <div class="glossary-item"><span class="g-en">NMR spectroscopy</span><span class="g-ko">핵자기공명 분광법 — 용액·소형 단백질(~30 kDa)</span></div>
+    <div class="glossary-item"><span class="g-en">cryo-EM</span><span class="g-ko">극저온 전자현미경 — 거대 복합체</span></div>
+    <div class="glossary-item"><span class="g-en">homology modeling</span><span class="g-ko">상동성 모델링 — 유사 구조 주형 기반</span></div>
+    <div class="glossary-item"><span class="g-en">threading / fold recognition</span><span class="g-ko">스레딩 / 폴드 인식</span></div>
+    <div class="glossary-item"><span class="g-en">ab initio modeling</span><span class="g-ko">제1원리 모델링 — 주형 불요</span></div>
+    <div class="glossary-item"><span class="g-en">molecular dynamics (MD)</span><span class="g-ko">분자동역학 시뮬레이션</span></div>
+    <div class="glossary-item"><span class="g-en">MSA</span><span class="g-ko">다중 서열 정렬 — 공진화 신호 포착</span></div>
+    <div class="glossary-item"><span class="g-en">Evoformer</span><span class="g-ko">AlphaFold 진화정보 처리 핵심 모듈</span></div>
+    <div class="glossary-item"><span class="g-en">diffusion network</span><span class="g-ko">확산 신경망 — 노이즈 제거 기반 생성</span></div>
+    <div class="glossary-item"><span class="g-en">recycling</span><span class="g-ko">재활용 — 출력을 재귀 입력하는 반복 정제</span></div>
+    <div class="glossary-item"><span class="g-en">pLDDT</span><span class="g-ko">예측 국소 거리차 검정 — 국소 신뢰도 지표</span></div>
+    <div class="glossary-item"><span class="g-en">orphan protein</span><span class="g-ko">고아 단백질 — 상동 서열 없음</span></div>
+    <div class="glossary-item"><span class="g-en">protein language model</span><span class="g-ko">단백질 언어모델 — 서열 학습(ESM 등)</span></div>
+    <div class="glossary-item"><span class="g-en">co-folding</span><span class="g-ko">공동폴딩 — 단백질+리간드 동시 폴딩</span></div>
+    <div class="glossary-item"><span class="g-en">ProteinMPNN</span><span class="g-ko">메시지 전달 신경망 기반 서열 설계</span></div>
+    <div class="glossary-item"><span class="g-en">SBDD</span><span class="g-ko">구조 기반 신약 설계</span></div>
+    <div class="glossary-item"><span class="g-en">AlphaFoldDB</span><span class="g-ko">알파폴드 구조 DB — 2.14억+ 구조</span></div>
+    <div class="glossary-item"><span class="g-en">conformational ensemble</span><span class="g-ko">형태 앙상블 — 다수의 동적 형태 집합</span></div>
+    <div class="glossary-item"><span class="g-en">intrinsically disordered region</span><span class="g-ko">본질적 무질서 영역</span></div>
+    <div class="glossary-item"><span class="g-en">post-translational modification</span><span class="g-ko">번역후수식(PTM)</span></div>
+    <div class="glossary-item"><span class="g-en">GNN</span><span class="g-ko">그래프 신경망</span></div>
+  </div>
+</div>
+
+<!-- USER VOCAB -->
+<div class="user-vocab" id="sec-uservocab">
+  <h2>내가 추가한 단어장</h2>
+  <p>읽다가 모르는 단어를 클로드에게 알려주면 여기에 추가됩니다.</p>
+  <div id="userVocabList"></div>
+</div>
+
+</div>
+
+<script>
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.toggle');
+  if (body.style.display === 'none') {
+    body.style.display = '';
+    toggle.classList.remove('collapsed');
+    header.classList.remove('is-collapsed');
+  } else {
+    body.style.display = 'none';
+    toggle.classList.add('collapsed');
+    header.classList.add('is-collapsed');
+  }
+}
+</script>
+</body>
+</html>

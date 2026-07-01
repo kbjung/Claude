@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-06-15] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #0d1b2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 5%;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-left { flex: 1; min-width: 0; }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .header-badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent1);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .header-date {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+  header h1 {
+    font-size: 2.1rem; font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.9rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+
+  .top-banner {
+    background: linear-gradient(135deg, #0f2035, #162840);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 14px; padding: 20px 26px;
+    display: flex; gap: 18px; align-items: flex-start;
+    margin-bottom: 30px;
+  }
+  .top-banner .icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .top-banner h2 { font-size: 1rem; font-weight: 700; color: var(--accent1); margin-bottom: 5px; }
+  .top-banner p { font-size: 0.875rem; color: #cdd9e5; line-height: 1.65; }
+
+  .section-label {
+    font-size: 0.83rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+
+  /* ── 그리드 기본값: 모바일 1열 ── */
+  .grid, .grid-wide, .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.95rem; color: #cdd9e5; line-height: 1.68; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.79rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.94rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.85rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.94rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+
+  .summary-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(188,140,255,0.04) 100%);
+    border: 1px solid rgba(88,166,255,0.22);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 30px;
+  }
+  .summary-box-title {
+    font-size: 0.92rem; font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: #cdd9e5;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .summary-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.86rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.90rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.84rem; padding: 16px 0 32px; }
+
+  /* ── 반응형 브레이크포인트 ── */
+  @media (min-width: 620px) {
+    .grid-2                          { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid-4, .grid, .grid-wide { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1000px) {
+    .grid-2                          { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid, .grid-wide       { grid-template-columns: repeat(3, 1fr); }
+    .grid-4                          { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (min-width: 1280px) {
+    .grid-2                    { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid             { grid-template-columns: repeat(3, 1fr); }
+    .grid-4, .grid-wide        { grid-template-columns: repeat(4, 1fr); }
+    main                       { max-width: 1440px; }
+    .header-inner              { max-width: 1440px; }
+  }
+
+  @media (min-width: 1700px) {
+    main          { max-width: 1800px; }
+    .header-inner { max-width: 1800px; }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 20px 0 16px; }
+    .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .summary-box { padding: 16px; overflow-x: auto; }
+    .summary-table td:first-child { white-space: normal; }
+    .summary-table td:last-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">AI</span>
+        <span class="header-date">2026년 6월 15일 (월) KST · 자동 생성</span>
+      </div>
+      <h1><span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">Apple WWDC 2026 Gemini Siri · xAI Grok V9-Medium · Claude Opus 4.8 1위 · OpenAI IPO 준비 · 에이전트 플랫폼 경쟁 · 美 연방 AI법안 초안 · 콜로라도 AI법 시행 유예</p>
+    </div>
+    <div class="date-badge">2026.06.15.월 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- 이번 주 요약 배너 -->
+  <div class="summary-box">
+    <div class="summary-box-title">🔑 이번 주 핵심 요약</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>주체 / 이벤트</th>
+          <th>핵심 내용</th>
+          <th>분류</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Apple WWDC 2026</td>
+          <td>6월 8일 기조연설. Gemini 탑재 Siri AI 발표, iOS 27 Extensions로 Claude·ChatGPT·Gemini 선택 가능. Google과 연 $10억 파트너십</td>
+          <td><span class="tag">플랫폼</span></td>
+        </tr>
+        <tr>
+          <td>xAI Grok V9-Medium</td>
+          <td>1.5조 파라미터 훈련 완료, 6월 중순 공개 예정. Grok 5 (6조 파라미터) 는 Q2 내 출시 불투명 (Polymarket 33%)</td>
+          <td><span class="tag p">모델</span></td>
+        </tr>
+        <tr>
+          <td>Claude Opus 4.8</td>
+          <td>Artificial Analysis Intelligence Index 61.4점으로 GPT-5.5(60.2)를 앞서 전체 1위. 5월 말 출시</td>
+          <td><span class="tag p">모델</span></td>
+        </tr>
+        <tr>
+          <td>OpenAI IPO 준비</td>
+          <td>수주 내 SEC 비밀 상장 신청 예정. 9월 IPO 전망. xAI의 경쟁사 Anthropic은 이미 6월 1일 신청 완료</td>
+          <td><span class="tag y">기업</span></td>
+        </tr>
+        <tr>
+          <td>에이전트 플랫폼 전쟁</td>
+          <td>AWS·Google Cloud·Microsoft·Databricks 등 대형 플랫폼 모두 에이전트를 새로운 소프트웨어 레이어로 선언. 기업 앱 40% 에이전트 탑재 전망(Belitsoft)</td>
+          <td><span class="tag g">산업</span></td>
+        </tr>
+        <tr>
+          <td>美 연방 AI법안 GAAIA</td>
+          <td>6월 4일 양당 초안 발표. 프론티어 모델 공개 의무·제3자 감사·내부고발자 보호 4개 챕터. 미국 최초 포괄적 연방 AI 규제</td>
+          <td><span class="tag r">정책</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 모델 출시 & 업데이트 -->
+  <div class="section-label"><span class="sdot p"></span> 모델 출시 &amp; 업데이트</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1535;">🤖</div>
+        <h3>Claude Opus 4.8 — AI 벤치마크 전체 1위</h3>
+      </div>
+      <div class="card-body">
+        Anthropic이 5월 말 출시한 Claude Opus 4.8이 Artificial Analysis Intelligence Index에서 <strong>61.4점</strong>을 기록하며 GPT-5.5(60.2)를 제치고 전체 1위에 올랐다. 코딩·추론·에이전트 태스크 전반에서 고른 성능을 보이며, 현재 가장 균형 잡힌 프론티어 모델로 평가받고 있다.
+      </div>
+      <div class="tags">
+        <span class="tag p">Anthropic</span>
+        <span class="tag p">Claude Opus 4.8</span>
+        <span class="tag">벤치마크</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1f2e;">⚡</div>
+        <h3>xAI Grok V9-Medium — 1.5조 파라미터 훈련 완료</h3>
+      </div>
+      <div class="card-body">
+        xAI의 Grok 신규 모델 V9-Medium이 <strong>1.5조 파라미터</strong> 규모로 훈련을 마쳤으며 6월 중순 공개가 예상된다. 현재 프로덕션 모델의 3배 규모다. 한편 플래그십인 Grok 5(약 6조 파라미터)는 Q1 출시 목표를 놓쳤고, Polymarket 기준 6월 30일 이전 출시 확률은 33%에 그친다.
+        <br><br>
+        6월 4일에는 Grok Voice(음성 인터페이스)와 Grok Imagine 1.5 Preview(이미지 생성 API)가 공개되었다.
+      </div>
+      <div class="tags">
+        <span class="tag p">xAI</span>
+        <span class="tag">Grok V9</span>
+        <span class="tag y">Grok 5 지연</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0f2035;">🧠</div>
+        <h3>GPT-5.5 & OpenAI 모델 동향</h3>
+      </div>
+      <div class="card-body">
+        GPT-5.5는 4월 23일 출시되어 AI Index 60.2점으로 Claude Opus 4.8에 소폭 뒤처진다. GPT-5.4(3월 출시)는 네이티브 컴퓨터 사용 기능과 100만 토큰 컨텍스트를 지원하는 프로페셔널 모델로 기업 시장에 안착 중이다. OpenAI는 수주 내 SEC에 IPO를 비밀 신청할 예정이며, 9월 상장 가능성이 점쳐진다.
+      </div>
+      <div class="tags">
+        <span class="tag">OpenAI</span>
+        <span class="tag">GPT-5.5</span>
+        <span class="tag y">IPO 예정</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 플랫폼 & 빅테크 동향 -->
+  <div class="section-label"><span class="sdot g"></span> 플랫폼 &amp; 빅테크 동향</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1a1a;">🍎</div>
+        <h3>Apple WWDC 2026 — Gemini 탑재 Siri AI 공개</h3>
+      </div>
+      <div class="card-body">
+        6월 8일 Apple Park에서 열린 WWDC 2026 기조연설에서 Tim Cook은 <strong>Gemini 기반 Siri AI</strong>를 전면 공개했다. Google의 1.2조 파라미터급 커스텀 Gemini 모델이 탑재되며, 연간 약 $10억 규모의 파트너십이다.
+        <br><br>
+        iOS 27에는 공개되지 않은 <strong>Extensions 프레임워크</strong>가 포함되어 있어, 사용자가 Siri 기본 어시스턴트를 Claude·ChatGPT·Gemini 중에서 선택할 수 있게 된다. 이는 Claude가 처음으로 iPhone의 기본 AI 옵션으로 편입되는 사례다.
+      </div>
+      <div class="tags">
+        <span class="tag g">Apple</span>
+        <span class="tag g">Google</span>
+        <span class="tag">WWDC 2026</span>
+        <span class="tag p">Claude 통합</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0e1e10;">🏢</div>
+        <h3>에이전트 플랫폼 전쟁 — 기업 AI의 새로운 전선</h3>
+      </div>
+      <div class="card-body">
+        2026년 6월은 "AI 에이전트가 실제로 작동하는가?"에서 "우리 회사의 어느 부서를 먼저 에이전트화할까?"로 질문이 바뀐 전환점이다. AWS, Google Cloud, Microsoft, GitHub, Databricks, IBM, BCG 등 주요 플랫폼이 일제히 에이전트를 새로운 소프트웨어 레이어로 선언했다.
+        <br><br>
+        Belitsoft 예측에 따르면 <strong>2026년 말까지 기업 앱의 40%</strong>에 태스크별 에이전트가 탑재될 전망이다. 현재 핵심 경쟁은 파운데이션 모델 성능이 아닌 메모리·컨텍스트·자율 액션을 담당하는 <em>에이전트 클라이언트</em> 주도권 싸움이다.
+      </div>
+      <div class="tags">
+        <span class="tag g">에이전트</span>
+        <span class="tag g">엔터프라이즈</span>
+        <span class="tag">플랫폼 경쟁</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책 & 규제 -->
+  <div class="section-label"><span class="sdot r"></span> 정책 &amp; 규제</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e0e0e;">⚖️</div>
+        <h3>美 연방 GAAIA 초안 — 최초 포괄적 AI 연방법</h3>
+      </div>
+      <div class="card-body">
+        6월 4일 Jay Obernolte(공화·CA)와 Lori Trahan(민주·MA) 의원이 <strong>Great American Artificial Intelligence Act of 2026(GAAIA)</strong> 토론 초안을 공개했다. 미국 최초의 포괄적 연방 AI 규제 프레임워크로, 4개 챕터로 구성된다.
+        <br><br>
+        핵심 내용: ① 프론티어 AI 모델 정보 공시 의무, ② 독립 검증 기관(IVO) 통한 제3자 감사, ③ 내부고발자 보호, ④ 사이버보안·R&D·국제협력 조항. 아직 토론 초안 단계로 입법까지는 시간이 필요하다.
+      </div>
+      <div class="tags">
+        <span class="tag r">미국</span>
+        <span class="tag r">연방 규제</span>
+        <span class="tag r">GAAIA</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1200;">📋</div>
+        <h3>콜로라도 AI법 사실상 전면 개정 — 시행 2027년으로 연기</h3>
+      </div>
+      <div class="card-body">
+        콜로라도 주지사 Polis가 5월 14일 SB 189에 서명, 기존 Colorado AI Act를 사실상 전면 개정했다. 시행일이 기존 <strong>2026년 6월 30일 → 2027년 1월 1일</strong>로 연기되고, 가장 강력했던 의무 3가지(리스크 관리 프로그램, 영향 평가, 알고리즘 차별 방지 주의 의무)가 삭제되었다.
+        <br><br>
+        개정법은 '결과적 결정(consequential decisions)'에 사용되는 자동화 의사결정 기술(ADMT) 규제에 초점을 맞추며, 기업 부담이 대폭 완화되었다.
+      </div>
+      <div class="tags">
+        <span class="tag r">콜로라도</span>
+        <span class="tag y">시행 연기</span>
+        <span class="tag">ADMT</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 연구 & 기술 동향 -->
+  <div class="section-label"><span class="sdot y"></span> 연구 &amp; 기술 동향</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1800;">🔬</div>
+        <h3>멀티모달 LLM 2026 — 생산 환경 신뢰성이 핵심 과제</h3>
+      </div>
+      <div class="card-body">
+        2026년 AI 연구의 중심축이 모델 경쟁에서 <strong>"어떻게 신뢰할 수 있는 멀티모달 생산 시스템을 구축할까"</strong>로 이동했다. 주목할 연구 방향으로는 TIGER(그래프 기반 증거 라우팅으로 멀티모달 환각 감소)와 Robust-U1(시각적 노이즈에 강건한 MLLM 자가 복구)이 있다.
+        <br><br>
+        또한 텍스트-이미지 디퓨전 모델 연구에서 3B 파라미터급 완전 오픈 모델 i1이 최상위급 성능에 도달하는 효율화 트렌드가 두드러진다.
+      </div>
+      <div class="tags">
+        <span class="tag y">멀티모달</span>
+        <span class="tag y">환각 감소</span>
+        <span class="tag">TIGER</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a1200;">💻</div>
+        <h3>코딩 AI — MAI-Code-1-Flash · SWE-Bench 경쟁</h3>
+      </div>
+      <div class="card-body">
+        Microsoft가 Build 2026(6월 2주)에서 발표한 <strong>MAI-Code-1-Flash</strong>(5B 파라미터)가 SWE-Bench Pro에서 51%를 기록했다. Microsoft는 OpenAI 데이터 없이 독자 개발한 MAI-Thinking-1 추론 모델도 공개하며 독립적 AI 역량을 과시했다.
+        <br><br>
+        한편 MetaMask는 6월 8일 AI 에이전트가 EVM 체인과 DeFi 프리미티브에서 온체인 거래를 실행할 수 있는 <strong>Agent Wallet</strong> 얼리 액세스를 공개하며 AI-Web3 융합을 본격화했다.
+      </div>
+      <div class="tags">
+        <span class="tag">Microsoft</span>
+        <span class="tag">MAI-Code-1-Flash</span>
+        <span class="tag y">SWE-Bench 51%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0f2035;">🛡️</div>
+        <h3>AI 에이전트 보안 취약점 — 새로운 위협 벡터 부상</h3>
+      </div>
+      <div class="card-body">
+        에이전트 AI가 기업 시스템에 깊이 통합되면서 프롬프트 인젝션, 메모리 오염, 과도한 권한 확대 등 <strong>에이전트 특화 보안 취약점</strong>이 새로운 위협 벡터로 부상하고 있다. 미국 정부는 Anthropic의 일부 모델(Fable 5, Mythos 5)에 대해 탈옥 위험을 이유로 글로벌 접근 제한을 명령한 것으로 알려져 보안·거버넌스 논의를 촉발했다.
+        <br><br>
+        Aible은 NVIDIA Nemotron 3 Ultra를 장기 실행 에이전트의 거버넌스 레이어로 통합한 AibleClaw를 6월 4일 발표했다.
+      </div>
+      <div class="tags">
+        <span class="tag r">에이전트 보안</span>
+        <span class="tag r">거버넌스</span>
+        <span class="tag">프롬프트 인젝션</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources">
+    <h2>📎 Sources</h2>
+    <ul>
+      <li><a href="https://llm-stats.com/ai-news" target="_blank">LLM News Today (June 2026) – AI Model Releases · llm-stats.com</a></li>
+      <li><a href="https://www.buildfastwithai.com/blogs/ai-news-today-june-8-2026" target="_blank">AI News Today - June 8, 2026: 16 Biggest Stories · buildfastwithai.com</a></li>
+      <li><a href="https://overchat.ai/ai-hub/grok-5-release-date" target="_blank">Grok 5: Release Date, Features, Benchmarks & Everything We Know · overchat.ai</a></li>
+      <li><a href="https://www.techtimes.com/articles/317328/20260528/grok-ai-new-model-triples-parameter-count-targets-coding-lead-release-expected-mid-june.htm" target="_blank">Grok AI V9-Medium: 1.5T Parameters, Mid-June Release · techtimes.com</a></li>
+      <li><a href="https://www.business-standard.com/technology/tech-news/wwdc-2026-apple-unveils-siri-ai-gemini-powered-apple-intelligence-more-126060900042_1.html" target="_blank">WWDC 2026: Apple unveils Siri AI, Gemini-powered Apple Intelligence · business-standard.com</a></li>
+      <li><a href="https://www.notebookcheck.net/Siri-to-become-the-most-flexible-AI-chatbot-with-Gemini-and-Claude-support.1259978.0.html" target="_blank">Siri to support Gemini and Claude via iOS 27 Extensions · notebookcheck.net</a></li>
+      <li><a href="https://medium.com/adi-insights-innovations-collective/the-ai-update-june-5-2026-agents-are-working-regulation-is-moving-and-the-hype-is-over-b475b737bd76" target="_blank">The AI Update — June 5, 2026: Agents Are Working · Medium</a></li>
+      <li><a href="https://windowsnews.ai/article/agentic-ai-platform-war-who-controls-enterprise-memory-context-and-action-in-june-2026.423571" target="_blank">Agentic AI Platform War: Who Controls Enterprise Memory in June 2026 · windowsnews.ai</a></li>
+      <li><a href="https://www.mcdonaldhopkins.com/insights/news/the-great-american-ai-act-what-businesses-need-to-know" target="_blank">The Great American AI Act: What businesses need to know · mcdonaldhopkins.com</a></li>
+      <li><a href="https://www.crowell.com/en/insights/client-alerts/colorado-hits-reset-on-ai-regulation-sb-26-189-repeals-and-reenacts-the-colorado-ai-act" target="_blank">Colorado Hits Reset on AI Regulation: SB 26-189 · crowell.com</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/GPT-5.4" target="_blank">GPT-5.4 — Wikipedia</a></li>
+      <li><a href="https://www.analyticsvidhya.com/blog/2026/05/top-llm-research-papers-2026/" target="_blank">Top 10 LLM Research Papers of 2026 · analyticsvidhya.com</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>자동 생성 · 2026-06-15 KST · AI 핵심뉴스 weekly</footer>
+
+</body>
+</html>

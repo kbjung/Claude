@@ -1,0 +1,37 @@
+[Installation]
+
+Save the attached SVL file at the following folder.
+
+ 
+
+$MOE/custom/svl/molsis.svl
+
+ 
+
+Note: $MOE is MOE installed folder.
+
+Note: If you do not have these folders, create them.
+
+ 
+
+[Usage]
+
+1. Execute the following command in SVL Commands window, which starts up by clicking “SVL” button on the upper right in MOE window.
+
+ 
+
+db_enu_seq  [seq: ["ADFG", "Y", "GH", "YTNMKL"], pfx: 'output_file_prefix']
+
+ 
+
+output_file_prefix is output filename prefix.
+
+["ADFG", "Y", "GH", "YTNMKL"] is a sequence query. This query enumerates (4 * 1 * 2 * 6 = ) 48 sequences. The output sequences are
+
+ 
+
+AYGY, DYGY,…, GYHL
+
+ 
+
+Please specify sequence combinations by listing the one-letter code of amino acid residues that can be taken for each element.

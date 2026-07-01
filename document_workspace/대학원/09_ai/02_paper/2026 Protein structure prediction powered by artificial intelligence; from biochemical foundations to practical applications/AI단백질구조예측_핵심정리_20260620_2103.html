@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- 이전 버전: (신규 생성) -->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 단백질 구조 예측 (Yin et al. 2026) 핵심 정리</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, 'Malgun Gothic', sans-serif; background: #f5f7fa; color: #2d3748; line-height: 1.7; }
+  .top-nav { position: sticky; top: 0; z-index: 100; background: #1a365d; color: #fff; padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .nav-links { display: flex; flex-wrap: wrap; gap: 5px; }
+  .nav-links a { color: #bee3f8; text-decoration: none; font-size: 11.5px; padding: 3px 10px; border-radius: 12px; background: rgba(255,255,255,0.1); transition: all .2s; white-space: nowrap; }
+  .nav-links a:hover { background: #3182ce; color: #fff; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  .paper-meta { background: linear-gradient(135deg,#ebf8ff,#f0fff4); border:1px solid #bee3f8; border-radius:10px; padding:22px; margin-bottom:22px; }
+  .paper-meta .meta-title { font-size:18px; font-weight:700; color:#1a365d; margin-bottom:8px; line-height:1.5; }
+  .paper-meta .meta-sub { font-size:14px; color:#2b6cb0; font-weight:600; margin-bottom:12px; }
+  .paper-meta .meta-row { font-size:12.5px; color:#4a5568; margin-bottom:4px; }
+  .card { background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:22px 26px; margin-bottom:18px; scroll-margin-top:80px; }
+  .card h2 { font-size:17px; color:#1a365d; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #2b6cb0; display:flex; align-items:center; gap:8px; }
+  .card h3 { font-size:14px; color:#2b6cb0; margin:16px 0 8px; }
+  .card p { font-size:13.5px; margin-bottom:10px; }
+  .card ul { margin:0 0 10px 20px; }
+  .card li { font-size:13.5px; margin-bottom:6px; }
+  .badge { display:inline-block; white-space:nowrap; font-size:11px; font-weight:700; padding:2px 9px; border-radius:11px; }
+  .badge-orig { background:#bee3f8; color:#1a365d; }
+  .badge-recon { background:#fbd38d; color:#7b341e; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin:8px 0 12px; }
+  th,td { border:1px solid #e2e8f0; padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#edf2f7; color:#2b6cb0; font-weight:700; }
+  td .nm { font-weight:700; color:#c53030; white-space:nowrap; }
+  .takeaway { background:#fffbeb; border-left:4px solid #d69e2e; border-radius:6px; padding:12px 16px; margin:12px 0; font-size:13px; }
+  .takeaway b { color:#975a16; }
+  .recon-box { background:#fffaf0; border:2px dashed #dd6b20; border-radius:10px; padding:20px 24px; margin-bottom:18px; scroll-margin-top:80px; }
+  .recon-box h2 { color:#7b341e; border-bottom-color:#dd6b20; }
+  .recon-note { font-size:12px; color:#7b341e; background:#feebc8; border-radius:6px; padding:8px 12px; margin-bottom:14px; }
+  .flow { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0; }
+  .flow .step { background:#fff; border:1px solid #f6ad55; border-radius:8px; padding:8px 12px; font-size:12px; font-weight:600; color:#7b341e; }
+  .flow .arr { color:#dd6b20; font-weight:700; }
+  .limit { background:#fff5f5; border-left:4px solid #e53e3e; border-radius:6px; padding:10px 14px; margin:8px 0; font-size:13px; }
+  .src { font-size:11px; color:#888; margin-top:6px; }
+  @media (max-width:768px){ .container{padding:14px;} .glossary-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<nav class="top-nav"><div class="nav-inner"><div class="nav-links">
+  <a href="#meta">논문정보</a>
+  <a href="#tldr">한눈 요약</a>
+  <a href="#orig">A. 원문 구조</a>
+  <a href="#models">핵심 모델</a>
+  <a href="#apps">응용</a>
+  <a href="#limit">한계·미래</a>
+  <a href="#recon">B. 요약자 재구성</a>
+</div></div></nav>
+
+<div class="container">
+
+<div class="paper-meta" id="meta">
+  <div class="meta-title">AI 기반 단백질 구조 예측 — 핵심 정리</div>
+  <div class="meta-sub">Protein structure prediction powered by artificial intelligence: from biochemical foundations to practical applications</div>
+  <div class="meta-row">Yin T, Chen Y, Wang Y, Su H, Duan C, Liu J · <i>Frontiers in Molecular Biosciences</i> 13:1767821 (2026) · Mini Review · Open Access (CC BY)</div>
+  <div class="meta-row">DOI: 10.3389/fmolb.2026.1767821 · 📅 정리일: 2026-06-20</div>
+</div>
+
+<!-- TLDR -->
+<div class="card" id="tldr">
+  <h2>⚡ 한눈 요약 (3문장)</h2>
+  <ul>
+    <li>실험적 구조 규명(X선·NMR·cryo-EM)은 정확하지만 <b>저처리량·고비용</b>이고, 전통적 계산법은 주형이 없으면 정확도가 떨어진다 → AI가 이 간극을 메웠다.</li>
+    <li><b>AlphaFold3</b>(확산 기반, 원자 수준 정확도)·<b>RoseTTAFold</b>(3트랙, 빠름·복합체/돌연변이)·<b>ESMFold</b>(언어모델, MSA 불필요·초고속)가 대표 축이며, 신약개발·효소공학·질병연구로 응용이 확장됐다.</li>
+    <li>다만 예측은 <b>단일 정적 구조</b>이고 pLDDT는 신뢰도일 뿐 기능 정확성의 보장이 아니므로, <b>가설 생성 모델</b>로 취급해 실험 검증과 결합해야 한다(저자가 반복 강조).</li>
+  </ul>
+  <div class="takeaway"><b>저자의 핵심 경고:</b> 구조예측·도킹·설계·DB구축·평가는 "하나의 연속 파이프라인"이 아니라 가정·불확실성·검증요건이 다른 별개 과제다. 이를 통합 워크플로우로 보면 현 역량을 과장하게 된다.</div>
+</div>
+
+<!-- ===== PART A : 원문 구조 ===== -->
+<div class="card" id="orig" style="border-top:4px solid #2b6cb0;">
+  <h2><span class="badge badge-orig">A. 논문이 실제로 다룬 구조</span></h2>
+  <p>아래는 원 논문의 목차(섹션)를 그대로 따른 구성입니다.</p>
+  <table>
+    <tr><th style="width:140px;">섹션</th><th>핵심 내용</th></tr>
+    <tr><td><b>Abstract</b><br>초록</td><td>3D 구조가 기능을 결정 → 실험법의 한계 → 심층학습·단백질 언어모델이 변혁. AF3·RoseTTAFold는 실험 근접 정확도, ESMFold는 속도·확장성.</td></tr>
+    <tr><td><b>1. Introduction</b><br>서론</td><td>단백질 오폴딩과 질병(알츠하이머·낭포성 섬유증). 서열 DB가 구조 규명을 추월 → 고처리량 예측 수요. AF2는 인간 프로테옴 98.5% 커버(pLDDT&gt;70). 그림 1로 전체 구성 제시.</td></tr>
+    <tr><td><b>2. Traditional methods</b><br>전통적 방법</td><td>1차~4차 구조와 폴딩 힘(소수성·수소결합·반데르발스·정전기), 앤핀슨 가설. 실험법(X선·NMR·cryo-EM)과 고전 계산법(상동성·스레딩·ab initio)의 장단점.</td></tr>
+    <tr><td><b>3. Breakthroughs</b><br>AI 돌파구</td><td>AF 시리즈·RoseTTAFold·언어모델의 구조와 성능 비교. 3대 추세: ①다중모델 융합(AlphaLink/AlphaFill/AF-Cluster·Boltz) ②다중모달·다중과제 학습(AF3·UniFold·Multimer) ③데이터베이스의 결정적 역할. → 표 1.</td></tr>
+    <tr><td><b>4. Applications</b><br>생화학·의학 응용</td><td>신약개발(표적동정·가상스크리닝·AlphaFoldDB 2.14억+ 구조), 효소공학(ESMFold+GNN·MD·ProteinMPNN), 질병연구(Aβ·p53·KRAS·BRCA1). Pfizer·Novartis·AstraZeneca 파이프라인 통합.</td></tr>
+    <tr><td><b>5. Conclusion</b><br>결론</td><td>물리 기반 → 심층학습 기반 전환의 전환점. 남은 과제(정적 구조·상호작용 예측 초기단계·데이터 편향)와 미래 3방향(물리모델 통합·다중상태 예측·자동 설계-검증-최적화).</td></tr>
+  </table>
+</div>
+
+<!-- 핵심 모델 -->
+<div class="card" id="models">
+  <h2>🧬 핵심 모델 비교 <span class="badge badge-orig" style="font-size:10px;">원문 표1·본문 기반</span></h2>
+  <table>
+    <tr><th style="width:130px;">모델</th><th>구조·원리</th><th>강점</th><th>약점·주의</th></tr>
+    <tr><td><span class="nm">AlphaFold3</span></td><td>MSA + 개선된 Evoformer + 확산 신경망(원자 구름→수렴), "recycling" 반복정제</td><td>원자 수준 정확도, 빠른 추론, 단백질–단백질/핵산·다중도메인·PTM·고아 단백질에 강함, DNA/RNA 복합체 예측</td><td>계면 동역학·무주형 소분자/PTM 예측 한계</td></tr>
+    <tr><td><span class="nm">RoseTTAFold</span></td><td>3트랙 네트워크(1D 서열·2D 거리지도·3D 좌표 통합)</td><td>고속, 복합체·돌연변이 예측 우수, 강한 일반화</td><td>AF3 대비 정확도 약간 낮음</td></tr>
+    <tr><td><span class="nm">ESMFold / ESM-2</span></td><td>대규모 단백질 언어모델, 종단간 단일서열 예측(MSA 불필요)</td><td>수십~수백 배 빠름, 고아 단백질·메타게놈에 적합, 서열 생성·설계 지원</td><td>해석가능성·신뢰성 낮음, 예측 정확성 불확실</td></tr>
+  </table>
+  <div class="takeaway"><b>보조·확장 도구:</b> AlphaLink(실험 거리제약)·AlphaFill(리간드/보조인자 보강)·AF-Cluster(다중형태)·Boltz 시리즈(전원자 공동폴딩+결합친화도)·ProteinMPNN(서열 설계)·DiffDock/SurfDock(도킹)·Foldseek/PoseBusters(검색·평가).</div>
+</div>
+
+<!-- 응용 -->
+<div class="card" id="apps">
+  <h2>💊 3대 응용 영역</h2>
+  <h3>1) 신약 개발 (Drug Discovery)</h3>
+  <p>표적 동정·가상 스크리닝 정확도 향상. <b>AlphaFoldDB</b>는 2.14억+ 예측 구조 제공(공개·무료). 단, 루프·곁사슬·결합부위 기하 부정확, 리간드/보조인자/물 분자 결여 → SBDD에는 추가 정제·검증 필수.</p>
+  <h3>2) 효소 공학 (Enzyme Engineering)</h3>
+  <p>ESMFold로 고정확 구조 예측 → GNN·어텐션으로 촉매 잔기 지목 → MD로 활성부위 동역학 검토 → <b>ProteinMPNN</b>으로 안정·가용성 높은 서열 신생 설계.</p>
+  <h3>3) 질병 연구 (Disease Research)</h3>
+  <p>알츠하이머 Aβ 응집(AF2+MD로 β-시트 배열 탐색), 종양 단백질(p53·KRAS·BRCA1) 돌연변이 안정성 변화 신속 조사 → 표적 치료제 개발 지원.</p>
+  <div class="src">제약사 사례: Pfizer·Novartis·AstraZeneca가 AF/RoseTTAFold를 내부 파이프라인에 통합. cryo-EM·가교 MS·NMR 제약과 결합한 통합 실험 설계 패러다임 부상.</div>
+</div>
+
+<!-- 한계·미래 -->
+<div class="card" id="limit">
+  <h2>⚠️ 한계와 미래 방향</h2>
+  <h3>현재 한계 (저자 강조)</h3>
+  <div class="limit"><b>정적 구조:</b> 단일 형태만 출력 — 생체 내 동적 형태 앙상블 미포착.</div>
+  <div class="limit"><b>신뢰도 ≠ 정확성:</b> pLDDT는 국소 구조 일관성 지표일 뿐, 기능·상호작용·결합부위 정확성을 보장하지 않음.</div>
+  <div class="limit"><b>상호작용 예측 초기:</b> 단백질–리간드/핵산 예측은 아직 초기 단계, 해석가능성·신뢰성 부족.</div>
+  <div class="limit"><b>데이터 편향:</b> 막단백질·본질적 무질서 영역(IDR) 과소 대표 → 일반화 제약.</div>
+  <h3>미래 3방향</h3>
+  <ul>
+    <li>(i) 분자동역학·양자화학과의 통합 → 구조·에너지·동역학 통일</li>
+    <li>(ii) 서열·구조·기능·실험제약 통합 <b>다중상태 예측</b> 프레임워크 → 해석가능성 향상</li>
+    <li>(iii) 자동 <b>설계–검증–최적화</b> 파이프라인 → 생성형 단백질 공학</li>
+  </ul>
+</div>
+
+<!-- ===== PART B : 요약자 재구성 ===== -->
+<div class="recon-box" id="recon">
+  <h2><span class="badge badge-recon">B. 요약자 재구성 · 비공식</span></h2>
+  <div class="recon-note">⚠️ 아래 도식·분류는 <b>독자 이해를 돕기 위해 본 요약자(Claude)가 정리한 것</b>으로, 원 논문에 명시된 공식 프레임워크가 아닙니다. 원문 내용은 위 "A. 원문 구조"를 참고하세요.</div>
+
+  <h3 style="color:#7b341e;">① "방법 간극 → AI 해결" 흐름 (요약자 재구성)</h3>
+  <div class="flow">
+    <span class="step">실험법: 정확하나 저처리량·고비용</span><span class="arr">+</span>
+    <span class="step">고전 계산법: 주형 없으면 부정확</span><span class="arr">→ 간극 →</span>
+    <span class="step">AI(딥러닝·언어모델)</span><span class="arr">→</span>
+    <span class="step">고처리량 + 실험 근접 정확도</span>
+  </div>
+  <p style="font-size:12px;color:#7b341e;">※ 논문은 이 인과를 서술하지만 위와 같은 단계 도식으로 명시하지는 않음.</p>
+
+  <h3 style="color:#7b341e;">② 세 계열의 "트레이드오프" 한 줄 요약 (요약자 재구성)</h3>
+  <table>
+    <tr><th>축</th><th>정확도</th><th>속도</th><th>MSA 의존</th><th>최적 용도(요약자 견해)</th></tr>
+    <tr><td><b>AlphaFold3</b></td><td>최고</td><td>중</td><td>있음</td><td>고정밀 단일/복합체 구조</td></tr>
+    <tr><td><b>RoseTTAFold</b></td><td>높음</td><td>빠름</td><td>일부</td><td>복합체·돌연변이 신속 예측</td></tr>
+    <tr><td><b>ESMFold</b></td><td>중</td><td>최고</td><td>없음</td><td>대규모·고아·메타게놈 스캔</td></tr>
+  </table>
+  <p style="font-size:12px;color:#7b341e;">※ "정확도/속도" 상대 등급은 본문 서술(예: ESMFold 수십~수백 배 빠름, RoseTTAFold가 AF3보다 약간 낮은 정확도)을 요약자가 등급화한 것임.</p>
+
+  <div class="recon-note" style="margin-top:14px;">📌 검증 메모: 본 요약자가 덧붙인 도식(①②)과 등급표는 모두 "재구성" 라벨을 부여했으며, 원문 명시 사실(모델 특성·응용·한계·미래방향)과는 시각적으로 구분했습니다.</div>
+</div>
+
+<div style="text-align:center;font-size:11px;color:#a0aec0;padding:10px;">원문: Yin et al., Front. Mol. Biosci. 13:1767821 (2026) · DOI 10.3389/fmolb.2026.1767821 (CC BY)</div>
+
+</div>
+</body>
+</html>

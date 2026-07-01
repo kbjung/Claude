@@ -1,0 +1,146 @@
+function pro_SeqCreate;
+function pro_ResAppend, pro_ResPrepend;
+function pro_Acetylate;
+function MM;
+
+local function next_idx [cur, num]
+    local p = 1;
+    local l_num = length num;
+    loop
+	if istrue (cur(p) >= num(p)) then
+	    if istrue (p >= l_num) then
+		return [];
+	    else
+		p = inc p;
+	    endif
+	else
+	    cur(p) = inc cur(p);
+	    if istrue (p > 1) then
+		cur = put [cur, igen dec p, 1];
+	    endif
+	    break;
+	endif
+    endloop
+    return cur;
+endfunction
+
+const ENT_LMT = 1000000;
+// const ENT_LMT = 10;
+
+const DEFAULT_ENU_SEQ = [
+    pfx:	'enu_seq',
+    seq:	[]	// e.g. ["ACD", "RGH", ["WE", "NN"]] => "ARWE", ...
+];
+
+global function db_enu_seq opt
+    opt = tagcat [opt, DEFAULT_ENU_SEQ];
+    local seq = opt.seq;
+
+    if isnull seq then
+	exit 'Specify sequence pattern as seq option.';
+    endif
+
+    local num = app length opt.seq;
+    local cur = rep [1, length num];
+
+    local i = 0;
+    local i_db = 0;
+    local msg = 0;
+    local max_i = mul num;
+    local db = [];
+
+    loop
+	i = inc i;
+
+	if istrue (1 === mod [i, ENT_LMT]) then
+	    if istrue db then db_Close db; endif
+	    i_db = inc i_db;
+	    local dbfn = tok_cat [opt.pfx, '_', totok i_db, '.mdb'];
+	    dbv_Close dbfn;
+	    db = db_Open [dbfn, 'create'];
+	    db_EnsureField [db, 'seq', 'char'];
+	    dbv_Open dbfn;
+	    write ['OUTPUT: {}\n', dbfn];
+	endif
+
+	msg = Message [msg, twrite ['{}/{} adding to {}', i, max_i, dbfn]];
+
+	local qseq = cat cat apt peek [seq, cur];
+	db_Write [db, 0, [seq: qseq]];
+    until isfalse (cur = next_idx [cur, num]) endloop
+    db_Close db;
+    Message [msg, []];
+    write 'Done: db_enu_seq\n';
+endfunction
+
+const DEFAULT_SEQ2MOL = [
+    infile:		'',
+    seqfld:		'seq',
+    nme:		0,	// C-terminal capping flag: N-methyl
+    ace:		0,	// N-terminal capping flag: Acethyl
+    conf:		'extended',
+    emin:		0,	// energy minmize
+    gtest:		0.1	// gradient threshold of emin
+];
+
+global function db_seq2mol opt
+    opt = tagcat [opt, DEFAULT_SEQ2MOL];
+
+    if isfalse opt.infile then
+	if isfalse MOE_BATCH then
+	    opt.infile = FilePrompt [
+		title: 'Select sequence MDB Files',
+		mode: 'open',
+		multi: 1,
+		filter: '*.mdb'
+		];
+	    if isfalse opt.infile then exit []; endif
+	else
+	    exit 'Specify sequence MDB as infile option.';
+	endif
+    endif
+
+    local i, j;
+    local msg = 0;
+    local pdata = SystemPush [];
+    for i = 1, length opt.infile loop
+	local dbfn = opt.infile(i);
+	local db = db_Open [dbfn, 'read-write'];
+	db_EnsureField [db, 'mol_seq', 'molecule'];
+	dbv_Open dbfn;
+	local ent = db_Entries db;
+	for j = 1, length ent loop
+	    msg = Message [msg, twrite ['{}/{} entries in {} ({}/{})',
+		j, length ent, dbfn, i, length opt.infile]];
+	    local qseq = cat db_ReadFields [db, ent(j), opt.seqfld];
+	    local ckey = pro_SeqCreate [qseq, [
+		name: token qseq,
+		tag: token qseq,
+		header: twrite ['entry:{}, file: {}', j, dbfn],
+		conformation: opt.conf
+		]];
+
+	    if istrue opt.nme then
+		pro_ResAppend [ckey, 'NME'];
+	    endif
+
+	    if istrue opt.ace then
+		pro_Acetylate first cat cResidues ckey; 
+		// pro_ResPrepend [ckey, 'ACE'];  <- bug!
+	    endif
+
+	    if istrue opt.emin then
+		pot_FinalizeModel [];
+		MM [gtest: opt.gtest];
+	    endif
+
+	    db_Write [db, ent(j), [mol_seq: mol_Extract ckey]];
+	    oDestroy Chains [];
+	endloop
+	db_Close db;
+    endloop
+    SystemPop pdata;
+    Message [msg, []];
+    write 'Done: db_seq2mol\n';
+endfunction
+

@@ -1,0 +1,15 @@
+db_enu_seq [seq: ["ELMRSWY", "ELMRSWY", "ELMRSWY", "ELMRSWY"], pfx: 'Peptide_combinatorial_library_4-mer(7)']
+
+db_seq2mol [nme:0, ace:0, conf: 'strand', emin:1]
+
+##
+
+nme: If 1 is specified, C-terminal capping process (N-methylation). The default is 0.
+
+ace: If 1 is specified, N-terminal capping process (Acetylation). The default is 0.
+
+conf: it is the same as “conformation” option in “pro_SeqCreate” function (For detail, see $MOE/html/proteins/fcnref/pro_seq.htm). The default is ‘extended’.
+
+emin: If 1 is specified, it performs energy minimization. The default is 0.
+
+##

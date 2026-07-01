@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[2026-06-01] BIO AI 핵심뉴스</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #7ee787;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --tag-bg: rgba(88,166,255,0.12);
+      --tag-border: rgba(88,166,255,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: 5%;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(210,168,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .header-left { flex: 1; min-width: 0; }
+    .header-date-badge {
+      flex-shrink: 0;
+      align-self: center;
+      background: rgba(126,231,135,0.08);
+      border: 1px solid rgba(126,231,135,0.25);
+      color: var(--accent2);
+      font-size: 0.88rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .header-badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .header-date {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (min-width: 620px) {
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-num {
+      font-size: 27px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-count {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ── 그리드 기본: 모바일 1열 ── */
+    .news-grid, .news-grid-2, .news-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 620px) {
+      .news-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* full 카드는 항상 전체 너비 */
+    .news-card.full { grid-column: 1 / -1; }
+
+    @media (max-width: 619px) {
+      .news-grid, .news-grid-2, .news-grid-3 { grid-template-columns: 1fr; }
+      .news-card.full { grid-column: 1; }
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .news-card.blue::before { background: linear-gradient(90deg, var(--accent), var(--accent4)); }
+    .news-card.green::before { background: linear-gradient(90deg, var(--accent2), #3fb950); }
+    .news-card.orange::before { background: linear-gradient(90deg, var(--accent5), #e3b341); }
+    .news-card.red::before { background: linear-gradient(90deg, var(--accent3), #f0883e); }
+    .news-card.purple::before { background: linear-gradient(90deg, var(--accent4), var(--accent)); }
+
+    .news-card:hover {
+      border-color: #444c56;
+      transform: translateY(-2px);
+    }
+    .news-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .news-emoji {
+      font-size: 25px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .news-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+    .news-card-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .news-card-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .tag.blue { background: rgba(88,166,255,0.12); border: 1px solid rgba(88,166,255,0.25); color: var(--accent); }
+    .tag.green { background: rgba(126,231,135,0.1); border: 1px solid rgba(126,231,135,0.25); color: var(--accent2); }
+    .tag.orange { background: rgba(255,166,87,0.1); border: 1px solid rgba(255,166,87,0.25); color: var(--accent5); }
+    .tag.red { background: rgba(247,129,102,0.1); border: 1px solid rgba(247,129,102,0.25); color: var(--accent3); }
+    .tag.purple { background: rgba(210,168,255,0.1); border: 1px solid rgba(210,168,255,0.25); color: var(--accent4); }
+
+    .news-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .news-card-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .news-card-meta a:hover { text-decoration: underline; }
+    .meta-dot { color: var(--border); }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(210,168,255,0.04) 100%);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .highlight-box-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .highlight-table th {
+      text-align: left;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .highlight-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(48,54,61,0.5);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .highlight-table td:first-child {
+      color: var(--text-primary);
+      font-weight: 600;
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table td:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table tr:last-child td { border-bottom: none; }
+
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-top: 40px;
+    }
+    .sources-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sources-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .source-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      padding: 5px 0;
+    }
+    .source-item a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .source-item a:hover { color: #79c0ff; text-decoration: underline; }
+    .source-num {
+      color: var(--text-muted);
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 620px) {
+      .news-grid, .news-grid-2, .news-grid-3 { grid-template-columns: 1fr; }
+      .news-card.full { grid-column: 1; }
+      .sources-grid { grid-template-columns: 1fr; }
+      .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+      .container { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">BIO AI</span>
+        <span class="header-date">2026년 6월 1일 (월) · 자동 생성</span>
+      </div>
+      <h1>생명공학 <span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">빅파마 파트너십 · AI 신약개발 · 단백질·펩타이드 AI · 국내 K바이오 동향</p>
+    </div>
+    <div class="header-date-badge">2026-05-25 ~ 2026-06-01</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent);">$2.1B</div>
+      <div class="stat-label">Isomorphic Labs Series B</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent2);">$2.75B</div>
+      <div class="stat-label">Lilly × Insilico 딜 규모</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent5);">5건</div>
+      <div class="stat-label">루닛 ASCO 2026 발표</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent4);">8개사</div>
+      <div class="stat-label">K바이오 ASCO 참가</div>
+    </div>
+  </div>
+
+  <!-- ① 빅파마 AI 파트너십·M&A -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(88,166,255,0.1);">🤝</div>
+    <div class="section-title">빅파마 AI 파트너십 · M&A</div>
+    <div class="section-count">3건</div>
+  </div>
+  <div class="news-grid">
+
+    <div class="news-card blue full">
+      <div class="news-card-top">
+        <div class="news-emoji">💰</div>
+        <div class="news-card-title">Isomorphic Labs, 시리즈 B $2.1억 달러 조달 — IsoDDE로 AlphaFold 너머를 겨냥</div>
+      </div>
+      <div class="tags">
+        <span class="tag blue">Isomorphic Labs</span>
+        <span class="tag blue">AlphaFold</span>
+        <span class="tag purple">구조예측</span>
+        <span class="tag green">신약설계</span>
+      </div>
+      <div class="news-card-body">
+        DeepMind 스핀오프 Isomorphic Labs가 <strong>2026년 5월 12일</strong> Thrive Capital 주도로 21억 달러(약 2.9조 원) 시리즈 B를 완료했다. Alphabet·GV·MGX·Temasek·UK Sovereign AI Fund 등이 참여해 총 누적 외부 조달액은 약 27억 달러에 달한다. 자체 개발한 <strong>IsoDDE(Isomorphic Labs Drug Design Engine)</strong>는 AlphaFold 3의 구조 예측을 넘어 "특정 단백질에 결합할 약물 분자를 어떻게 설계하느냐"까지 통합한 컴퓨터 신약설계 시스템으로, 종양학·면역학 파이프라인을 중심으로 <strong>2026년 말 첫 임상 진입</strong>을 목표로 한다. CEO Demis Hassabis는 다보스 WEF에서 이 계획을 공식 언급했다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026.05.12</span>
+        <span class="meta-dot">·</span>
+        <a href="https://theaiinsider.tech/2026/05/13/isomorphic-labs-announces-2-1b-funding-to-scale-its-ai-drug-design-engine/" target="_blank">The AI Insider</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.isomorphiclabs.com/articles/the-isomorphic-labs-drug-design-engine-unlocks-a-new-frontier" target="_blank">Isomorphic Labs 공식</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <div class="news-emoji">🧬</div>
+        <div class="news-card-title">Eli Lilly × Insilico Medicine, 최대 $2.75B 계약 — AI 신약 다중 적응증 공동 개발</div>
+      </div>
+      <div class="tags">
+        <span class="tag blue">Eli Lilly</span>
+        <span class="tag orange">Insilico Medicine</span>
+        <span class="tag green">파트너십</span>
+      </div>
+      <div class="news-card-body">
+        <strong>2026년 3월 29일</strong> 체결된 계약으로 이번 주에도 주요 업데이트가 이어졌다. Lilly는 선급금 1억 1,500만 달러를 지급하고 개발·규제·상업화 마일스톤에 따라 최대 <strong>27억 5,000만 달러</strong>를 추가 지급하는 구조다. Insilico의 생성형 AI 플랫폼 'Chemistry42'를 활용해 종양학(CDK4)·대사질환(인크레틴 계열)·통증(Nav1.8) 등 다수 신규 타깃에서 후보물질을 도출한다. Lilly의 'AI 네이티브' 연구 전략 확장의 핵심 딜로 평가된다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026.03.29 / 업데이트 05.19</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.biopharmadive.com/news/eli-lilly-insilico-ai-medicine-drug-discovery/816088/" target="_blank">BioPharma Dive</a>
+      </div>
+    </div>
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <div class="news-emoji">🤖</div>
+        <div class="news-card-title">Incyte × Edison Scientific, AI 과학자 'Kosmos' 전사 R&D 도입 협약</div>
+      </div>
+      <div class="tags">
+        <span class="tag orange">Incyte</span>
+        <span class="tag blue">Edison Scientific</span>
+        <span class="tag purple">AI 과학자</span>
+      </div>
+      <div class="news-card-body">
+        <strong>2026년 5월 19일</strong> Incyte와 Edison Scientific은 AI 플랫폼 Kosmos를 Incyte의 타깃 발굴·중개연구·임상 바이오마커 분석 전반에 도입하는 전략적 협약을 체결했다. Kosmos는 단순 분석을 넘어 임상·중개연구 데이터를 학습하며 <strong>지속적으로 업그레이드되는 '협업형 AI 과학자'</strong> 플랫폼으로 설계됐다. Incyte Global Head of R&D는 "데이터가 Kosmos를 훈련시키는 새로운 협업 모델"이라고 강조했다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026.05.19</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.biopharminternational.com/view/incyte-partners-with-edison-scientific-to-integrate-ai-across-drug-discovery-and-translational-research" target="_blank">BioPharm International</a>
+        <span class="meta-dot">·</span>
+        <a href="https://investor.incyte.com/news-releases/news-release-details/incyte-and-edison-scientific-announce-strategic-collaboration" target="_blank">Incyte 공식</a>
+      </div>
+    </div>
+
+  </div><!-- /news-grid -->
+
+  <!-- ② AI 신약개발 플랫폼 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(126,231,135,0.1);">💊</div>
+    <div class="section-title">AI 신약개발 플랫폼 · 임상 진전</div>
+    <div class="section-count">2건</div>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <div class="news-emoji">🏥</div>
+        <div class="news-card-title">AI 설계 소분자, 임상 1상 안전성·표적 결합 입증 — TNIK 억제제 선두</div>
+      </div>
+      <div class="tags">
+        <span class="tag green">임상 1상</span>
+        <span class="tag blue">생성형 AI</span>
+        <span class="tag orange">종양학</span>
+      </div>
+      <div class="news-card-body">
+        Drug Target Review 분석(2026)에 따르면, <strong>생성형 AI로 설계된 TNIK 억제제</strong>가 임상 1상에서 안전성·내약성·약력학적 표적 결합을 인체에서 처음 입증했다. 또한 면역항암제 EXS21546은 AI로 최적화돼 종양 미세환경 내 면역 억제를 극복하는 데 활용 중이다. 2026년은 <strong>Phase III 결과가 'AI 신약 실증의 해'</strong>가 될 것이라는 전망이 제기됐다. AI 신약 파이프라인 보유 기업 25개사 이상이 임상 후보물질 단계에 도달한 것으로 집계된다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026.04~05</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.drugtargetreview.com/article/192962/ai-in-drug-discovery-predictions-for-2026/" target="_blank">Drug Target Review</a>
+      </div>
+    </div>
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <div class="news-emoji">🔬</div>
+        <div class="news-card-title">구조생물학 AI 신지평: 단백질 결합자 설계 + 구조 앙상블 예측 동시 부상</div>
+      </div>
+      <div class="tags">
+        <span class="tag purple">구조생물학</span>
+        <span class="tag blue">단백질 결합자</span>
+        <span class="tag green">AlphaFold 이후</span>
+      </div>
+      <div class="news-card-body">
+        Nature Communications Biology 2026년 리뷰에 따르면, AlphaFold 이후 구조생물학 AI의 두 가지 신개척 분야로 <strong>① 고친화도 단백질 결합자(binder) de novo 설계</strong>와 <strong>② 단백질 구조 앙상블·동역학 예측</strong>이 주목받고 있다. AI 기반 결합자 설계 플랫폼은 고실험 성공률을 보이며 '확장 가능한 공학 분야'로 자리잡고 있다. 약물 타깃의 구조적 다양성(구조 앙상블)을 예측하는 능력이 항체·펩타이드 신약 설계 정확도를 크게 높이고 있다는 분석이다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026년</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.nature.com/articles/s42003-026-10112-3" target="_blank">Communications Biology (Nature)</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 펩타이드·단백질 AI 연구 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(210,168,255,0.1);">🧪</div>
+    <div class="section-title">펩타이드 · 단백질 AI 연구</div>
+    <div class="section-count">2건</div>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card purple">
+      <div class="news-card-top">
+        <div class="news-emoji">🔗</div>
+        <div class="news-card-title">V-SPADE: Viva Biotech, 사이클릭 펩타이드 de novo 설계 알고리즘 공개</div>
+      </div>
+      <div class="tags">
+        <span class="tag purple">펩타이드 설계</span>
+        <span class="tag blue">de novo</span>
+        <span class="tag green">Co-folding</span>
+        <span class="tag orange">사이클릭 펩타이드</span>
+      </div>
+      <div class="news-card-body">
+        Viva Biotech(华领医药)이 자체 개발한 <strong>V-SPADE(멀티모달 all-atom co-folding/co-design 알고리즘)</strong>를 2026 Viva Biotech Innovation Forum에서 공개했다. 단백질-단백질 상호작용 계면 기반 사이클릭 펩타이드 설계, 결합 포켓·에피토프 가이드 de novo 펩타이드 생성, 파지 디스플레이 등 실험 스크리닝 플랫폼과의 연동 설계 지원 등 <strong>3가지 펩타이드 발굴 시나리오</strong>를 지원한다. 전산 생성 펩타이드 후보 중 절반 이상이 실험 검증에서 결합친화도 유지 또는 향상 및 drug-like 프로파일 개선을 동시에 달성했다고 발표됐다.
+        <br><br>
+        <strong>소속:</strong> Viva Biotech (华领医药, 홍콩)
+      </div>
+      <div class="news-card-meta">
+        <span>2026년</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.vivabiotech.com/news/1036.html" target="_blank">Viva Biotech 공식</a>
+      </div>
+    </div>
+
+    <div class="news-card purple">
+      <div class="news-card-top">
+        <div class="news-emoji">💉</div>
+        <div class="news-card-title">생성형 AI 기반 펩타이드 신약 설계 총론 — RSC Chemical Communications 2026 리뷰</div>
+      </div>
+      <div class="tags">
+        <span class="tag purple">리뷰 논문</span>
+        <span class="tag blue">생성형 AI</span>
+        <span class="tag green">펩타이드 신약</span>
+      </div>
+      <div class="news-card-body">
+        Royal Society of Chemistry <em>Chemical Communications</em> 2026년 게재 리뷰(DOI: 10.1039/D5CC04998A)는 생성형 AI를 활용한 펩타이드 기반 신약 설계의 현황과 전망을 포괄적으로 정리했다. <strong>자율 펩타이드 합성·고처리량 스크리닝 결합으로 발굴 타임라인이 수년→수개월로 단축</strong>되었으며, 대사질환·종양학·의료 영상 분야 승인 펩타이드 의약품 수가 늘어나는 추세를 반영한다. AI로 설계한 펩타이드가 특정 돌연변이 단백질(혈소판형 폰빌레브란트병)을 타깃으로 10,000개 이상의 후보 중 최적 펩타이드를 도출한 임상 적용 사례도 수록됐다.
+        <br><br>
+        <strong>게재지:</strong> Chemical Communications (RSC) | DOI: 10.1039/D5CC04998A
+      </div>
+      <div class="news-card-meta">
+        <span>2026년</span>
+        <span class="meta-dot">·</span>
+        <a href="https://pubs.rsc.org/en/content/articlelanding/2026/cc/d5cc04998a" target="_blank">Chemical Communications (RSC)</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 국내 K바이오 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(255,166,87,0.1);">🇰🇷</div>
+    <div class="section-title">국내 K바이오 AI 동향</div>
+    <div class="section-count">3건</div>
+  </div>
+  <div class="news-grid">
+
+    <div class="news-card orange full">
+      <div class="news-card-top">
+        <div class="news-emoji">🏆</div>
+        <div class="news-card-title">루닛, ASCO 2026서 AI 바이오마커 플랫폼 '루닛 스코프' 연구 5편 발표 — AI IHC 분석 임상 확장</div>
+      </div>
+      <div class="tags">
+        <span class="tag orange">루닛</span>
+        <span class="tag blue">ASCO 2026</span>
+        <span class="tag green">AI 바이오마커</span>
+        <span class="tag purple">IHC 분석</span>
+      </div>
+      <div class="news-card-body">
+        루닛(대표 서범석)이 2026년 5월 29일~6월 3일 미국 시카고 ASCO 2026에서 AI 기반 IHC(면역조직화학) 바이오마커 분석 플랫폼 <strong>루닛 스코프(HER2, uIHC, IO)</strong>를 활용한 연구 5편을 공개한다.
+        <br><br>
+        주요 연구:
+        <br>① <strong>연세대 의대 이충근 교수팀</strong>(연세암병원) — HER2 양성 진행성 담도암 환자 대상 트라스투주맙+니볼루맙+화학요법 병용 임상에서 루닛 스코프 HER2로 바이오마커 분석 참여.
+        <br>② <strong>서울아산병원</strong> 공동연구 — MSS 전이성 대장암 환자 51건 슬라이드를 루닛 스코프 IO로 분석, TLS(3차 림프구조) 면적이 큰 환자군에서 면역항암제 치료 후 생존 기간 유의하게 연장 확인.
+        <br>
+        <br>또한 루닛은 독일 의료기기 업체 <strong>라이카 바이오시스템즈</strong>와 협력해 '루닛 스코프 PD-L1 CAL10' 솔루션을 2026년 5월 27일 출시했다.
+        <br><br>
+        <strong>소속:</strong> 루닛 (서울), 연세암병원, 서울아산병원 (공동 연구기관)
+      </div>
+      <div class="news-card-meta">
+        <span>2026.05.22~27</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.hankyung.com/article/202605223258i" target="_blank">한국경제</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.thebionews.net/news/articleView.html?idxno=24791" target="_blank">더바이오뉴스</a>
+      </div>
+    </div>
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <div class="news-emoji">🌏</div>
+        <div class="news-card-title">K바이오 8개사, ASCO 2026 총출동 — 세포치료제·AI 바이오마커·면역항암제 임상 성과</div>
+      </div>
+      <div class="tags">
+        <span class="tag orange">K바이오</span>
+        <span class="tag blue">ASCO 2026</span>
+        <span class="tag green">임상 성과</span>
+      </div>
+      <div class="news-card-body">
+        루닛·바이젠셀·지아이이노베이션·에스티큐브·티움바이오·이뮨온시아·온코크로스·신라젠 등 <strong>8개 한국 바이오 기업</strong>이 ASCO 2026에서 세포치료제, 면역항암제(GI-101A 1상 구두 발표), AI 바이오마커, 합성치사 항암제 등 다양한 분야 임상 데이터를 공개한다. 지아이이노베이션은 GI-101A 단독요법 및 키트루다 병용요법 데이터를 구두 발표 형식으로 선보이며, K바이오의 글로벌 치료 패러다임 참여를 상징하는 행사로 평가된다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026.05</span>
+        <span class="meta-dot">·</span>
+        <a href="https://eanews.kr/news/955389" target="_blank">얼리어답터뉴스</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.kjob.news/news/488737" target="_blank">전국인력신문</a>
+      </div>
+    </div>
+
+    <div class="news-card red">
+      <div class="news-card-top">
+        <div class="news-emoji">🏛️</div>
+        <div class="news-card-title">정부, 바이오를 국가전략산업 지정 — 국가바이오혁신위원회 출범·AI 신약 빅데이터 핵심 과제</div>
+      </div>
+      <div class="tags">
+        <span class="tag red">정부 정책</span>
+        <span class="tag blue">국가전략산업</span>
+        <span class="tag orange">AI 신약</span>
+      </div>
+      <div class="news-card-body">
+        2026년 한국 정부는 바이오산업을 <strong>국가전략산업으로 지정</strong>하고 단일 거버넌스 기구인 <strong>국가바이오혁신위원회</strong>를 출범시켰다. 현대차증권·NH투자증권 등은 비만·RNA·항암·AI 신약 4개 분야를 2026년 핵심 투자 테마로 지목했다. AI 신약개발 도입 여부가 기업 경쟁력의 분기점으로 평가되며, 2026년은 'AI 신약개발의 원년'으로 불리고 있다. 한국보건산업진흥원은 글로벌 협업 기업 대상 최대 8억 원 사업화 자금을 지원 중이다.
+      </div>
+      <div class="news-card-meta">
+        <span>2026.05</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.enetnews.co.kr/news/articleView.html?idxno=43988" target="_blank">이넷뉴스</a>
+        <span class="meta-dot">·</span>
+        <a href="https://seo.goover.ai/report/202505/go-public-report-ko-704c863c-8c27-45d5-8a1d-15b4c64cf0b6-0-0.html" target="_blank">K바이오 AI 신약개발 현황</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ 주요 딜 요약 테이블 -->
+  <div class="highlight-box">
+    <div class="highlight-box-title">📊 이번 주 주요 AI 제약 딜 요약</div>
+    <table class="highlight-table">
+      <thead>
+        <tr>
+          <th>파트너 A</th>
+          <th>파트너 B</th>
+          <th>규모</th>
+          <th>핵심 내용</th>
+          <th>일자</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Isomorphic Labs</td>
+          <td>Thrive Capital 등</td>
+          <td style="color: var(--accent); white-space: nowrap; width: 1%;">$2.1B</td>
+          <td>IsoDDE 플랫폼 확장, 2026년 말 첫 임상 목표</td>
+          <td style="white-space: nowrap; width: 1%;">05.12</td>
+        </tr>
+        <tr>
+          <td>Eli Lilly</td>
+          <td>Insilico Medicine</td>
+          <td style="color: var(--accent2); white-space: nowrap; width: 1%;">$2.75B</td>
+          <td>종양학·대사질환·통증 다중 타깃 AI 신약 공동개발</td>
+          <td style="white-space: nowrap; width: 1%;">03.29</td>
+        </tr>
+        <tr>
+          <td>Incyte</td>
+          <td>Edison Scientific</td>
+          <td style="color: var(--accent5); white-space: nowrap; width: 1%;">미공개</td>
+          <td>Kosmos AI 과학자 플랫폼 R&D 전사 도입</td>
+          <td style="white-space: nowrap; width: 1%;">05.19</td>
+        </tr>
+        <tr>
+          <td>루닛</td>
+          <td>라이카 바이오시스템즈</td>
+          <td style="color: var(--accent4); white-space: nowrap; width: 1%;">미공개</td>
+          <td>루닛 스코프 PD-L1 CAL10 솔루션 공동 출시</td>
+          <td style="white-space: nowrap; width: 1%;">05.27</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="sources-section">
+    <div class="sources-title">📎 참고 출처</div>
+    <div class="sources-grid">
+      <div class="source-item"><span class="source-num">01</span><a href="https://theaiinsider.tech/2026/05/13/isomorphic-labs-announces-2-1b-funding-to-scale-its-ai-drug-design-engine/" target="_blank">The AI Insider — Isomorphic Labs $2.1B Series B (2026.05.13)</a></div>
+      <div class="source-item"><span class="source-num">02</span><a href="https://www.isomorphiclabs.com/articles/the-isomorphic-labs-drug-design-engine-unlocks-a-new-frontier" target="_blank">Isomorphic Labs — IsoDDE 공식 발표</a></div>
+      <div class="source-item"><span class="source-num">03</span><a href="https://www.biopharmadive.com/news/eli-lilly-insilico-ai-medicine-drug-discovery/816088/" target="_blank">BioPharma Dive — Lilly × Insilico $2.75B 딜</a></div>
+      <div class="source-item"><span class="source-num">04</span><a href="https://investor.incyte.com/news-releases/news-release-details/incyte-and-edison-scientific-announce-strategic-collaboration" target="_blank">Incyte 공식 — Kosmos AI 파트너십 (2026.05.19)</a></div>
+      <div class="source-item"><span class="source-num">05</span><a href="https://www.biopharminternational.com/view/incyte-partners-with-edison-scientific-to-integrate-ai-across-drug-discovery-and-translational-research" target="_blank">BioPharm International — Incyte × Edison</a></div>
+      <div class="source-item"><span class="source-num">06</span><a href="https://www.nature.com/articles/s42003-026-10112-3" target="_blank">Communications Biology — 구조생물학 AI 신지평 리뷰</a></div>
+      <div class="source-item"><span class="source-num">07</span><a href="https://www.vivabiotech.com/news/1036.html" target="_blank">Viva Biotech — V-SPADE 펩타이드 설계 알고리즘</a></div>
+      <div class="source-item"><span class="source-num">08</span><a href="https://pubs.rsc.org/en/content/articlelanding/2026/cc/d5cc04998a" target="_blank">Chemical Communications (RSC) — 생성형 AI 펩타이드 신약 설계 리뷰</a></div>
+      <div class="source-item"><span class="source-num">09</span><a href="https://www.hankyung.com/article/202605223258i" target="_blank">한국경제 — 루닛 ASCO 2026 AI IHC 발표 (2026.05.22)</a></div>
+      <div class="source-item"><span class="source-num">10</span><a href="https://www.thebionews.net/news/articleView.html?idxno=24791" target="_blank">더바이오뉴스 — 루닛 ASCO 5편 발표</a></div>
+      <div class="source-item"><span class="source-num">11</span><a href="https://eanews.kr/news/955389" target="_blank">얼리어답터뉴스 — K바이오 8개사 ASCO 총출동</a></div>
+      <div class="source-item"><span class="source-num">12</span><a href="https://www.drugtargetreview.com/article/192962/ai-in-drug-discovery-predictions-for-2026/" target="_blank">Drug Target Review — 2026 AI 신약 예측 리포트</a></div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer class="footer">
+  자동 생성 · 2026-06-01 KST &nbsp;|&nbsp; BIO AI 핵심뉴스 · 대학원 09_ai/01_news
+</footer>
+
+</body>
+</html>
