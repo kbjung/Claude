@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-07-27] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #0d1b2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 5%;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-left { flex: 1; min-width: 0; }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .header-badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent1);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .header-date { color: var(--text-muted); font-size: 14px; }
+  header h1 {
+    font-size: 2.1rem; font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.9rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+  .section-label {
+    font-size: 0.83rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+  .grid, .grid-wide, .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.95rem; color: #cdd9e5; line-height: 1.68; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.79rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.94rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.85rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.94rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert.g { background: #0e1e10; border: 1px solid rgba(63,185,80,0.3); color: #b8e5be; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+  .summary-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(188,140,255,0.04) 100%);
+    border: 1px solid rgba(88,166,255,0.22);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 30px;
+  }
+  .summary-box-title {
+    font-size: 0.92rem; font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: #cdd9e5;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .summary-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.86rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.90rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+  footer { text-align: center; color: var(--text-muted); font-size: 0.84rem; padding: 16px 0 32px; }
+  @media (min-width: 620px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid-4, .grid, .grid-wide { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid, .grid-wide { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 1280px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-4, .grid-wide { grid-template-columns: repeat(4, 1fr); }
+    main { max-width: 1440px; }
+    .header-inner { max-width: 1440px; }
+  }
+  @media (min-width: 1700px) {
+    main { max-width: 1800px; }
+    .header-inner { max-width: 1800px; }
+  }
+  @media (max-width: 480px) {
+    header { padding: 20px 0 16px; }
+    .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .summary-box { padding: 16px; overflow-x: auto; }
+    .summary-table td:first-child { white-space: normal; }
+    .summary-table td:last-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">AI</span>
+        <span class="header-date">2026년 7월 27일 (월) KST · 자동 생성</span>
+      </div>
+      <h1><span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">Claude Opus 5 출시 (7/24) · Google Gemini 3.6 Flash 출시 · 한 주 7개 모델 릴리즈 · 한국 AI기본법 7/21 시행 · Microsoft-Databricks·Mistral 파트너십 확장 · EU AI Act 8월 2일 전면 발효</p>
+    </div>
+    <div class="date-badge">2026.07.27.월 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <div class="summary-box">
+    <div class="summary-box-title">🔑 이번 주 핵심 요약 (2026.07.21 ~ 07.27)</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>주체 / 이벤트</th>
+          <th>핵심 내용</th>
+          <th>분류</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Claude Opus 5 출시</td>
+          <td>7월 24일 출시. Fable 5 대비 절반 가격($5/$25 per 1M)에 동급 성능. 에이전트 코딩 특화, 에포트 토글(저·중·고) 기능 신설. Claude Max 기본 모델 설정</td>
+          <td><span class="tag">모델출시</span></td>
+        </tr>
+        <tr>
+          <td>Google Gemini 3.6 Flash 출시</td>
+          <td>7월 21일 3종(3.6 Flash·3.5 Flash-Lite·3.5 Flash Cyber) 동시 공개. 지식 컷오프 1년 이상 앞당겨짐(2025.01 → 2026.03). Gemini 4 사전학습 개시 예고</td>
+          <td><span class="tag">모델출시</span></td>
+        </tr>
+        <tr>
+          <td>한 주 7개 모델 릴리즈</td>
+          <td>Kimi K3·Qwen 3종·Gemini 3.6 Flash 트리오·poolside Laguna S 2.1·Ant Ling-3.0-flash가 7일 안에 출시. 주간 모델 출시가 업계 표준으로 정착</td>
+          <td><span class="tag y">모델경쟁</span></td>
+        </tr>
+        <tr>
+          <td>한국 AI기본법 시행</td>
+          <td>7월 21일 개정 AI기본법 발효. 공공기관의 AI 제품 우선 구매 의무화, 'AI 제품·서비스 확인 제도' 신설</td>
+          <td><span class="tag g">국내 정책</span></td>
+        </tr>
+        <tr>
+          <td>Microsoft 파트너십 이중 확장</td>
+          <td>7/21 Mistral 전략적 파트너십 확대(NVIDIA Vera Rubin GPU 수천 개 추가), 7/23 Databricks와 2030년대까지 협력 연장. 엔터프라이즈 AI 통합 가속</td>
+          <td><span class="tag">기업전략</span></td>
+        </tr>
+        <tr>
+          <td>EU AI Act 8월 2일 전면 발효</td>
+          <td>GPAI 투명성 의무·고위험 AI 분류·금지 AI 규정 동시 발효. 고위험 스탠드얼론 시스템 적용은 2027년 12월로 유예</td>
+          <td><span class="tag r">규제</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 모델 출시 & 업데이트 -->
+  <div class="section-label"><span class="sdot"></span> 모델 출시 &amp; 업데이트</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🤖</div>
+        <h3>Claude Opus 5 출시 — Fable 5 절반 가격에 동급 성능</h3>
+      </div>
+      <div class="card-body">
+        Anthropic이 7월 24일 <strong>Claude Opus 5</strong>를 공개했다. 두 달 내 네 번째 Claude 5 시리즈 출시로, 기업·지식 노동자·개발자를 위한 "일상 모델"로 포지셔닝됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">$5/$25 per 1M 토큰 — Opus 4.8과 동일 가격, Fable 5의 절반</li>
+          <li>에포트 토글(저·중·고): 비용 대 성능을 사용자가 직접 조절 가능</li>
+          <li>에이전트 코딩·컴퓨터 사용(Computer Use) 특화 — 자체 오류 탐지 및 복구</li>
+          <li class="g">Artificial Analysis Intelligence Index 61점 / Agentic Index 55.3점 — 출시 즉시 1위</li>
+          <li>Fable 5 대비 더 적은 대화 왕복으로 작업 완료 (사용성 향상)</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">💡</span>
+          <span>사이버보안 태스크에서는 Sakana AI Fugu-Cyber·Mythos 5가 앞서 있으나, 코딩·지식 업무에서는 Opus 5가 최상위</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag p">Claude Opus 5</span>
+        <span class="tag">Anthropic</span>
+        <span class="tag g">에이전트 코딩</span>
+        <span class="tag">에포트 토글</span>
+        <span class="tag">2026-07-24</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">⚡</div>
+        <h3>Google Gemini 3.6 Flash — 3종 동시 출시, Gemini 4 사전학습 예고</h3>
+      </div>
+      <div class="card-body">
+        Google이 7월 21일 <strong>Gemini 3.6 Flash</strong>를 포함한 3개 모델(3.6 Flash·3.5 Flash-Lite·3.5 Flash Cyber)을 동시에 출시했다. 3.5 Pro 대신 Flash 라인업이 먼저 공개됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>3.5 Flash 대비 출력 토큰 약 17% 절감, 멀티스텝 작업 속도 향상</li>
+          <li class="g">지식 컷오프 1년 이상 앞당김: 2025년 1월 → 2026년 3월</li>
+          <li>$1.50/$7.50 per 1M — 이전 Flash($9 출력)보다 출력 비용 17% 인하</li>
+          <li>코딩·장기 컨텍스트·컴퓨터 사용 벤치마크 개선</li>
+          <li class="y">Google, "Gemini 4 사상 최대 사전학습 런 이미 시작" 발표</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">📌</span>
+          <span>Gemini 3.5 Pro는 Bloomberg 7/16 보도에 따르면 내부 목표 미달로 수개월 지연 중 — 3.6 Flash 트리오로 공백 메우기</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Google</span>
+        <span class="tag g">Gemini 3.6 Flash</span>
+        <span class="tag">1M 컨텍스트</span>
+        <span class="tag g">Gemini 4 예고</span>
+        <span class="tag">2026-07-21</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🌊</div>
+        <h3>한 주 7개 모델 — AI 릴리즈 주간화 현상 정착</h3>
+      </div>
+      <div class="card-body">
+        7월 17~23일 사이 5개 벤더에서 7개 모델이 출시됐다. AI 업계의 출시 리듬이 "분기 단위 빅뱅"에서 "매주 릴리즈"로 완전히 전환됐다는 평가다.
+        <ul class="blist" style="margin-top:8px;">
+          <li><strong>Kimi K3</strong> (Moonshot AI, 중국) — 추론 특화 대형 모델</li>
+          <li><strong>Qwen 3종</strong> (Alibaba) — 72시간 안에 연속 출시</li>
+          <li><strong>Gemini 3.6 Flash 트리오</strong> (Google) — 7/21 동시 공개</li>
+          <li><strong>poolside Laguna S 2.1</strong> — 코드 생성 특화</li>
+          <li><strong>Ant Ling-3.0-flash</strong> (Ant Group) — 경량·빠른 추론</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">🔍</span>
+          <span>GPT-5.6·Grok 4.5 등 7월 초 출시 이후 가격 전쟁 지속 — 출력 토큰 비용 $4~6/M 수준으로 수렴</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag y">모델 경쟁</span>
+        <span class="tag">Kimi K3</span>
+        <span class="tag">Qwen</span>
+        <span class="tag">poolside</span>
+        <span class="tag">Ling-3.0</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 기업 동향 & 파트너십 -->
+  <div class="section-label"><span class="sdot p"></span> 기업 동향 &amp; 파트너십</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🤝</div>
+        <h3>Microsoft-Mistral 전략 파트너십 확장 — NVIDIA Vera Rubin GPU 투입</h3>
+      </div>
+      <div class="card-body">
+        7월 21일 Microsoft와 Mistral이 전략적 파트너십을 대폭 확장했다. 규제 산업 및 엔터프라이즈 고객이 더 높은 통제권을 갖고 프론티어 AI를 도입할 수 있도록 하는 것이 목적이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Mistral, NVIDIA <strong>Vera Rubin GPU</strong> 수천 개 추가로 컴퓨트 용량 확보</li>
+          <li class="g">Azure 상의 Mistral 모델 엔터프라이즈 배포 확대, 규제 산업 특화</li>
+          <li>데이터 주권·운영 일관성 요구하는 유럽 기업 공략 강화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Microsoft</span>
+        <span class="tag p">Mistral</span>
+        <span class="tag">NVIDIA Vera Rubin</span>
+        <span class="tag g">규제 산업</span>
+        <span class="tag">2026-07-21</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🗄️</div>
+        <h3>Microsoft-Databricks 파트너십 2030년대까지 연장</h3>
+      </div>
+      <div class="card-body">
+        7월 23일 Microsoft와 Databricks가 10년 협력을 이어온 파트너십을 2030년대까지 연장한다고 발표했다. Databricks의 <strong>Genie AI 코워커</strong>가 Microsoft 고객 워크플로우에 직접 통합된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Databricks, Azure Cobalt 기반으로 핵심 비즈니스 운영 및 레이크하우스 구축</li>
+          <li class="g">Genie(AI 코워커)가 Microsoft 제품에 내장 — 데이터·AI 플랫폼 통합</li>
+          <li>기업이 비즈니스 컨텍스트를 엔터프라이즈 AI에 연결하는 방식 표준화 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Microsoft</span>
+        <span class="tag g">Databricks</span>
+        <span class="tag">Genie AI</span>
+        <span class="tag">2026-07-23</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🏗️</div>
+        <h3>Intel-Google Cloud 협력 확대 — AI 기반 엔터프라이즈 전환</h3>
+      </div>
+      <div class="card-body">
+        7월 16일 Intel과 Google Cloud가 Intel의 전사적 디지털 전환을 AI로 가속하기 위한 전략적 협력을 발표했다. Gemini Enterprise 및 Google Cloud 도구를 Intel 내부 운영에 배포한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Intel 공급망·제조·설계 프로세스에 Gemini Enterprise 적용</li>
+          <li class="y">반도체 기업이 직접 AI 클라우드 솔루션 고객이 되는 아이러니한 구조</li>
+          <li class="g">AI가 반도체 설계 및 제조 효율 개선에 본격 활용되는 사례로 주목</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">Intel</span>
+        <span class="tag">Google Cloud</span>
+        <span class="tag g">Gemini Enterprise</span>
+        <span class="tag">엔터프라이즈 AI</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책 & 규제 -->
+  <div class="section-label"><span class="sdot r"></span> 정책 &amp; 규제</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">🇰🇷</div>
+        <h3>한국 AI기본법 7월 21일 시행 — 공공기관 AI 우선 구매 의무화</h3>
+      </div>
+      <div class="card-body">
+        개정 <strong>인공지능 발전과 신뢰 기반 조성 등에 관한 기본법(AI기본법)</strong> 시행령이 7월 14일 국무회의를 통과한 후 7월 21일 발효됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g"><strong>AI 제품·서비스 확인 제도</strong> 신설 — 제품 AI 기술 적용 여부 공식 인증</li>
+          <li>국가기관·공공기관, 물품 구매 시 AI 적용 제품 <strong>우선 검토 의무</strong> 부과</li>
+          <li class="y">딥페이크·고영향 AI·해외 대리인 규정도 함께 시행 — 다각적 규제 체계 완성</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">📌</span>
+          <span>국내 AI 스타트업에게 공공 시장 진입 기회 확대. AI 인증 획득 여부가 공공 조달 핵심 변수로 부상</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag g">한국 AI기본법</span>
+        <span class="tag">공공 구매 의무</span>
+        <span class="tag">AI 확인 제도</span>
+        <span class="tag">2026-07-21</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#200e0e;">🇪🇺</div>
+        <h3>EU AI Act 8월 2일 전면 발효 — 고위험 AI·GPAI 투명성 의무 적용</h3>
+      </div>
+      <div class="card-body">
+        EU AI Act의 핵심 조항들이 8월 2일 동시 발효된다. EU 이사회는 6월 29일 AI 옴니버스 개정안을 승인하며 일부 유예 기간을 조정했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">GPAI(범용 AI) <strong>투명성 의무</strong>: AI 생성 콘텐츠 표시 의무 발효</li>
+          <li class="r">금지 AI 관행(사회적 스코어링 등) 위반 시 전 세계 연매출 최대 7% 과징금</li>
+          <li>고위험 스탠드얼론 AI: 2027년 12월 2일로 유예</li>
+          <li>고위험 내장 AI(제품 탑재): 2028년 8월 2일로 유예</li>
+          <li class="g">EC 사이버보안·AI 액션 플랜(7/7 발표) 연계 시행</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">EU AI Act</span>
+        <span class="tag">GPAI 투명성</span>
+        <span class="tag">고위험 AI</span>
+        <span class="tag r">2026-08-02 발효</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🇺🇸</div>
+        <h3>FTC, AI 정확도 정책 공개 의견 수렴 — 미국 주 단위 AI 법률 14개 제정</h3>
+      </div>
+      <div class="card-body">
+        미국 연방거래위원회(FTC)가 AI 정확도 관련 정책 성명에 대한 공개 의견을 수렴 중이다(마감: 7월 31일). 한편, 미국 전체 포괄적 AI 법률은 아직 없으며 규제 권한은 주로 주(州) 단위에 분산돼 있다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">California AI Transparency Act — 8월 2일 발효 예정</li>
+          <li>California·Texas·Illinois·Utah 규칙 이미 시행 중</li>
+          <li>2026년 AI 동반자 챗봇 관련 법안 100여 건 발의, 14개 제정</li>
+          <li class="y">주 단위 규제 난립으로 연방 단일 법률 필요성 논쟁 심화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">미국 FTC</span>
+        <span class="tag r">AI 정확도 정책</span>
+        <span class="tag y">캘리포니아</span>
+        <span class="tag">주 단위 규제</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ AI 연구 & 기술 -->
+  <div class="section-label"><span class="sdot y"></span> AI 연구 &amp; 기술</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d2207;">🔬</div>
+        <h3>ICML 2026 — 선택적 활성화 희소성(SAS)으로 3배 소형 모델이 동급 성능</h3>
+      </div>
+      <div class="card-body">
+        ICML 2026에서 가장 많이 인용된 연구는 <strong>Selective Activation Sparsity(SAS)</strong> 훈련 기법이다. 태스크별로 가장 관련성 높은 파라미터만 활성화해, 모델 크기를 1/3로 줄여도 추론 벤치마크에서 동급 성능을 달성한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">모델 압축·증류: 추론 정확도 유지하며 학습 시간·GPU 메모리 대폭 절감</li>
+          <li>보안·견고 에이전트: 인젝션·탈옥 위험 측정·감소를 위한 재현 가능 공격 라이브러리</li>
+          <li>장기 컨텍스트 효율화: 학습 없이 KV 캐시 예산을 크게 줄이는 압축 기술</li>
+          <li class="y">도메인 배포용 평가·벤치마크 다양화 — 실사용 환경 신뢰성 측정 강화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">ICML 2026</span>
+        <span class="tag">SAS 훈련 기법</span>
+        <span class="tag g">모델 압축</span>
+        <span class="tag">에이전트 보안</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🛡️</div>
+        <h3>Sakana AI Fugu-Cyber — 사이버보안 특화 AI 86.9% 달성</h3>
+      </div>
+      <div class="card-body">
+        Sakana AI가 보안 전용 파인튜닝 모델 <strong>Fugu-Cyber</strong>를 공개했다. CyberGym 벤치마크 86.9%, CTI-REALM 72.1%로 범용 AI 대비 사이버보안 태스크에서 현저한 우위를 보인다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Fugu 오케스트레이션 모델 기반 보안 특화 엔드포인트</li>
+          <li class="g">CTI(사이버 위협 인텔리전스)·CTF 풀이·취약점 분석 특화</li>
+          <li class="y">Claude Opus 5·GPT-5.6도 사이버보안 전용 모델에는 뒤처지는 결과 — 도메인 특화 AI의 재부상</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">🔒</span>
+          <span>범용 AI vs 도메인 특화 AI 격차: 사이버보안·의료·법률 분야에서 전문 파인튜닝 모델이 우위를 점하는 트렌드</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag p">Sakana AI</span>
+        <span class="tag r">Fugu-Cyber</span>
+        <span class="tag">CyberGym 86.9%</span>
+        <span class="tag y">도메인 특화 AI</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🤖</div>
+        <h3>Claude Cowork (7/7 출시) — 오프라인 유지 장기 실행 에이전트</h3>
+      </div>
+      <div class="card-body">
+        Anthropic의 <strong>Claude Cowork</strong>가 7월 7일 출시됐다. 이메일·캘린더·파일 처리 등 장기 실행 작업을 디바이스가 오프라인 상태에서도 계속 수행하는 에이전트 서비스다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">디바이스 꺼진 이후에도 작업 지속 — 진정한 비동기 에이전트 구현</li>
+          <li>이메일·캘린더·파일 관리 등 업무 자동화에 특화</li>
+          <li>Anthropic의 에이전트 서비스 포트폴리오: Cowork + Claude for Work + API 에이전트</li>
+          <li class="y">장기 실행 에이전트가 단순 챗봇 수준을 넘어 "AI 직원" 역할로 진화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag p">Claude Cowork</span>
+        <span class="tag">Anthropic</span>
+        <span class="tag g">비동기 에이전트</span>
+        <span class="tag">업무 자동화</span>
+        <span class="tag">2026-07-07</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ 인프라 & 반도체 -->
+  <div class="section-label"><span class="sdot g"></span> 인프라 &amp; 반도체</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1b2f22;">⚙️</div>
+        <h3>AI 경쟁 축, GPU 성능 → 전력·광통신·데이터센터 인프라로 이동</h3>
+      </div>
+      <div class="card-body">
+        2026년 7월 4주차 반도체 업계 분석에 따르면, AI 경쟁의 핵심이 GPU 연산 성능보다 <strong>전력·광통신·데이터센터 인프라</strong> 역량으로 이동하고 있다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">3M-Microsoft, Expanded Beam Optical(EBO) 기술로 데이터센터 광통신 혁신</li>
+          <li>메모리 기업들이 전문 기업과 역할을 분담 — AI 생태계 중심 경쟁으로 전환</li>
+          <li class="y">장기공급계약(LTA)·국가별 기술통제·공급망 자립이 글로벌 반도체 새 질서로</li>
+          <li>뉴욕주 50MW 이상 하이퍼스케일 데이터센터 1년 동결 지속 — 전력 제약 현실화</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">⚡</span>
+          <span>AI 훈련·추론 전력 수요 폭증으로 전력망·냉각·광통신이 AI 인프라 경쟁력의 새 병목으로 부상</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag g">인프라 경쟁</span>
+        <span class="tag">광통신 EBO</span>
+        <span class="tag y">전력 제약</span>
+        <span class="tag">데이터센터</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d2207;">🔥</div>
+        <h3>추론 비용 전쟁 심화 — 출력 토큰 $4~6/M 수렴, 오픈소스 경쟁 가열</h3>
+      </div>
+      <div class="card-body">
+        7월 초 GPT-5.6·Grok 4.5·Muse Spark 1.1이 24시간 내 동시 출시되며 촉발된 가격 전쟁이 주간 릴리즈 파도와 결합해 추론 비용 하락을 가속하고 있다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">출력 토큰 비용 $4~6/M 수준으로 수렴 — 6개월 전 대비 50% 이상 하락</li>
+          <li>Meta의 유료 클로즈드 모델 Muse Spark 1.1 — "에이전트 추론 레이어 수익화" 전략</li>
+          <li class="g">오픈소스 Qwen·Ling·Kimi가 클로즈드 모델 압박 — 원가 경쟁 한계 근접</li>
+          <li>Claude Opus 5 $5/$25 vs Fable 5 $10/$50 — 프리미엄 모델 가격도 반토막</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">추론 비용 전쟁</span>
+        <span class="tag">오픈소스</span>
+        <span class="tag y">Qwen</span>
+        <span class="tag">Kimi</span>
+        <span class="tag g">비용 하락</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://www.anthropic.com/news/claude-opus-5" target="_blank">Introducing Claude Opus 5 — Anthropic</a></li>
+      <li><a href="https://techcrunch.com/2026/07/24/anthropic-launches-opus-5/" target="_blank">Anthropic launches Opus 5 — TechCrunch</a></li>
+      <li><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-6-flash-3-5-flash-lite-3-5-flash-cyber/" target="_blank">Introducing Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber — Google Blog</a></li>
+      <li><a href="https://techcrunch.com/2026/07/21/google-releases-three-new-gemini-models-but-no-3-5-pro/" target="_blank">Google releases three new Gemini models — but no 3.5 Pro — TechCrunch</a></li>
+      <li><a href="https://www.digitalapplied.com/blog/seven-days-seven-releases-july-2026-model-wave" target="_blank">Seven Days, Seven Model Releases: The New AI Normal — Digital Applied</a></li>
+      <li><a href="https://news.microsoft.com/source/2026/07/21/microsoft-and-mistral-expand-strategic-partnership-to-give-enterprises-and-regulated-industries-frontier-ai-they-can-control/" target="_blank">Microsoft and Mistral expand strategic partnership — Microsoft Source</a></li>
+      <li><a href="https://news.microsoft.com/source/2026/07/23/databricks-and-microsoft-expand-partnership-to-help-enterprises-bring-business-context-to-enterprise-ai/" target="_blank">Databricks and Microsoft expand partnership — Microsoft Source</a></li>
+      <li><a href="https://newsroom.intel.com/artificial-intelligence/intel-google-cloud-announce-collaboration-to-accelerate-intel-ai-enabled-enterprise-transformation" target="_blank">Intel and Google Cloud Announce Collaboration — Intel Newsroom</a></li>
+      <li><a href="https://aicitizenlab.com/entry/korea-ai-regulations-grace-period-2026" target="_blank">한국 AI기본법 2026년 7월 21일 시행 — AI Citizen Lab</a></li>
+      <li><a href="https://www.consilium.europa.eu/en/press/press-releases/2026/06/29/artificial-intelligence-council-gives-final-green-light-to-simplify-and-streamline-rules/" target="_blank">EU AI Act — Consilium Press Release</a></li>
+      <li><a href="https://www.ftc.gov/news-events/news/press-releases/2026/07/ftc-seeks-public-comment-policy-statement-addressing-ai-accuracy" target="_blank">FTC Seeks Public Comment on AI Accuracy Policy — FTC</a></li>
+      <li><a href="https://kersai.com/ai-breakthroughs-july-2026/" target="_blank">AI Breakthroughs July 2026 — KERSAI</a></li>
+      <li><a href="https://www.sptatimeskorea.com/post/%EC%A0%9C-20260726-ai-01%ED%98%B8-2026%EB%85%84-7%EC%9B%94-4%EC%A3%BC%EC%B0%A8-%EA%B8%80%EB%A1%9C%EB%B2%8C-%EB%B0%98%EB%8F%84%EC%B2%B4%EC%82%B0%EC%97%85-%EA%B4%80%EB%A0%A8-%EA%B8%B0%EC%82%AC-%EB%B6%84%EC%84%9D" target="_blank">2026년 7월 4주차 글로벌 반도체산업 기사 분석 — SPTAtimes Korea</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>자동 생성 · 2026년 7월 27일 (월) KST · Claude Sonnet 4.6</footer>
+
+</body>
+</html>

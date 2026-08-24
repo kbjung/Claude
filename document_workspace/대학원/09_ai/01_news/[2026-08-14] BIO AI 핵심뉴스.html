@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[2026-08-14] BIO AI 핵심뉴스</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #7ee787;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --tag-bg: rgba(88,166,255,0.12);
+      --tag-border: rgba(88,166,255,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: 5%;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(210,168,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .header-left { flex: 1; min-width: 0; }
+    .header-date-badge {
+      flex-shrink: 0;
+      align-self: center;
+      background: rgba(126,231,135,0.08);
+      border: 1px solid rgba(126,231,135,0.25);
+      color: var(--accent2);
+      font-size: 0.88rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .header-badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .header-date {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (min-width: 620px) {
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-num {
+      font-size: 27px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-count {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .news-grid, .news-grid-2, .news-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 620px) {
+      .news-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .news-card.full { grid-column: 1 / -1; }
+
+    @media (max-width: 619px) {
+      .news-grid, .news-grid-2, .news-grid-3 { grid-template-columns: 1fr; }
+      .news-card.full { grid-column: 1; }
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .news-card.blue::before   { background: linear-gradient(90deg, var(--accent), var(--accent4)); }
+    .news-card.green::before  { background: linear-gradient(90deg, var(--accent2), #3fb950); }
+    .news-card.orange::before { background: linear-gradient(90deg, var(--accent5), #e3b341); }
+    .news-card.red::before    { background: linear-gradient(90deg, var(--accent3), #f0883e); }
+    .news-card.purple::before { background: linear-gradient(90deg, var(--accent4), var(--accent)); }
+
+    .news-card:hover {
+      border-color: #444c56;
+      transform: translateY(-2px);
+    }
+    .news-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .news-emoji {
+      font-size: 25px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .news-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+    .news-card-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .news-card-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .tag.blue   { background: rgba(88,166,255,0.12);  border: 1px solid rgba(88,166,255,0.25);  color: var(--accent); }
+    .tag.green  { background: rgba(126,231,135,0.1);  border: 1px solid rgba(126,231,135,0.25); color: var(--accent2); }
+    .tag.orange { background: rgba(255,166,87,0.1);   border: 1px solid rgba(255,166,87,0.25);  color: var(--accent5); }
+    .tag.red    { background: rgba(247,129,102,0.1);  border: 1px solid rgba(247,129,102,0.25); color: var(--accent3); }
+    .tag.purple { background: rgba(210,168,255,0.1);  border: 1px solid rgba(210,168,255,0.25); color: var(--accent4); }
+
+    .news-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .news-card-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .news-card-meta a:hover { text-decoration: underline; }
+    .meta-dot { color: var(--border); }
+
+    .paper-info {
+      background: rgba(88,166,255,0.05);
+      border: 1px solid rgba(88,166,255,0.15);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .paper-info strong { color: var(--accent); font-weight: 600; }
+
+    .blist { list-style: none; display: flex; flex-direction: column; gap: 6px; margin: 6px 0 2px; }
+    .blist li { font-size: 14px; color: var(--text-secondary); padding-left: 16px; position: relative; line-height: 1.65; }
+    .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 13px; }
+    .blist li.green::before  { color: var(--accent2); }
+    .blist li.orange::before { color: var(--accent5); }
+    .blist li.red::before    { color: var(--accent3); }
+    .blist li.purple::before { color: var(--accent4); }
+    .blist li strong { color: var(--text-primary); font-weight: 600; }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(210,168,255,0.04) 100%);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .highlight-box-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .highlight-table th {
+      text-align: left;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .highlight-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(48,54,61,0.5);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .highlight-table td:first-child {
+      color: var(--text-primary);
+      font-weight: 600;
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table td:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table tr:last-child td { border-bottom: none; }
+
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-top: 40px;
+    }
+    .sources-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sources-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sources-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .sources-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .sources-list a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 { font-size: 24px; }
+      .header-inner { flex-direction: column; }
+      .header-date-badge { align-self: flex-start; }
+      .container { padding: 24px 16px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">BIO AI</span>
+        <span class="header-date">2026년 8월 14일 (금)</span>
+      </div>
+      <h1>🧬 BIO AI <span>핵심뉴스</span></h1>
+      <p class="header-subtitle">펩타이드·단백질 AI 논문 · 신약개발 플랫폼 · 빅테크 바이오 파트너십 · FDA 규제 동향 · 국내 동향</p>
+    </div>
+    <div class="header-date-badge">2026-08-14</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 통계 요약 -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent4);">2</div>
+      <div class="stat-label">펩타이드·단백질 AI</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent2);">2</div>
+      <div class="stat-label">AI 신약 플랫폼·투자</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent5);">2</div>
+      <div class="stat-label">빅파마 AI 파트너십</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent3);">2</div>
+      <div class="stat-label">FDA·규제·국내</div>
+    </div>
+  </div>
+
+  <!-- 주요 이슈 요약 -->
+  <div class="highlight-box">
+    <div class="highlight-box-title">⚡ 이번 주 주요 이슈 요약 (2026.08.08 – 08.14)</div>
+    <table class="highlight-table">
+      <thead>
+        <tr>
+          <th>이슈</th>
+          <th>영역</th>
+          <th>하이라이트</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Novo Nordisk × AWS</td>
+          <td>전사적 agentic AI 전략 파트너십, 런던 공동혁신허브 구축</td>
+          <td style="color:var(--accent5);">신약발굴~임상 단축</td>
+          <td>2026-08-10</td>
+        </tr>
+        <tr>
+          <td>Roche × Recursion</td>
+          <td>AI 발굴 신경퇴행성질환 표적 첫 검증 완료, 최대 40개 프로그램 중 1호</td>
+          <td style="color:var(--accent3);">$3M 마일스톤</td>
+          <td>2026-08-05</td>
+        </tr>
+        <tr>
+          <td>Aureka Biotechnologies</td>
+          <td>생물학 파운데이션모델 'Biological World Model' 구축</td>
+          <td style="color:var(--accent2);">$100M Series B</td>
+          <td>2026-08-10</td>
+        </tr>
+        <tr>
+          <td>대구 AI×바이오 혁신연구거점</td>
+          <td>국내 첫 순환형(AI+자동화실험실) 신약개발 시범사업단 출범</td>
+          <td style="color:var(--accent4);">과기정통부</td>
+          <td>2026-08-12</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 펩타이드·단백질 AI 연구 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(210,168,255,0.1);">🔬</div>
+    <span class="section-title">펩타이드 · 단백질 AI 연구</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card purple">
+      <div class="news-card-top">
+        <span class="news-emoji">🧩</span>
+        <span class="news-card-title">ByteDance Seed 'SeedProteo' — 전원자(All-Atom) 동시생성 단백질 바인더 디퓨전 모델, 실험 검증 적중률 70~80%</span>
+      </div>
+      <div class="paper-info">
+        <strong>논문(프리프린트):</strong> Qu W, Ma Y, Ye F, Lu C, Zhou Y, Zhang K, Wang L, Gui M, Gu Q. "SeedProteo: Accurate De Novo All-Atom Design of Protein Binders." arXiv:2512.24192.<br>
+        <strong>저자 소속:</strong> ByteDance Seed (단일 기관, 사내 AI 연구팀)
+      </div>
+      <div class="news-card-body">
+        ByteDance의 AI 연구조직 <strong>Seed</strong>가 전 원자(all-atom) 코디자인 방식의 단백질 바인더 설계 모델 <strong>SeedProteo</strong>를 공개했다.
+        <ul class="blist">
+          <li class="purple">백본·측쇄·서열을 하나의 디퓨전 모델에서 동시 생성 — 구조예측·서열설계를 분리했던 기존 파이프라인의 병목 제거</li>
+          <li>무조건부 단백질 생성·바인더 설계 양쪽에서 최고 수준(SOTA) 성능 보고</li>
+          <li class="green">치료제 표적 2건 습식실험 검증: <strong>적중률 70~80%, 피코몰 수준 결합친화도</strong> 달성</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag purple">SeedProteo</span>
+        <span class="tag purple">ByteDance Seed</span>
+        <span class="tag blue">단백질 바인더 설계</span>
+        <span class="tag green">All-Atom Diffusion</span>
+        <span class="tag orange">프리프린트</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2025-12 (arXiv 게재) · 2026-08 (확산)</span>
+        <span class="meta-dot">·</span>
+        <a href="https://arxiv.org/abs/2512.24192" target="_blank">arXiv</a>
+        <span class="meta-dot">·</span>
+        <a href="https://papers.cool/arxiv/2512.24192" target="_blank">Papers.cool</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <span class="news-emoji">📖</span>
+        <span class="news-card-title">"생성형 AI 기반 펩타이드 신약설계" 리뷰 — 구조예측·생성설계·상호작용 모델링 트렌드 종합</span>
+      </div>
+      <div class="paper-info">
+        <strong>논문:</strong> Ekambaram S, Dokholyan NV. "Peptide-based drug design using generative AI." <em>Chemical Communications</em> 62(3), 672–691 (2026). DOI: 10.1039/d5cc04998a<br>
+        <strong>저자 소속:</strong> University of Virginia — Department of Neurology(Ekambaram); Departments of Neuroscience, Pharmacology, Biomedical Engineering, Microbiology·Immunology & Cancer Biology(Dokholyan, 교신저자)
+      </div>
+      <div class="news-card-body">
+        버지니아대(UVA) 연구진이 <em>Chemical Communications</em>에 펩타이드 신약설계 분야 생성형 AI 활용 흐름을 정리한 리뷰 논문을 발표했다.
+        <ul class="blist">
+          <li class="blue">AI 활용 초점이 <strong>구조 예측 → 생성형 설계 → 상호작용 모델링</strong>으로 이동</li>
+          <li>GNN·트랜스포머·디퓨전 모델 등 아키텍처가 표적 특이적 신규 서열 생성 가속화</li>
+          <li class="orange">용해도·면역원성·독성 예측은 여전히 주요 난제로 지적</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag blue">리뷰 논문</span>
+        <span class="tag blue">UVA</span>
+        <span class="tag green">Chemical Communications</span>
+        <span class="tag purple">생성형 펩타이드 설계</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026 (Vol. 62, Issue 3)</span>
+        <span class="meta-dot">·</span>
+        <a href="https://pubs.rsc.org/en/content/articlelanding/2026/cc/d5cc04998a" target="_blank">Chemical Communications (RSC)</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.researchgate.net/publication/398582202" target="_blank">ResearchGate</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② AI 신약개발 플랫폼·투자 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(126,231,135,0.1);">🚀</div>
+    <span class="section-title">AI 신약개발 플랫폼 · 투자 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <span class="news-emoji">💰</span>
+        <span class="news-card-title">Aureka Biotechnologies, "생물학 월드모델" 구축에 $100M Series B 유치 — 누적 투자 $200M 육박</span>
+      </div>
+      <div class="news-card-body">
+        미·중 라이프사이언스 스타트업 <strong>Aureka Biotechnologies</strong>(CEO Weian Zhao, 2023년 설립)가 생물학 파운데이션모델 구축에 1억 달러 시리즈B를 유치했다.
+        <ul class="blist">
+          <li class="green">Granite Asia 1차 트랜치 단독투자, 전략적 투자자·HighLight Capital(HLC)·MPCi·NRL Capital 후속 참여 — 누적 투자 약 2억 달러</li>
+          <li>신물질 설계(de novo molecular design)·생물학적 구조 모델링·기능 예측 성능 강화에 투입</li>
+          <li class="blue">AI 모델·에이전트·디지털 바이올로지·실험 플랫폼 결합한 엔드투엔드 신약개발이 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag green">Aureka Biotechnologies</span>
+        <span class="tag green">Series B $100M</span>
+        <span class="tag blue">Biological World Model</span>
+        <span class="tag purple">Granite Asia</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-10</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.biospace.com/press-releases/aureka-biotechnologies-raises-us-100-million-series-b-to-build-a-biological-world-model-for-drug-discovery" target="_blank">BioSpace</a>
+        <span class="meta-dot">·</span>
+        <a href="https://pulse2.com/aureka-biotechnologies-raises-100-million-series-b-to-build-biological-world-model-for-drug-discovery/" target="_blank">Pulse 2.0</a>
+      </div>
+    </div>
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <span class="news-emoji">🧪</span>
+        <span class="news-card-title">QuantHealth, AI 임상시험 시뮬레이션 플랫폼에 $45M Series B — 상위 20대 제약사 중 12곳 이미 도입</span>
+      </div>
+      <div class="news-card-body">
+        AI 기반 임상시험 시뮬레이션 스타트업 <strong>QuantHealth</strong>가 Qumra Capital 주도로 4,500만 달러 시리즈B를 유치했다.
+        <ul class="blist">
+          <li class="green">Sanofi Ventures·Pitango HealthTech·Bertelsmann Healthcare Investments 등 참여 — 환자 등록 전 결과를 예측하는 '시뮬레이션 퍼스트' 방식</li>
+          <li>600건 이상 시뮬레이션 임상시험에서 <strong>예측 정확도 최대 90%</strong> 보고</li>
+          <li class="blue">상위 20대 제약사 중 12곳 이미 도입, 종양·심대사·염증 등 40개 이상 적응증으로 확장 예정</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag green">QuantHealth</span>
+        <span class="tag green">Series B $45M</span>
+        <span class="tag blue">임상시험 시뮬레이션</span>
+        <span class="tag purple">Sanofi Ventures</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-04</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.fiercehealthcare.com/finance/quanthealth-raises-45m-series-b-accelerate-ai-driven-clinical-trial-simulations" target="_blank">Fierce Healthcare</a>
+        <span class="meta-dot">·</span>
+        <a href="https://medcitynews.com/2026/08/quanthealth-ai-drug-discovery/" target="_blank">MedCity News</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 빅파마·빅테크 AI 파트너십 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(255,166,87,0.1);">🏢</div>
+    <span class="section-title">빅파마 · 빅테크 AI 파트너십 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <span class="news-emoji">🤝</span>
+        <span class="news-card-title">Novo Nordisk × AWS — 전사적 agentic AI 전략 파트너십, 런던 공동혁신허브서 신약발굴~임상 전주기 단축</span>
+      </div>
+      <div class="news-card-body">
+        <strong>Novo Nordisk</strong>가 8월 10일 AWS를 우선 클라우드·전략 AI 파트너로 지정하는 전사적 파트너십을 발표했다.
+        <ul class="blist">
+          <li class="orange">런던에 <strong>공동혁신허브</strong> 구축 — Amazon Bio Discovery·Bedrock·AgentCore로 멀티오믹스·영상·임상데이터 통합, 표적발굴~최초인체투여(first-in-human) 경로 압축</li>
+          <li>연구·임상개발·제조·IT 운영 전반에 agentic AI 애플리케이션 적용</li>
+          <li class="blue">2만 5,000명 이상 직원 생산성 향상이 초기 성과 — Amazon Pharmacy·Ads·One Medical 연계 가능성도 시사</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag orange">Novo Nordisk</span>
+        <span class="tag orange">AWS</span>
+        <span class="tag blue">Agentic AI</span>
+        <span class="tag purple">Bedrock·AgentCore</span>
+        <span class="tag green">공동혁신허브</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-10</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.globenewswire.com/news-release/2026/08/10/3341794/0/en/novo-nordisk-and-aws-enter-strategic-partnership-to-accelerate-drug-discovery-through-ai.html" target="_blank">GlobeNewswire</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.fiercebiotech.com/biotech/novo-nordisk-and-aws-sign-ai-drug-discovery-pact-launch-london-innovation-hub" target="_blank">Fierce Biotech</a>
+        <span class="meta-dot">·</span>
+        <a href="https://aws.amazon.com/blogs/industries/novo-nordisk-selects-aws-as-strategic-partner-to-accelerate-drug-discovery-with-ai/" target="_blank">AWS Blog</a>
+      </div>
+    </div>
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <span class="news-emoji">🧠</span>
+        <span class="news-card-title">Roche × Recursion — AI 발굴 신경퇴행성질환 표적 첫 검증 완료, 최대 40개 프로그램 중 1호 진전</span>
+      </div>
+      <div class="news-card-body">
+        <strong>Roche</strong>가 <strong>Recursion Pharmaceuticals</strong>와의 AI 신약발굴 협업 첫 프로젝트를 진전시켰다고 8월 5일 밝혔다.
+        <ul class="blist">
+          <li class="orange">대상은 알츠하이머·파킨슨 등 <strong>신경퇴행성질환</strong> 표적 — Recursion이 1조 개 이상 배양뉴런 유전자 넉아웃 데이터로 구축한 '생물학 지도(maps of biology)'에서 발굴</li>
+          <li>검증 패키지 승인으로 <strong>300만 달러 마일스톤</strong> 지급</li>
+          <li class="purple">전체 협업 최대 <strong>40개 프로그램 중 첫 사례</strong> — AI 신약발굴 실효성을 가늠하는 초기 시험대</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag orange">Roche</span>
+        <span class="tag orange">Recursion</span>
+        <span class="tag blue">신경퇴행성질환</span>
+        <span class="tag purple">AI 표적 발굴</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-05</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.bloomberg.com/news/articles/2026-08-05/roche-advances-ai-derived-drug-target-with-partner-recursion" target="_blank">Bloomberg</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.genengnews.com/topics/artificial-intelligence/recursion-partners-with-genentech-to-advance-first-validated-neuro-target-discovered-through-ai-map/" target="_blank">GEN</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ FDA 규제 & 국내 K-바이오 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(247,129,102,0.1);">🏥</div>
+    <span class="section-title">FDA 규제 · 국내 K-바이오 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <span class="news-emoji">🇰🇷</span>
+        <span class="news-card-title">국내 첫 '순환형 AI 신약개발' 시범사업단 출범 — AI 후보발굴 → 자동화실험실 검증 → 재학습 폐쇄루프</span>
+      </div>
+      <div class="news-card-body">
+        과학기술정보통신부가 8월 11~12일 잇달아 출범식을 열며 국내 첫 AI 기반 신약개발 혁신거점 구축을 본격화했다.
+        <ul class="blist">
+          <li class="blue">8/11 서울 <strong>'자율실험실 산·학·연 협의체'</strong> 출범 — 장비·자동화·AI기업, 반도체·소재 등 수요기업 50개사와 대학·연구기관 30여 곳 등 총 80여 개 기관 참여</li>
+          <li class="green">8/12 대구 <strong>'합성신약 분야 AI×바이오 혁신연구거점 조성 시범사업단'</strong> 출범 — 대구경북첨단의료산업진흥재단이 HLB생명과학·아론티어·몰큐브·에이블랩스 등과 'A2 수준' 자동화실험 인프라 운영</li>
+          <li>AI 후보발굴 → 자동화실험실 검증 → 데이터 재학습으로 이어지는 <strong>순환형(폐쇄루프) 연구 시스템</strong>으로 개발 기간·비용 절감이 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag blue">자율실험실</span>
+        <span class="tag blue">순환형 AI 신약개발</span>
+        <span class="tag green">과기정통부</span>
+        <span class="tag purple">대구경북첨단의료산업진흥재단</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-11 (협의체) · 2026-08-12 (시범사업단)</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.ddaily.co.kr/page/view/2026081212070905179" target="_blank">디지털데일리</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.mstoday.co.kr/news/articleView.html?idxno=102299" target="_blank">MS투데이</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.hellodd.com/news/articleView.html?idxno=112789" target="_blank">헬로디디</a>
+      </div>
+    </div>
+
+    <div class="news-card red">
+      <div class="news-card-top">
+        <span class="news-emoji">📋</span>
+        <span class="news-card-title">FDA CDER·CBER, AI 최종 가이던스는 여전히 지연 — 디지털헬스기술(DHT) 원격데이터 공동연구비 공고로 우회 대응</span>
+      </div>
+      <div class="news-card-body">
+        FDA의 AI 활용 최종 가이던스는 2분기 목표를 넘겨 8월 현재도 초안 단계에 머물러 있다.
+        <ul class="blist">
+          <li class="red">초안 <strong>"Considerations for the Use of AI to Support Regulatory Decision Making for Drug and Biological Products"</strong>, 2026 2분기 최종본 목표였으나 지연</li>
+          <li>대신 CDER·CBER이 8월 초 액티그래피·사진·비접촉센서 등 원격데이터 수집용 디지털헬스기술(DHT) 공동연구비 공고</li>
+          <li class="blue">2026년 가이던스 아젠다에 '제약 제조 AI/ML 품질관리' 초안도 포함 — 통합본보다 세부 영역별 가이던스가 먼저 순차 발표되는 흐름</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag red">FDA</span>
+        <span class="tag red">가이던스 지연</span>
+        <span class="tag blue">디지털헬스기술(DHT)</span>
+        <span class="tag purple">CDER·CBER</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08 (현재 상태)</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.raps.org/resource/cder-plans-new-guidance-on-ai-electronic-safety-report-submissions-and-more.html" target="_blank">RAPS</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.fda.gov/about-fda/center-drug-evaluation-and-research-cder/artificial-intelligence-drug-development" target="_blank">FDA CDER</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources-section">
+    <div class="sources-title">📚 주요 출처</div>
+    <ul class="sources-list">
+      <li><a href="https://arxiv.org/abs/2512.24192" target="_blank">arXiv — SeedProteo: Accurate De Novo All-Atom Design of Protein Binders (ByteDance Seed)</a></li>
+      <li><a href="https://pubs.rsc.org/en/content/articlelanding/2026/cc/d5cc04998a" target="_blank">Chemical Communications — Peptide-based drug design using generative AI (UVA, 2026)</a></li>
+      <li><a href="https://www.biospace.com/press-releases/aureka-biotechnologies-raises-us-100-million-series-b-to-build-a-biological-world-model-for-drug-discovery" target="_blank">BioSpace — Aureka Biotechnologies Raises $100M Series B (2026-08-10)</a></li>
+      <li><a href="https://www.fiercehealthcare.com/finance/quanthealth-raises-45m-series-b-accelerate-ai-driven-clinical-trial-simulations" target="_blank">Fierce Healthcare — QuantHealth Raises $45M Series B (2026-08-04)</a></li>
+      <li><a href="https://www.globenewswire.com/news-release/2026/08/10/3341794/0/en/novo-nordisk-and-aws-enter-strategic-partnership-to-accelerate-drug-discovery-through-ai.html" target="_blank">GlobeNewswire — Novo Nordisk and AWS Strategic Partnership (2026-08-10)</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-08-05/roche-advances-ai-derived-drug-target-with-partner-recursion" target="_blank">Bloomberg — Roche Advances AI-Derived Drug Target With Partner Recursion (2026-08-05)</a></li>
+      <li><a href="https://www.ddaily.co.kr/page/view/2026081212070905179" target="_blank">디지털데일리 — AI가 신약 후보 찾고 실험실이 검증…정부 K-문샷 신약개발 거점 가동 (2026-08-12)</a></li>
+      <li><a href="https://www.raps.org/resource/cder-plans-new-guidance-on-ai-electronic-safety-report-submissions-and-more.html" target="_blank">RAPS — CDER Plans New Guidance on AI, Electronic Safety Report Submissions</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  🧬 BIO AI 핵심뉴스 | 2026-08-14 | 자동 수집 · AI 분석 정리
+</footer>
+
+</body>
+</html>

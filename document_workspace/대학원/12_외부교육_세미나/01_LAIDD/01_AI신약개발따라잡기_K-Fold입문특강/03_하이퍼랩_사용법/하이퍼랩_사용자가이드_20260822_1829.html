@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하이퍼랩(HyperLab) 사용자 가이드</title>
+<style>
+:root{
+  --bg:#f7f8fa; --card:#fff; --line:#e2e6ec; --text:#1f2937; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff6ff; --warn:#b45309; --warn-soft:#fffbeb;
+  --green:#047857; --green-soft:#ecfdf5; --red:#b91c1c; --red-soft:#fef2f2;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--text);
+     font-family:'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif;line-height:1.7;}
+.wrap{max-width:960px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+      border-radius:14px;padding:36px 40px 48px;}
+h1{font-size:24px;margin:0 0 18px;letter-spacing:-0.5px;padding-bottom:14px;
+   border-bottom:3px solid var(--accent);}
+h2{font-size:18px;margin:34px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--accent);
+   display:inline-block;}
+h3{font-size:15.5px;margin:24px 0 8px;color:#111827;padding-left:9px;border-left:3px solid var(--accent);}
+h4{font-size:14.5px;margin:18px 0 6px;color:#374151;}
+
+/* 표 — CLAUDE.md 체크리스트 반영 */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px;}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+th{background:#f3f5f8;font-weight:600;white-space:nowrap;}
+td.tight{white-space:nowrap;width:1%;}
+
+/* 인라인 배지 — 한국어 4자 이상도 잘리지 않게 */
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;
+       font-weight:700;white-space:nowrap;}
+.b-ok{background:var(--green-soft);color:var(--green);border:1px solid #b8e6cf;}
+.b-warn{background:var(--warn-soft);color:var(--warn);border:1px solid #f0d9a8;}
+.b-red{background:var(--red-soft);color:var(--red);border:1px solid #f3c2c2;}
+.b-info{background:var(--accent-soft);color:var(--accent);border:1px solid #bfd6fb;}
+
+/* 강조 박스 */
+blockquote,.box-note{margin:14px 0;padding:12px 18px;background:var(--warn-soft);
+       border-left:3px solid var(--warn);border-radius:6px;font-size:13.5px;}
+.box-ok{margin:14px 0;padding:12px 18px;background:var(--green-soft);
+       border-left:3px solid var(--green);border-radius:6px;font-size:13.5px;}
+blockquote p,.box-note p,.box-ok p{margin:5px 0;}
+blockquote table,.box-note table,.box-ok table{font-size:12.5px;}
+
+code{background:#f3f5f8;padding:2px 6px;border-radius:4px;font-size:12.8px;
+     font-family:'D2Coding','Consolas','Malgun Gothic',monospace;}
+pre{background:#1f2937;color:#e5e7eb;padding:16px 18px;border-radius:9px;overflow:auto;
+    font-size:13px;line-height:1.7;}
+pre code{background:none;color:inherit;padding:0;}
+hr{border:none;border-top:1px solid var(--line);margin:30px 0;}
+p,li{font-size:14px;}
+a{color:var(--accent);text-decoration:none;font-weight:600;}
+a:hover{text-decoration:underline;}
+del,s{color:var(--muted);}
+img{max-width:100%;height:auto;}
+figure.figure-keep{margin:16px 0;}
+figure.figure-keep img{display:block;width:100%;}
+
+/* 복사 버튼 블록 */
+.block{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:16px 0;background:#fcfcfd;}
+.bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+       padding:10px 14px;background:#f3f5f8;border-bottom:1px solid var(--line);}
+.btitle{font-size:13.5px;font-weight:700;}
+.copybtn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:7px;
+         padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+         white-space:nowrap;transition:.15s;}
+.copybtn:hover{filter:brightness(1.08);}
+.copybtn.done{background:var(--green);border-color:var(--green);}
+.copybtn.fail{background:var(--red);border-color:var(--red);}
+pre.copytext{margin:0;padding:16px 18px;background:#fff;color:var(--text);font-size:13px;
+     line-height:1.8;white-space:pre-wrap;word-break:break-word;font-family:inherit;}
+
+/* 담당자 입력 필드 */
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0 6px;}
+.fld label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.fld input{width:100%;padding:8px 11px;border:1px solid var(--line);border-radius:7px;
+           font-size:14px;font-family:inherit;}
+.fld input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+
+/* 펩타이드 작업용액 계산기 */
+.calc{margin:16px 0;padding:20px;border:1px solid #bfd6fb;background:#f8fbff;border-radius:12px;}
+.calc h4{margin:0 0 5px;padding:0;border:0;color:#17324d;font-size:16px;}
+.calc .hint{margin:0 0 15px;color:var(--muted);font-size:13px;}
+.calc-grid{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px;}
+.calc-field label{display:block;margin-bottom:4px;color:var(--muted);font-size:12.5px;font-weight:700;}
+.calc-field input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;font:14px inherit;}
+.calc-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.field-reset{margin-top:4px;border:1px solid #c7d2e0;background:#fff;color:#526579;border-radius:5px;padding:3px 7px;font:11.5px inherit;cursor:pointer;}
+.field-reset:hover{background:#f3f7fb;color:var(--accent);}
+.calc-results{margin:18px 0 0;border-collapse:separate;border-spacing:0;border:1px solid #c8d8ec;border-radius:9px;overflow:hidden;}
+.calc-results th{background:#eaf2fc;white-space:normal;}
+.calc-results td{background:#fff;font-variant-numeric:tabular-nums;}
+.calc .formula{margin:14px 0 0;color:#4b5563;font-size:12.5px;}
+.calc .error{margin-top:10px;color:var(--red);font-size:13px;font-weight:700;}
+.calc .default{display:block;margin-top:3px;color:#64748b;font-size:11.5px;font-weight:500;}
+.calc-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px;}
+.calc-reset{border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:7px;padding:7px 12px;font:700 13px inherit;cursor:pointer;}
+.calc-reset:hover{background:var(--accent-soft);}
+.calc-action-note{color:var(--muted);font-size:12.5px;}
+.prep-summary{margin:16px 0 8px;border:1px solid #8fb0d3;border-radius:9px;overflow:hidden;}
+.prep-summary th{background:#173f6a;color:#fff;white-space:normal;}
+.prep-summary td{background:#fff;font-variant-numeric:tabular-nums;}
+.prep-summary tr.highlight td{background:#f0f7ff;}
+.prep-summary .mix{font-weight:700;color:#173f6a;}
+.calc .status{margin:12px 0 0;padding:10px 12px;border-radius:7px;background:#eef7ef;color:#176b2b;font-size:13px;}
+.calc .status.warn{background:var(--warn-soft);color:var(--warn);border-left:3px solid var(--warn);}
+
+footer{max-width:960px;margin:14px auto 0;color:var(--muted);font-size:12.5px;text-align:center;}
+
+@media (max-width:768px){
+  body{padding:18px 10px 40px;}
+  .wrap{padding:20px 16px 30px;}
+  table{font-size:12px;} th,td{padding:6px 7px;}
+  .bhead{flex-direction:column;align-items:stretch;} .copybtn{width:100%;}
+  .calc-grid{grid-template-columns:repeat(2,minmax(130px,1fr));}
+  .prep-summary{font-size:11.5px;} .prep-summary th,.prep-summary td{padding:6px 7px;}
+}
+@media print{
+  figure.figure-keep{break-inside:avoid-page;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>하이퍼랩(HyperLab) 사용자 가이드</h1>
+<blockquote>
+<p>LAIDD 'AI 신약개발 따라잡기 특별 세미나 : K-Fold 입문 특강' 사전 준비용 정리<br />
+원문: <a href="https://docs.hits.ai/docs-ko">HyperLab 공식 유저 가이드</a> (히츠/HITS 제공, GitBook 공개 문서)<br />
+정리일: 2026-08-22</p>
+</blockquote>
+<div class="box-note"><p>GitBook MCP는 제이 계정 소속 조직의 문서에만 접근할 수 있어, 히츠(HITS) 소유의 하이퍼랩 공개 문서는 조회할 수 없었습니다. 대신 공개된 <code>docs.hits.ai/docs-ko</code> 사이트를 웹에서 직접 읽어와 정리했습니다. 전체 문서 중 회원가입~핵심 AI 기능까지 실무에 필요한 페이지 위주로 정리했으며, 세부 화면 조작(버튼 위치 등)은 실제 화면에서 다소 다를 수 있습니다.</p></div>
+<h2>0. 하이퍼랩이란 / K-Fold와의 관계</h2>
+<p>하이퍼랩은 히츠(HITS)가 제공하는 <strong>AI 기반 신약개발 플랫폼(디지털 실험실)</strong>입니다. 구조 기반 약물 발견(Structure-Based Drug Discovery, SBDD)을 축으로, 단백질 구조 등록부터 결합 예측·분자 설계·가상 스크리닝·ADME/T 예측까지 한 플랫폼에서 수행합니다.</p>
+<p>이번에 신청한 <strong>K-Fold 입문 특강</strong>은 하이퍼랩의 AI 과학자(Bio Co-Scientist) 기능 중 <strong>"구조 예측(K-Fold)"</strong> — 단백질 3차원 구조를 예측하는 기능(단독 구조/복합체/삼중 복합체/대량 예측 지원)을 실습하는 과정으로 보입니다. 아래 「6. AI 과학자」 절에 관련 내용을 정리했습니다.</p>
+<hr />
+<h2>1. 시작하기 — 가입 &amp; 로그인</h2>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">1</td>
+<td>로그인용 이메일 주소 입력 (일부 이메일은 비권장으로 표시될 수 있음)</td>
+</tr>
+<tr>
+<td class="tight">2</td>
+<td>이메일로 수신한 6자리 인증코드 입력 → 인증 완료</td>
+</tr>
+<tr>
+<td class="tight">3</td>
+<td>필수/선택 약관 동의</td>
+</tr>
+<tr>
+<td class="tight">4</td>
+<td>회원 정보 입력 — ① 이름·비밀번호·전화번호 ② 담당 업무 ③ 하이퍼랩 기대사항/인지 경로</td>
+</tr>
+<tr>
+<td class="tight">5</td>
+<td><strong>랩스페이스 이름 입력</strong> 후 완료 → 회원가입 종료</td>
+</tr>
+</tbody>
+</table>
+<div class="box-ok"><p>계정 보안을 중요하게 다루기 때문에 가입 단계가 다소 많습니다. 순서대로 따라가면 문제없이 끝난다고 안내되어 있습니다.</p></div>
+<hr />
+<h2>2. 랩스페이스(Labspace)</h2>
+<p>랩스페이스는 하이퍼랩이 제공하는 <strong>디지털 실험실 단위</strong>입니다. 조직 규모에 맞춰 아래처럼 운영할 것을 권장합니다.</p>
+<table>
+<thead>
+<tr>
+<th>단위</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">본부</td>
+<td><code>#HITS</code></td>
+</tr>
+<tr>
+<td class="tight">부서</td>
+<td><code>#신약개발본부</code></td>
+</tr>
+<tr>
+<td class="tight">팀</td>
+<td><code>#의약화학팀</code></td>
+</tr>
+<tr>
+<td class="tight">실험실</td>
+<td><code>#Drug Development Lab</code></td>
+</tr>
+</tbody>
+</table>
+<h3>랩스페이스 생성하기</h3>
+<ol>
+<li>로그인 시 자동 이동하는 랩스페이스 목록 페이지에서 <strong><code>랩스페이스 만들기</code></strong> 클릭</li>
+<li>랩스페이스 유형 선택 (유형에 따라 제공 기능·가능한 연구가 달라짐)</li>
+<li>랩스페이스 이름 입력 (조직명/팀명 권장, 예: <code>HITS</code>, <code>Drug Discovery Lab</code>)</li>
+<li><strong><code>생성</code></strong> 클릭으로 완료</li>
+</ol>
+<h3>OTP 보안 설정</h3>
+<ol>
+<li>OTP를 설정할 랩스페이스 클릭 → 스마트폰 OS에 맞는 OTP 앱 설치 (계정 이메일과 무관하게 사용 가능)</li>
+<li>OTP 앱에서 QR 코드 스캔 → 랩스페이스 이름이 표시된 코드 생성 확인</li>
+<li>앱에 표시된 6자리 코드를 입력하면 등록 완료</li>
+</ol>
+<p><span class="badge b-warn">주의</span> 일부 중국산 스마트폰(Xiaomi Redmi 시리즈 등)에서는 정상 동작이 확인되지 않았습니다. OTP 분실 시 화면 우측 하단 채널톡으로 관리자에게 재등록 문의.</p>
+<h3>멤버 관리 — 권한 표</h3>
+<table>
+<thead>
+<tr>
+<th>역할</th>
+<th>권한</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">오너</td>
+<td>랩스페이스 생성자. 멤버 초대·제외 가능</td>
+</tr>
+<tr>
+<td class="tight">어드민</td>
+<td>멤버 초대 가능, 오너를 제외한 멤버 제외 가능</td>
+</tr>
+<tr>
+<td class="tight">멤버</td>
+<td>조회만 가능</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>멤버 초대: <code>멤버 초대</code> → 이메일 입력 → 하이퍼랩 가입 안내 메일 자동 발송</li>
+<li>멤버 제외: 대상 확인 → <code>제외하기</code> → OTP 입력 → 제외 안내 메일 발송<br />
+  <span class="badge b-warn">주의</span> 프로젝트에 속한 멤버는 먼저 모든 프로젝트에서 제외한 뒤에만 랩스페이스에서 제외 가능</li>
+</ul>
+<hr />
+<h2>3. 프로젝트 &amp; 토큰</h2>
+<h3>토큰 사용 원리</h3>
+<p>계산 제출 시 토큰이 <strong>할당</strong>되고, 완료되면 <strong>반환</strong>됩니다. 토큰은 랩스페이스에 귀속되며, 모든 계산은 <strong>선입선출(FIFO)</strong> 방식으로 처리됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>토큰 수</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">하이퍼 ADME/T</td>
+<td>1</td>
+<td>In-vitro ADME/T 예측</td>
+</tr>
+<tr>
+<td class="tight">하이퍼 바인딩</td>
+<td>3</td>
+<td>결합에너지·3D 결합구조 예측</td>
+</tr>
+<tr>
+<td class="tight">하이퍼 디자인</td>
+<td>6</td>
+<td>신규 유도체 설계(Scaffold hopping)</td>
+</tr>
+<tr>
+<td class="tight">하이퍼 바인딩 Co-Folding</td>
+<td>6</td>
+<td>단백질 구조 + 결합에너지·3D 구조 동시 예측</td>
+</tr>
+<tr>
+<td class="tight">시퀀스 단백질 등록</td>
+<td>6</td>
+<td>Sequence 타입 단백질 등록</td>
+</tr>
+<tr>
+<td class="tight">Hyper Screening X</td>
+<td>1</td>
+<td>초대형 가상 라이브러리 기반 신규 분자 생성</td>
+</tr>
+</tbody>
+</table>
+<p><span class="badge b-info">참고</span> 하이퍼 스크리닝은 토큰과 별개로 <strong>스크리닝 포인트</strong>를 소모하며, 소모된 포인트는 반환되지 않습니다.<br />
+토큰 현황은 좌측 사이드바 <strong>[토큰 사용 현황]</strong>, 플랜 정보는 랩스페이스 설정 <strong>[플랜 &amp; 토큰]</strong>에서 확인합니다.</p>
+<h3>프로젝트 생성하기</h3>
+<p>프로젝트는 "AI 기반 신약개발 실험을 수행하는 독립된 연구 공간"으로, 프로젝트별로 멤버·표적 단백질을 따로 관리합니다.</p>
+<ol>
+<li>랩스페이스 접속 → 상단 메뉴 <strong>프로젝트 리스트</strong> 이동</li>
+<li>우측 상단 <strong>프로젝트 생성</strong> 클릭</li>
+<li>프로젝트 이름 입력 (표적 단백질명 포함 권장, 추후 수정 가능)</li>
+<li>표적 단백질 관련 정보 입력</li>
+<li><strong>생성 완료</strong></li>
+</ol>
+<h3>프로젝트 관리</h3>
+<ul>
+<li><code>…</code> 버튼 → <strong>[프로젝트 관리]</strong>(이름·설명·타겟 단백질·TPP 수정) / <strong>[프로젝트 멤버]</strong>(초대·제외·역할변경)</li>
+<li>멤버 초대: [프로젝트 멤버] → <code>멤버 초대</code> → 랩스페이스 등록 멤버 검색·선택 → 역할 확인 → <code>추가</code> → <code>초대하기</code></li>
+<li>멤버 제외(리더·매니저만 가능): <code>제외하기</code> → 데이터 이관 대상 선택(또는 삭제) → OTP 입력<br />
+  <span class="badge b-warn">주의</span> 멤버 제외 시 해당 멤버가 만든 데이터가 삭제될 수 있음</li>
+<li>프로젝트 삭제: [프로젝트 관리] → [프로젝트 삭제] → 프로젝트 이름 정확히 입력 → OTP → <strong>영구삭제</strong></li>
+</ul>
+<hr />
+<h2>4. 단백질 등록 — SBDD의 출발점</h2>
+<p>하이퍼랩은 <strong>구조 기반 약물 발견(SBDD)</strong> 방식을 씁니다. AI 실험을 시작하려면 먼저 표적 단백질 구조를 <strong>등록 → 활성화</strong>해야 하며, 활성화된 단백질을 기준으로 실험 결과가 관리됩니다.</p>
+<p><strong>절차</strong>: 프로젝트 진입 → <code>단백질 관리</code> → <code>단백질 추가</code> → 유형 선택(3D 구조 / Sequence) → 등록 → 활성화</p>
+<h3>3D 구조로 등록하는 3가지 방법</h3>
+<table>
+<thead>
+<tr>
+<th>방법</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">PDB ID</td>
+<td>실험적으로 결정된 구조(X-ray/Cryo-EM/NMR)를 RCSB PDB ID로 조회</td>
+</tr>
+<tr>
+<td class="tight">AlphaFold</td>
+<td>실험 구조가 없을 때 UniProt ID로 예측 구조 조회. <span class="badge b-warn">주의</span> 리간드 결합 정보는 반영 안 됨</td>
+</tr>
+<tr>
+<td class="tight">파일 업로드</td>
+<td>개인 소장·수정한 PDB 파일 직접 업로드</td>
+</tr>
+</tbody>
+</table>
+<h3>Sequence로 등록하는 2가지 방법</h3>
+<ul>
+<li><strong>검색 추가</strong>: Gene name/Protein name/Organism/UniProt ID/PDB ID로 검색 → 옵션(Mutation, PTM, Coenzyme 등) 설정 → 등록 → 계산 완료 후 활성화</li>
+<li><strong>직접 입력</strong>: Type(Protein/RNA/DNA/Coenzyme/Inorganic ion) 선택 → Copies·체인 정보 입력 → PTM·Binding site 설정(선택) → 등록</li>
+</ul>
+<h3>구조 등록 &amp; 결합 부위 정의 (프로젝트 내 [Protein Structure] 탭)</h3>
+<ol>
+<li><code>[Protein Structure]</code> 탭 → <code>+ 추가</code>로 구조 등록 시작</li>
+<li><strong>결합 부위(Binding site) 정의</strong> — 3가지 방법</li>
+<li>리간드 위치 기준: 결합 중인 리간드 선택 → 자동으로 결합 부위 박스 생성</li>
+<li>잔기(residue) 위치 기준: <code>Select Residue</code>로 잔기 선택(1개만 가능) → 박스 생성</li>
+<li>리간드 구조 파일 업로드: PDB/SDF/MOL2 형식 지원</li>
+<li><code>[Center]</code>, <code>[Box size]</code>는 1.0 Å 단위로 직접 조정 가능 (예측 분자 크기 고려해서 설정 권장)</li>
+</ol>
+<hr />
+<h2>5. Bench &amp; 분자 관리 / 3D Viewer</h2>
+<p><strong>Bench</strong>는 하이퍼랩 상의 "작업 디렉토리" 개념입니다.<br />
+- 개인 Bench: 본인만 열람 가능<br />
+- 공유 Bench: 다른 사용자와 분자 공유 가능</p>
+<p>분자 상세 페이지에서는 기본 정보, Properties, 단백질별 계산 결과, 유사 분자 탐색이 가능하며, 파일 업로드(SDF/CSV 등)로 신규 분자 추가 또는 기존 데이터 병합이 가능합니다.</p>
+<h3>3D Viewer 주요 기능 (13종)</h3>
+<ul>
+<li>결합 부위 표시(원자·잔기·표면 투명도, Surface radius clipping)</li>
+<li>상호작용 표시: 수용체-리간드 / 리간드-리간드 / 수용체-수용체 / 리간드-물 / 수용체-물</li>
+<li>상호작용 유형 10종: 공유결합·충돌·반데르발스·수소결합·약한 수소결합·정전기적 결합·금속 상호작용·소수성 상호작용·Cation-Pi·Pi-Pi</li>
+<li>표시 커스터마이징(색상·크기·라벨), 스크린샷, 전체화면, 2D Interaction Map</li>
+</ul>
+<hr />
+<h2>6. AI 과학자 (Bio Co-Scientist) — 자연어로 실험 요청하기</h2>
+<p>채팅창에 자연어로 요청하면 AI가 아래 작업들을 수행합니다.</p>
+<table>
+<thead>
+<tr>
+<th>카테고리</th>
+<th>가능한 요청 예</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>구조 예측 (K-Fold)</strong></td>
+<td>단독 구조 / 복합체 / TPD·삼중 복합체 / 대량(Bulk) 예측</td>
+</tr>
+<tr>
+<td><strong>디자인 (RFdiffusion / RFantibody)</strong></td>
+<td>De novo 단백질·펩타이드 바인더, Motif scaffolding, 대칭 올리고머, 항체·나노바디</td>
+</tr>
+<tr>
+<td><strong>리서치·정보 조회</strong></td>
+<td>단백질 서열, 실험 구조, 화학 구조, 에피토프, 도메인 구성 검색·주석</td>
+</tr>
+<tr>
+<td><strong>확인·해석</strong></td>
+<td>3D Viewer로 구조 확인, 자연어 해석 리포트, 다음 연구 전략 제안</td>
+</tr>
+</tbody>
+</table>
+<h3>좋은 결과를 얻는 요청 방법</h3>
+<ol>
+<li><strong>목표·작업 유형을 명확히</strong> — 무엇을 위해 예측/설계하는지 명시</li>
+<li><strong>시작 서열</strong>은 직접 붙여넣거나 단백질 이름으로 지정 (이름만 줘도 표준 서열 자동 조회)</li>
+<li><strong>복합체는 구성을 구체적으로</strong> — 어떤 분자가 몇 개, 어떤 형태로 결합하는지</li>
+<li><strong>디자인 요청 시 4가지 정보 필수</strong>: 타깃, 생성할 개수, 시퀀스 길이, 결합 위치</li>
+<li>정확도를 높이려면 참고 구조 첨부, 결합 부위 힌트, 파일/Context 활용</li>
+<li>평가 기준과 다음 행동(선별 방식 등)까지 함께 요청하면 결과를 바로 활용 가능</li>
+</ol>
+<h3>결과 신뢰도 검증 — 4가지 도구</h3>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>확인 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">Trace</td>
+<td>채팅의 작업 블록 클릭 → 판단 근거, 호출한 도구/API, 검색·인용 출처, 실행 스크립트까지 상세 확인</td>
+</tr>
+<tr>
+<td class="tight">Confidence Score</td>
+<td>pLDDT(잔기별 구조 신뢰도), PAE/iPAE(영역 간 상대 위치 신뢰도), pTM/ipTM(전체/복합체 신뢰도). 복합체는 ipTM↑·iPAE↓ 순으로 후보 선별</td>
+</tr>
+<tr>
+<td class="tight">구조 해석</td>
+<td>수치뿐 아니라 핵심 인사이트·한계점을 자연어로 정리해 제공</td>
+</tr>
+<tr>
+<td class="tight">3D Viewer</td>
+<td>예측 구조 최대 5개 컨포머, Mol* 뷰어로 회전·확대·이동</td>
+</tr>
+</tbody>
+</table>
+<p>무거운 계산은 실행 전 <strong>예상 소요시간·예상 비용</strong>을 보여주고 승인을 받은 뒤 시작합니다.</p>
+<h3>결과가 기대와 다를 때 대응 순서</h3>
+<ol>
+<li>Trace + Confidence Score로 어느 단계에서 갈렸는지, 불확실성인지 입력 문제인지 확인</li>
+<li>"왜 이 부위에 결합하도록 예측됐나요?" 등 자연어로 근거를 직접 질문</li>
+<li>결과 하단의 추천 액션(무질서 영역 재설계, druggability 분석 등) 활용</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tight">신뢰도 낮음</td>
+<td>입력 파라미터 재검토, 샘플 개수 증가</td>
+</tr>
+<tr>
+<td class="tight">결합 문제</td>
+<td>에피토프·포켓 재지정, 백본 재설계 또는 서열만 수정</td>
+</tr>
+<tr>
+<td class="tight">항체-항원 불안정</td>
+<td>에피토프·CDR·framework·타깃 구조 정보 수정</td>
+</tr>
+<tr>
+<td class="tight">구조 부자연스러움</td>
+<td>입력 서열·체인 지정·SMILES 확인, 시작점 변경</td>
+</tr>
+</tbody>
+</table>
+<p><span class="badge b-warn">주의</span> 예측·디자인은 동시에 여러 개 진행 가능하지만, <strong>중단 시 소진된 크레딧(토큰)은 환불되지 않습니다.</strong></p>
+<hr />
+<h2>7. 핵심 AI 계산 기능 요약</h2>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>한 줄 설명</th>
+<th>토큰</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>하이퍼 바인딩</strong></td>
+<td>약물-표적 단백질 결합구조·결합에너지를 수 분 내 예측(4단계: 분자 등록→실행→결과 확인→SDF 저장)</td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>하이퍼 디자인</strong></td>
+<td>Hit 화합물의 R-group 치환으로 신규 유도체 자동 설계, 치환 위치별 최대 50개 후보, 계층도로 관리 (전제조건: 하이퍼 바인딩 완료된 hit 화합물 필요)</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>하이퍼 스크리닝</strong></td>
+<td>60만~100만 개 라이브러리를 24시간 내 가상탐색, 물리-딥러닝 융합 알고리즘으로 미학습 단백질도 일반화 예측. 라이브러리: diverse(약 100만개/24h/1만점), fragment(약 50만개/12h/5천점), demo(1천개/0.5h/1천점)</td>
+<td>포인트 별도</td>
+</tr>
+<tr>
+<td><strong>하이퍼 ADME/T</strong></td>
+<td>LogP·Solubility·대사안정성·CYP억제(1A2/2C19/2C9/2D6/3A4)·hERG·P-gp·PAMPA 등 예측. 분자목록/상세정보/등록 시 3가지 실행 경로</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>Hyper Screening X</strong></td>
+<td>상용 빌딩블록+반응 기반 초대형 가상공간에서 합성 가능성 높은 신규 분자 생성. 모델 관리(단백질 구조로 AI 모델 학습)→분자 생성(합성경로 확인 가능)→장바구니(합성 견적 요청)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>Analysis / SAR 분석</strong></td>
+<td>Bench 데이터 기반 자동 분석·그래프 시각화. Core·R-group 기준 치환기별 활성 비교 가능</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>In-house 라이브러리</strong></td>
+<td>자체 화합물 라이브러리 업로드(SDF/CSV, 500MB 이하, CSV는 Name·Structure(SMILES) 필수) 후 하이퍼 스크리닝과 연계</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>8. 전체 문서 목차 (원문 링크)</h2>
+<p>아래는 하이퍼랩 공식 유저 가이드의 전체 목차입니다. 이 문서에 정리되지 않은 세부 페이지(예: 그래프 페이지 세부 기능, Covalent 단백질 등록 세부 절차 등)는 링크에서 직접 확인할 수 있습니다.</p>
+<ul>
+<li><a href="https://docs.hits.ai/docs-ko/undefined.md">하이퍼랩 시작하기</a> · <a href="https://docs.hits.ai/docs-ko/undefined/undefined.md">회원가입</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/lab-sapce-feature-ko/labspace.md">랩스페이스</a> · <a href="https://docs.hits.ai/docs-ko/lab-sapce-feature-ko/labspace/create.md">생성하기</a> · <a href="https://docs.hits.ai/docs-ko/lab-sapce-feature-ko/labspace/otp.md">OTP 보안 설정</a> · <a href="https://docs.hits.ai/docs-ko/lab-sapce-feature-ko/labspace/undefined-1.md">멤버 관리</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/bio-co-scientist/undefined.md">AI 과학자 - 요청 가능 항목</a> · <a href="https://docs.hits.ai/docs-ko/bio-co-scientist/undefined-1.md">요청 방법</a> · <a href="https://docs.hits.ai/docs-ko/bio-co-scientist/ai.md">신뢰·검증</a> · <a href="https://docs.hits.ai/docs-ko/bio-co-scientist/undefined-2.md">대응 방법</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/project-feature-ko/and.md">토큰 &amp; 플랜</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/project/create.md">프로젝트 생성</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/project/member.md">프로젝트 관리</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/project-feature-ko/undefined.md">단백질 관리</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/undefined/undefined/3d.md">3D 구조 추가</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/undefined/undefined/sequence.md">Sequence 추가</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/project-feature-ko/bench.md">Bench</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/3d-viewer.md">3D Viewer</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/project-feature-ko/undefined-2.md">하이퍼 바인딩</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/undefined-1.md">하이퍼 디자인</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/undefined-3.md">하이퍼 스크리닝</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/adme-t-1.md">하이퍼 ADME/T</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/hyper-screening-x.md">Hyper Screening X</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/project-feature-ko/protein_structure.md">구조 등록하기</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/protein_structure/binding_site_1.md">결합 부위 정의</a></li>
+<li><a href="https://docs.hits.ai/docs-ko/project-feature-ko/analysis/sar.md">Analysis / SAR 분석</a> · <a href="https://docs.hits.ai/docs-ko/project-feature-ko/in-house.md">In-house 라이브러리</a></li>
+<li>전체 페이지 목록(자동 생성): <a href="https://docs.hits.ai/llms.txt">llms.txt</a></li>
+</ul>
+<hr />
+<h2>Sources</h2>
+<ul>
+<li><a href="https://docs.hits.ai/docs-ko">HyperLab 유저 가이드 (docs.hits.ai/docs-ko)</a> — 히츠(HITS) 공식 문서</li>
+</ul>
+</div>
+<footer>하이퍼랩_사용자가이드_20260822_1829</footer>
+<script>
+var FIELDS=[['f_name','[[NAME]]','[  성명  ]'],
+            ['f_phone','[[PHONE]]','[  전화  ]'],
+            ['f_email','[[EMAIL]]','[  이메일  ]']];
+function fillAll(){
+  document.querySelectorAll('pre.copytext[data-tpl]').forEach(function(el){
+    var t=el.getAttribute('data-tpl');
+    FIELDS.forEach(function(a){
+      var i=document.getElementById(a[0]);
+      var v=(i&&i.value.trim())?i.value.trim():a[2];
+      t=t.split(a[1]).join(v);
+    });
+    el.textContent=t;
+  });
+}
+FIELDS.forEach(function(a){
+  var i=document.getElementById(a[0]);
+  if(i) i.addEventListener('input',fillAll);
+});
+fillAll();
+
+function flash(b,ok){
+  var o=b.getAttribute('data-label')||b.textContent;
+  b.setAttribute('data-label',o);
+  b.classList.add(ok?'done':'fail');
+  b.textContent=ok?'✔ 복사됨':'✕ 복사 실패';
+  setTimeout(function(){b.classList.remove('done','fail');b.textContent=o;},1700);
+}
+function copyText(text,btn){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-2000px'; ta.style.left='0';
+  document.body.appendChild(ta);
+  ta.select(); ta.setSelectionRange(0,ta.value.length);
+  var ok=false; try{ok=document.execCommand('copy');}catch(e){ok=false;}
+  document.body.removeChild(ta);
+  if(ok){flash(btn,true);return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){flash(btn,true);},function(){flash(btn,false);});
+  } else {flash(btn,false);}
+}
+document.querySelectorAll('.copybtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var el=document.getElementById(b.dataset.target);
+    if(el) copyText(el.textContent,b);
+  });
+});
+
+function fmtCalc(value, digits){
+  if(!isFinite(value)) return '—';
+  return Number(value.toFixed(digits === undefined ? 1 : digits)).toLocaleString('ko-KR');
+}
+function readCalc(id){
+  var el=document.getElementById(id);
+  return el ? Number(el.value) : NaN;
+}
+function updatePeptideCalc(){
+  if(!document.getElementById('pc_animals')) return;
+  var n=readCalc('pc_animals'), dose=readCalc('pc_dose'), active=readCalc('pc_active'),
+      stock=readCalc('pc_stock'), glycerol=readCalc('pc_glycerol'), over=readCalc('pc_over'),
+      aliquot=readCalc('pc_aliquot');
+  var err='', status='', corrected=false;
+  var working=active/dose*1000;
+  var nominal=n*dose;
+  var prep=nominal*(1+over/100);
+  var activeTotal=working*prep/1000;
+  var minStock=working/(1-glycerol/100);
+  var effectiveStock=Math.max(stock,minStock);
+  var stockVol=activeTotal/effectiveStock*1000;
+  var glycerolVol=prep*glycerol/100;
+  var dpbsVol=prep-stockVol-glycerolVol;
+  var reconstitution=aliquot/effectiveStock*1000;
+  var reconstitutionInput=aliquot/stock*1000;
+  var minoxPrep=n*dose*(1+over/100);
+  var maxGlycerol=Math.max(0,100*(1-working/stock));
+  if([n,dose,active,stock,glycerol,over,aliquot].some(function(v){return !isFinite(v) || v < 0;})) err='0 이상의 숫자를 입력하세요.';
+  else if(dose===0 || stock===0) err='도포부피와 보관용액 농도는 0보다 커야 합니다.';
+  else if(glycerol>=100) err='glycerol 비율은 100% 미만으로 입력하세요.';
+  else if(stock < minStock - 0.0001){
+    corrected=true;
+    status='입력한 보관용액 '+fmtCalc(stock,2)+' μM은 작업용액 '+fmtCalc(working,2)+' μM와 glycerol '+fmtCalc(glycerol,1)+'%를 함께 유지하기에 부족합니다. 아래 합성량은 필요한 최소 '+fmtCalc(minStock,2)+' μM 보관용액으로 자동 보정했습니다. 입력 농도를 그대로 사용하려면 glycerol은 최대 '+fmtCalc(maxGlycerol,1)+'%까지로 낮춰야 합니다.';
+  } else {
+    status='입력한 보관용액 농도로 glycerol '+fmtCalc(glycerol,1)+'% 작업용액을 제조할 수 있습니다.';
+  }
+  var out={
+    pc_working:fmtCalc(working,2)+' μM', pc_nominal:fmtCalc(nominal,1)+' μL',
+    pc_prep:fmtCalc(prep,1)+' μL', pc_active_total:fmtCalc(activeTotal,2)+' nmol',
+    pc_stock_vol:fmtCalc(stockVol,1)+' μL', pc_glycerol_vol:fmtCalc(glycerolVol,1)+' μL',
+    pc_dpbs_vol:fmtCalc(Math.max(0,dpbsVol),1)+' μL',
+    pc_reconstitution:fmtCalc(reconstitution,1)+' μL', pc_reconstitution_input:fmtCalc(reconstitutionInput,1)+' μL', pc_min_stock:fmtCalc(minStock,2)+' μM',
+    pc_effective_stock:fmtCalc(effectiveStock,2)+' μM', pc_minox_prep:fmtCalc(minoxPrep,1)+' μL',
+    pc_minox_nominal:fmtCalc(n*dose,1)+' μL', pc_sum_n:n+'마리', pc_sample_sum_n:n+'마리',
+    pc_sum_dose:fmtCalc(dose,1)+' μL', pc_sample_sum_dose:fmtCalc(dose,1)+' μL', pc_sum_prep:fmtCalc(prep,1)+' μL',
+    pc_sum_mix:fmtCalc(stockVol,1)+' μL 보관용액 + '+fmtCalc(glycerolVol,1)+' μL glycerol + '+fmtCalc(Math.max(0,dpbsVol),1)+' μL DPBS',
+    pc_minox_sum_n:n+'마리', pc_minox_sum_dose:fmtCalc(dose,1)+' μL',
+    pc_minox_sum_mix:'5% 원액 '+fmtCalc(minoxPrep,1)+' μL', pc_aliquot_sum:fmtCalc(aliquot,1)+' nmol',
+    pc_stock_sum:fmtCalc(stock,1)+' μM', pc_reconstitution_input_summary:fmtCalc(reconstitutionInput,1)+' μL DPBS'
+  };
+  Object.keys(out).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=err?'—':out[id];});
+  var error=document.getElementById('pc_error'); if(error) error.textContent=err;
+  var st=document.getElementById('pc_status'); if(st){st.textContent=err?'':status;st.className='status'+(corrected?' warn':'');}
+}
+document.querySelectorAll('.peptide-calc input').forEach(function(i){i.addEventListener('input',updatePeptideCalc);});
+var resetCalc=document.getElementById('pc_reset');
+if(resetCalc) resetCalc.addEventListener('click',function(){
+  document.querySelectorAll('.peptide-calc input[data-default]').forEach(function(i){i.value=i.dataset.default;});
+  updatePeptideCalc();
+});
+document.querySelectorAll('.field-reset').forEach(function(b){b.addEventListener('click',function(){
+  var i=document.getElementById(b.getAttribute('data-reset-target'));
+  if(i){i.value=i.dataset.default;updatePeptideCalc();}
+});});
+updatePeptideCalc();
+</script>
+</body>
+</html>

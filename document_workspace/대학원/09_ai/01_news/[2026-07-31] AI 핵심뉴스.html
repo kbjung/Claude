@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-07-31] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #0d1b2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 5%;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-left { flex: 1; min-width: 0; }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .header-badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent1);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .header-date { color: var(--text-muted); font-size: 14px; }
+  header h1 {
+    font-size: 2.1rem; font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.9rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+  .section-label {
+    font-size: 0.83rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+  .grid, .grid-wide, .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.95rem; color: #cdd9e5; line-height: 1.68; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.79rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.94rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.85rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.94rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert.g { background: #0e1e10; border: 1px solid rgba(63,185,80,0.3); color: #b8e5be; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+  .summary-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(188,140,255,0.04) 100%);
+    border: 1px solid rgba(88,166,255,0.22);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 30px;
+  }
+  .summary-box-title {
+    font-size: 0.92rem; font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: #cdd9e5;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .summary-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.86rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.90rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+  footer { text-align: center; color: var(--text-muted); font-size: 0.84rem; padding: 16px 0 32px; }
+  @media (min-width: 620px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid-4, .grid, .grid-wide { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid, .grid-wide { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 1280px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-4, .grid-wide { grid-template-columns: repeat(4, 1fr); }
+    main { max-width: 1440px; }
+    .header-inner { max-width: 1440px; }
+  }
+  @media (min-width: 1700px) {
+    main { max-width: 1800px; }
+    .header-inner { max-width: 1800px; }
+  }
+  @media (max-width: 480px) {
+    header { padding: 20px 0 16px; }
+    .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .summary-box { padding: 16px; overflow-x: auto; }
+    .summary-table td:first-child { white-space: normal; }
+    .summary-table td:last-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">AI</span>
+        <span class="header-date">2026년 7월 31일 (금) KST · 자동 생성</span>
+      </div>
+      <h1><span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">이재명 대통령 '샌프란시스코 AI 선언' (7/24, 950조원 협력) · Nvidia 네이버 1조원 투자·SK 500조원 협력 · Kimi K3 오픈 웨이트 공개 (7/27) · Open Secure AI Alliance 출범(37개사, SKT·네이버 참여) · 과기정통부 에이전틱 AI 이니셔티브 발표 · EU AI Act 투명성 가이드라인 발표</p>
+    </div>
+    <div class="date-badge">2026.07.31.금 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <div class="summary-box">
+    <div class="summary-box-title">🔑 이번 주 핵심 요약 (2026.07.25 ~ 07.31)</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>주체 / 이벤트</th>
+          <th>핵심 내용</th>
+          <th>분류</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>샌프란시스코 AI 선언</td>
+          <td>이재명 대통령이 7월 24일(현지시각) 샌프란시스코 AI 서밋에서 발표. 반도체·AI 인프라·로봇·자율주행 등 약 950조원 규모 협력, 5GW급 AI 데이터센터·GPU 200만 개 상당 컴퓨팅 인프라 구축 계획. 삼성·SK·현대차·네이버 총수와 젠슨 황·샘 올트먼·다리오 아모데이 등 참석</td>
+          <td><span class="tag g">국내 정책</span></td>
+        </tr>
+        <tr>
+          <td>Nvidia, 네이버·SK 투자 확대</td>
+          <td>7월 25일 네이버에 1조원(약 4.5% 지분, 3대 주주 등극) 투자 발표. AI 데이터센터 출력을 55MW→200MW로 확대. SK그룹과는 2GW급 AI 팩토리 구축 등 500조원 규모 사업 기대</td>
+          <td><span class="tag">기업전략</span></td>
+        </tr>
+        <tr>
+          <td>Kimi K3 오픈 웨이트 공개</td>
+          <td>Moonshot AI(중국)가 2.8조 파라미터 희소 MoE 모델 Kimi K3의 전체 가중치를 7월 27일 공개. 공개 시점 기준 세계 최대 오픈소스 AI 모델</td>
+          <td><span class="tag y">모델출시</span></td>
+        </tr>
+        <tr>
+          <td>Open Secure AI Alliance 출범</td>
+          <td>Nvidia 주도로 Microsoft·Adobe·Cisco·Databricks·Hugging Face·SKT·네이버 등 37개사가 참여하는 AI 보안 협의체 발족. OpenAI 대상 사이버공격 이후 AI 에이전트 보안 표준화 목적, NOOA 프레임워크 오픈소스 공개</td>
+          <td><span class="tag r">보안</span></td>
+        </tr>
+        <tr>
+          <td>과기정통부 에이전틱 AI 이니셔티브</td>
+          <td>제11회 과학기술관계장관회의에서 발표. 안전·개방형 실행기반·수요중심 도입 3대 전략, 1년 6개월간 180억원 투입해 '에이전틱 AI 유방초음파' 등 실생활 서비스 개발</td>
+          <td><span class="tag g">국내 정책</span></td>
+        </tr>
+        <tr>
+          <td>EU AI Act 투명성 가이드라인</td>
+          <td>EC가 7월 20일 AI 생성 콘텐츠 표시 등 투명성 의무 가이드라인 발표, 8월 2일 발효 예정. 미국 FTC의 AI 정확도 정책 의견수렴은 7월 31일 마감</td>
+          <td><span class="tag r">규제</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 모델 출시 & 업데이트 -->
+  <div class="section-label"><span class="sdot"></span> 모델 출시 &amp; 업데이트</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🐉</div>
+        <h3>Kimi K3 전체 가중치 공개 — 세계 최대 오픈소스 모델</h3>
+      </div>
+      <div class="card-body">
+        중국 Moonshot AI가 <strong>Kimi K3</strong>의 API·앱 서비스를 먼저 출시한 뒤, 7월 27일 2.8조 파라미터 희소 MoE(Mixture-of-Experts) 모델의 <strong>전체 오픈 웨이트</strong>를 공개했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">공개 시점 기준 세계 최대 규모의 오픈소스 AI 모델</li>
+          <li>대형 MoE 아키텍처로 연산 효율과 추론 성능 동시 확보 목표</li>
+          <li class="y">Qwen·Ling 등 중국계 오픈소스 모델의 연이은 대형화·경쟁 심화</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">📌</span>
+          <span>오픈 웨이트 공개로 클로즈드 모델의 가격 인하 압박이 한층 가중 — 추론 비용 하락 추세와 맞물려 진행</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag y">Kimi K3</span>
+        <span class="tag">Moonshot AI</span>
+        <span class="tag g">오픈 웨이트</span>
+        <span class="tag">2.8T MoE</span>
+        <span class="tag">2026-07-27</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🌙</div>
+        <h3>GPT-5.6 패밀리(Luna·Terra·Sol) — 프로그래매틱 툴콜·멀티에이전트 오케스트레이션</h3>
+      </div>
+      <div class="card-body">
+        OpenAI가 6월 말부터 단계적으로 출시한 <strong>GPT-5.6 패밀리</strong>(Luna·Terra·Sol 3종)가 100만 토큰 컨텍스트·2026년 2월 지식 컷오프를 갖추고 이번 주에도 채택이 확산됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>가격 $1~$5 per 1M 토큰 — Fable 5 대비 저가 포지셔닝</li>
+          <li class="g">장기 실행 에이전트 벤치마크에서 Claude Fable 5 상회한다는 평가</li>
+          <li>프로그래매틱 툴콜·멀티에이전트 오케스트레이션·프롬프트 캐시 브레이크포인트 신규 API 기능</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">OpenAI</span>
+        <span class="tag p">GPT-5.6</span>
+        <span class="tag">멀티에이전트</span>
+        <span class="tag">1M 컨텍스트</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">⚡</div>
+        <h3>7월 모델 물결 결산 — "단일 승자 없는" 프론티어 근접 경쟁</h3>
+      </div>
+      <div class="card-body">
+        업계 분석에 따르면 7월 한 달간 Claude Opus 5·Sonnet 5, GPT-5.6, Grok 4.5, Gemini 3.5/3.6 Flash, Kimi K3 등 프론티어 모델이 연이어 출시됐으나, 성능 격차가 좁혀지며 "단일 승자"가 없는 국면으로 정리됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Anthropic Claude Sonnet 5(6/30)·Opus 5(7/24), xAI Grok 4.5(7/8) 등 각사 순차 출시</li>
+          <li class="y">모델 품질보다 "어떻게 활용하는가"가 경쟁 우위를 가르는 요인으로 이동</li>
+          <li>Google Gemini 3.5 Flash — 에이전틱 워크플로우·코딩 특화로 3.5 패밀리 개시</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">모델 경쟁</span>
+        <span class="tag g">Gemini 3.5 Flash</span>
+        <span class="tag">Grok 4.5</span>
+        <span class="tag">Claude Sonnet 5</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 기업 동향 & 파트너십 -->
+  <div class="section-label"><span class="sdot p"></span> 기업 동향 &amp; 파트너십</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🇰🇷</div>
+        <h3>이재명 대통령 '샌프란시스코 AI 선언' — 950조원 규모 협력 발표</h3>
+      </div>
+      <div class="card-body">
+        이재명 대통령이 7월 24일(현지시각) 샌프란시스코 'The Midway'에서 열린 AI 서밋에서 한국을 <strong>"대체 불가능한 글로벌 AI 공급망 핵심 국가"</strong>로 만들겠다는 '샌프란시스코 AI 선언'을 발표했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">반도체·AI 인프라·로봇·자율주행 아우르는 약 950조원(약 6,850억 달러) 규모 협력</li>
+          <li>5GW급 전력 규모 AI 데이터센터, GPU 200만 개 상당 컴퓨팅 인프라 구축 계획</li>
+          <li>삼성 이재용·SK 최태원·현대차 정의선·네이버 이해진 회장과 젠슨 황(Nvidia)·샘 올트먼(OpenAI)·다리오 아모데이(Anthropic)·혹 탄(Broadcom) 등 참석</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">🤝</span>
+          <span>한국이 AI 반도체 생산기지이자 신뢰 가능한 공급망 거점으로 자리매김 — 국내 기업의 글로벌 AI 인프라 투자 본격화 신호</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag g">샌프란시스코 AI 선언</span>
+        <span class="tag">이재명 대통령</span>
+        <span class="tag">950조원</span>
+        <span class="tag">2026-07-24</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">💰</div>
+        <h3>Nvidia, 네이버 1조원 투자·SK 500조원 협력 확대</h3>
+      </div>
+      <div class="card-body">
+        Nvidia가 7월 25일 네이버에 <strong>1조원(약 7.24M 신주, 지분 4.5%)</strong> 투자를 발표하며 네이버 3대 주주로 올라섰다. SK그룹과는 2GW급 AI 팩토리 구축 등 파트너십을 확대했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">네이버 AI 데이터센터 출력 55MW → 200MW로 확대(DSX 플랫폼 기반)</li>
+          <li>Brookfield도 최대 90억 달러(비구속적 합의) 추가 투자 검토</li>
+          <li class="y">SK텔레콤과는 기가와트급 AI 클라우드 구축, 메모리·AI 슈퍼컴퓨터 구매 통해 500조원 이상 사업 창출 기대</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">NVIDIA</span>
+        <span class="tag p">네이버</span>
+        <span class="tag">SK그룹</span>
+        <span class="tag g">소버린 AI</span>
+        <span class="tag">2026-07-25</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d2207;">🔧</div>
+        <h3>Siemens-NVIDIA·DXC-ElevenLabs — 산업·엔터프라이즈 AI 파트너십 확대</h3>
+      </div>
+      <div class="card-body">
+        Siemens가 NVIDIA와 파트너십을 확대해 반도체·PCB 설계용 자율검증 에이전틱 AI 워크플로우 <strong>Fuse EDA AI Agent</strong>를 공개했다. DXC Technology는 음성 AI 전문기업 ElevenLabs와 전략적 파트너십을 체결했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Siemens Fuse EDA — 엔지니어링 인텔리전스와 NVIDIA AI 인프라 결합, 반도체 설계 자동화</li>
+          <li>DXC-ElevenLabs — 음성 에이전트 기반 AI 전환 가속</li>
+          <li class="g">Encore AI($30M), Freehand($75M) 등 엔터프라이즈 AI 스타트업 시리즈 투자도 활발</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Siemens</span>
+        <span class="tag">NVIDIA</span>
+        <span class="tag g">DXC-ElevenLabs</span>
+        <span class="tag">엔터프라이즈 AI</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책 & 규제 -->
+  <div class="section-label"><span class="sdot r"></span> 정책 &amp; 규제</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#200e0e;">🛡️</div>
+        <h3>Open Secure AI Alliance 출범 — 37개사, SKT·네이버 창립 멤버 참여</h3>
+      </div>
+      <div class="card-body">
+        NVIDIA가 주도해 Microsoft·Adobe·Cisco·Databricks·Hugging Face·IBM·Palantir·SpaceX 등 37개사가 참여하는 <strong>Open Secure AI Alliance</strong>가 출범했다. OpenAI 대상 사이버공격 이후 결성됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">SK텔레콤·네이버, 한국 기업으로는 유일하게 창립 멤버로 참여(7/27 발표)</li>
+          <li>AI 앱·에이전트 보호를 위한 보안 기술·오픈소스 도구 공동 개발</li>
+          <li class="g"><strong>NOOA 프레임워크</strong> 오픈소스 공개 — AI 안전성 검증 방법론·위협 대응 경험 공유</li>
+        </ul>
+        <div class="alert r" style="margin-top:10px;">
+          <span class="ai">⚠️</span>
+          <span>AI 기반 사이버공격 급증에 대응한 업계 최대 규모 보안 연합체 — 에이전트 보안이 2026년 하반기 핵심 의제로 부상</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag r">Open Secure AI Alliance</span>
+        <span class="tag">NVIDIA</span>
+        <span class="tag g">SKT·네이버</span>
+        <span class="tag">2026-07-27</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">🇰🇷</div>
+        <h3>과기정통부 '에이전틱 AI 이니셔티브' 발표 — 180억원 R&amp;D 착수</h3>
+      </div>
+      <div class="card-body">
+        과학기술정보통신부가 제11회 과학기술관계장관회의에서 <strong>안전·신뢰 확보, 개방형 실행 기반, 수요 중심 도입</strong> 3대 전략을 담은 '에이전틱 AI 이니셔티브'를 발표했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">1년 6개월간 총 180억원 투입 — '에이전틱 AI 유방초음파'·'디지털 업무 동료' 등 실생활 서비스 개발</li>
+          <li>2026년 성능·안전·신뢰성 평가 체계 구축, 2027년부터 실행 경로 모니터링 샌드박스 지원</li>
+          <li>"1인 1 AI 에이전트" 시대를 목표로 한 국내 에이전틱 AI 생태계 선점 전략</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">에이전틱 AI 이니셔티브</span>
+        <span class="tag">과기정통부</span>
+        <span class="tag">180억원 R&D</span>
+        <span class="tag">국내 정책</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🇪🇺</div>
+        <h3>EU AI Act 투명성 가이드라인 발표 · 미국 FTC 의견수렴 마감</h3>
+      </div>
+      <div class="card-body">
+        유럽집행위원회(EC)가 7월 20일 AI 생성 콘텐츠 표시 등 <strong>투명성 의무 가이드라인</strong>을 공개했다. 8월 2일 발효를 앞두고 있으며, 미국에서는 FTC의 AI 정확도 정책 성명 공개 의견수렴이 7월 31일 마감된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">EU: GPAI 투명성 의무 8월 2일 발효, 고위험 스탠드얼론은 2027년 12월로 유예</li>
+          <li>미국: California AI Transparency Act 8월 2일 발효, Colorado 대체 프레임워크는 2027년 1월</li>
+          <li class="y">중국은 7월 15일부터 동반자·정서지원 AI 규정 시행 — 각국 규제 시행 시점이 8월 초로 집중</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">EU AI Act</span>
+        <span class="tag">FTC</span>
+        <span class="tag y">캘리포니아</span>
+        <span class="tag">2026-08-02 발효</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ AI 연구 & 기술 -->
+  <div class="section-label"><span class="sdot y"></span> AI 연구 &amp; 기술</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d1a1a;">🔐</div>
+        <h3>AgentRedBench/AGENTREDGUARD — 에이전트 권한 오용 공격 75%p 차단</h3>
+      </div>
+      <div class="card-body">
+        AI 에이전트 보안 연구에서 <strong>AgentRedBench</strong>가 24개 SaaS 통합 환경에 걸친 215개 권한 오용(underspecified authorization) 공격 시나리오를 제시했다. 방어 기법 AGENTREDGUARD는 온라인 공격 성공률을 약 75~77%p 낮췄다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">정상 사용에 대한 오탐(false positive)은 거의 0에 근접 — 실사용 배포 적합성 확보</li>
+          <li>에이전트가 실제 업무 시스템(SaaS)에 연결되는 사례가 늘며 보안 연구 수요 급증</li>
+          <li class="y">Open Secure AI Alliance 출범과 맞물려 에이전트 보안이 학계·산업계 공동 화두로 부상</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">AgentRedBench</span>
+        <span class="tag">에이전트 보안</span>
+        <span class="tag g">권한 오용 방어</span>
+        <span class="tag">2026-07</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🔍</div>
+        <h3>"Jacobian Lens" — 모델 내부의 검증 가능한 추론 공간 발견</h3>
+      </div>
+      <div class="card-body">
+        정합성·해석가능성 연구에서 <strong>"Jacobian lens"</strong> 기법이 LLM 내부에 언어화 가능한 'J-공간'(보고 가능한 내부 작업공간)이 존재함을 밝혔다. 이를 통해 은밀한 숙고(silent deliberation)나 정합성 이탈(misalignment)을 탐지할 수 있다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">"반사실적 성찰 훈련(counterfactual reflection training)"으로 정합성 개선 가능성 제시</li>
+          <li>모델이 겉으로 드러내지 않는 내부 추론 과정을 검증 가능하게 만드는 해석가능성 진전</li>
+          <li>에이전트 신뢰성 검증·감사(audit) 도구로 발전 가능성</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag p">해석가능성</span>
+        <span class="tag">Jacobian Lens</span>
+        <span class="tag g">정합성 연구</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">⏱️</div>
+        <h3>테스트타임 연산 효율 배분 연구 — 에이전트 "언제 계획할지" 학습</h3>
+      </div>
+      <div class="card-body">
+        "Learning when to plan" 등 최근 연구는 LLM 에이전트가 테스트타임 연산(test-time compute)을 태스크 난이도에 맞춰 효율적으로 배분하도록 학습시키는 기법을 제시한다. Tool-DC 등 도구 선택 최적화 기법도 함께 발전 중이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">Tool-DC(Try-Check-Retry) — 자기 성찰 기반 반복 탐색으로 툴콜 벤치마크 최대 +25.1%p 개선</li>
+          <li>불필요한 연산 낭비를 줄여 에이전트 응답 속도·비용 동시 개선 목표</li>
+          <li class="y">GPT-5.6·Claude 5 시리즈 등 최신 모델의 "에포트 토글" 기능과 맥락을 같이하는 연구 흐름</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">테스트타임 연산</span>
+        <span class="tag g">Tool-DC</span>
+        <span class="tag">에이전트 효율화</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ 인프라 & 반도체 -->
+  <div class="section-label"><span class="sdot g"></span> 인프라 &amp; 반도체</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1b2f22;">🖥️</div>
+        <h3>에이전틱 AI 확산으로 데이터센터 CPU 중요성 재부상 — 인텔 제온6 공급 부족</h3>
+      </div>
+      <div class="card-body">
+        에이전틱 AI가 스스로 계획을 세우고 외부 시스템과 상호작용하는 방식으로 진화하면서, GPU 중심이던 데이터센터 투자에서 <strong>CPU 역할</strong>이 다시 중요해지고 있다. 인텔은 데이터센터용 <strong>제온6</strong> 프로세서 수요가 예상을 크게 웃돌아 공급 부족을 겪고 있다고 밝혔다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="y">인텔3 공정 웨이퍼 투입량·후공정·기판 생산능력 확대 중</li>
+          <li>AI 경쟁 축이 GPU 성능에서 전력·CPU·광통신 등 인프라 전반으로 이동</li>
+          <li class="g">개별 기업 경쟁에서 생태계(파운드리·메모리·클라우드·전력) 간 경쟁으로 전환</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">인텔 제온6</span>
+        <span class="tag">데이터센터 CPU</span>
+        <span class="tag y">인프라 경쟁</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d2207;">💾</div>
+        <h3>메모리 반도체 "파워 시프트" — 전략물자화로 공급사 협상력 급상승</h3>
+      </div>
+      <div class="card-body">
+        AI 확산으로 메모리 반도체가 <strong>전략 물자</strong>로 부상하면서, 과거 가격 인하를 주도하던 완제품 고객사 대비 메모리 공급사의 협상력이 크게 높아지는 구조적 힘의 균형 변화가 관측된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">장기공급계약(LTA) 중심의 새로운 공급망 질서 정착</li>
+          <li>국가별 기술통제·공급망 자립 흐름과 맞물려 메모리 기업 협상력 강화</li>
+          <li class="g">GPU 인프라 기업에 대한 벤처 투자도 3,000억원 규모로 확대 — "GPU 다음" 밸류체인 주목</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">메모리 반도체</span>
+        <span class="tag">장기공급계약</span>
+        <span class="tag y">공급망 재편</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://llm-stats.com/ai-news" target="_blank">LLM News Today (July 2026) — AI Model Releases</a></li>
+      <li><a href="https://aireleasetracker.com/latest" target="_blank">Latest AI Model Releases — July 2026</a></li>
+      <li><a href="https://www.stephensonharwood.com/insights/neural-network-july-2026/" target="_blank">Neural Network - July 2026 — Stephenson Harwood</a></li>
+      <li><a href="https://www.ftc.gov/news-events/news/press-releases/2026/07/ftc-seeks-public-comment-policy-statement-addressing-ai-accuracy" target="_blank">FTC Seeks Public Comment on AI Accuracy Policy — FTC</a></li>
+      <li><a href="https://www.techpolicy.press/where-state-ai-legislation-stands-half-way-into-2026/" target="_blank">Where State AI Legislation Stands Half Way Into 2026 — Tech Policy Press</a></li>
+      <li><a href="https://techstartups.com/2026/07/29/venture-capital-startup-funding-roundup-july-29-2026-more/" target="_blank">Venture Capital &amp; Startup Funding Roundup, July 29, 2026 — Tech Startups</a></li>
+      <li><a href="https://www.asiae.co.kr/en/article/bluehouse/2026072510063485396" target="_blank">President Lee's 'San Francisco AI Declaration' — Asia Business Daily</a></li>
+      <li><a href="https://www.koreajoongangdaily.com/business/lee-outlines-plan-to-transform-korea-into-pillar-of-global-ai-supply-chain/12791086" target="_blank">Lee outlines plan to transform Korea into pillar of global AI supply chain — Korea JoongAng Daily</a></li>
+      <li><a href="https://dig.watch/updates/south-korea-strategy-global-ai-supply-chains" target="_blank">South Korea unveils strategy to strengthen role in global AI supply chains — Digital Watch Observatory</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-07-24/nvidia-to-invest-1-billion-in-naver-and-expand-sk-group-accord" target="_blank">Nvidia to Invest $1 Billion in Naver and Expand SK Group Accord — Bloomberg</a></li>
+      <li><a href="https://www.digitaltoday.co.kr/en/view/85002/skt-joins-open-secure-ai-alliance-as-founding-member" target="_blank">SKT joins Open Secure AI Alliance as founding member — Digital Today</a></li>
+      <li><a href="https://thehackernews.com/2026/07/nvidia-forms-37-member-open-secure-ai.html" target="_blank">NVIDIA Forms 37-Member Open Secure AI Alliance and Open-Sources NOOA Framework — The Hacker News</a></li>
+      <li><a href="https://blogs.nvidia.com/blog/open-secure-ai-alliance/" target="_blank">Industry Leaders Join Open Secure AI Alliance — NVIDIA Blog</a></li>
+      <li><a href="https://www.itdaily.kr/news/articleView.html?idxno=240553" target="_blank">정부, '에이전틱 AI 이니셔티브' 발표 — 아이티데일리</a></li>
+      <li><a href="https://www.korea.kr/news/policyNewsView.do?newsId=148968284" target="_blank">정부, 550조 AI 데이터센터 투자 견인 — 대한민국 정책브리핑</a></li>
+      <li><a href="https://www.sptatimeskorea.com/post/%EC%A0%9C-20260726-ai-01%ED%98%B8-2026%EB%85%84-7%EC%9B%94-4%EC%A3%BC%EC%B0%A8-%EA%B8%80%EB%A1%9C%EB%B2%8C-%EB%B0%98%EB%8F%84%EC%B2%B4%EC%82%B0%EC%97%85-%EA%B4%80%EB%A0%A8-%EA%B8%B0%EC%82%AC-%EB%B6%84%EC%84%9D" target="_blank">2026년 7월 4주차 글로벌 반도체산업 기사 분석 — SPTAtimes Korea</a></li>
+      <li><a href="https://www.sptatimeskorea.com/post/%EC%A0%9C20260728-tt-01%ED%98%B8-2026%EB%85%84-7%EC%9B%94-28%EC%9D%BC-%EB%B0%98%EB%8F%84%EC%B2%B4-%EA%B8%B0%EC%88%A0-%EA%B4%80%EB%A0%A8-%EC%A3%BC%EC%9A%94-%EB%89%B4%EC%8A%A4-%EC%9A%94%EC%95%BD" target="_blank">2026년 7월 28일 반도체 기술 관련 주요 뉴스 요약 — SPTAtimes Korea</a></li>
+      <li><a href="https://arxiv.org/pdf/2605.22138" target="_blank">Efficient Agentic Reasoning Through Self-Regulated Simulative Planning — arXiv</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>자동 생성 · 2026년 7월 31일 (금) KST · Claude Sonnet 5</footer>
+
+</body>
+</html>

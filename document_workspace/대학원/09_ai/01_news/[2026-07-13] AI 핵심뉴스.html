@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-07-13] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #0d1b2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 5%;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-left { flex: 1; min-width: 0; }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .header-badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent1);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .header-date { color: var(--text-muted); font-size: 14px; }
+  header h1 {
+    font-size: 2.1rem; font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.9rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+  .section-label {
+    font-size: 0.83rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+  .grid, .grid-wide, .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.95rem; color: #cdd9e5; line-height: 1.68; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.79rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.94rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.85rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.94rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert.g { background: #0e1e10; border: 1px solid rgba(63,185,80,0.3); color: #b8e5be; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+  .summary-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(188,140,255,0.04) 100%);
+    border: 1px solid rgba(88,166,255,0.22);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 30px;
+  }
+  .summary-box-title {
+    font-size: 0.92rem; font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: #cdd9e5;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .summary-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.86rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.90rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+  footer { text-align: center; color: var(--text-muted); font-size: 0.84rem; padding: 16px 0 32px; }
+  @media (min-width: 620px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid-4, .grid, .grid-wide { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid, .grid-wide { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 1280px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-4, .grid-wide { grid-template-columns: repeat(4, 1fr); }
+    main { max-width: 1440px; }
+    .header-inner { max-width: 1440px; }
+  }
+  @media (min-width: 1700px) {
+    main { max-width: 1800px; }
+    .header-inner { max-width: 1800px; }
+  }
+  @media (max-width: 480px) {
+    header { padding: 20px 0 16px; }
+    .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .summary-box { padding: 16px; overflow-x: auto; }
+    .summary-table td:first-child { white-space: normal; }
+    .summary-table td:last-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">AI</span>
+        <span class="header-date">2026년 7월 13일 (월) KST · 자동 생성</span>
+      </div>
+      <h1><span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">GPT-5.6 Sol/Terra/Luna 전면 공개 · Grok 4.5 출시 · Claude Cowork 모바일·웹 론칭 · OpenAI ChatGPT Work 대항 출시 · 중국 AI 에이전트 규제 7/15 발효 · 하이퍼스케일러 AI 인프라 투자 $700B 돌파</p>
+    </div>
+    <div class="date-badge">2026.07.13.월 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <div class="summary-box">
+    <div class="summary-box-title">🔑 이번 주 핵심 요약 (2026.07.07 ~ 07.13)</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>주체 / 이벤트</th>
+          <th>핵심 내용</th>
+          <th>분류</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OpenAI GPT-5.6 전면 공개</td>
+          <td>7월 9일 Sol·Terra·Luna 3종 ChatGPT 기본 모델 및 API 전면 GA. Sol 입력 $5/M · 출력 $30/M, Terra $2.5/$15, Luna $1/$6</td>
+          <td><span class="tag">모델출시</span></td>
+        </tr>
+        <tr>
+          <td>xAI Grok 4.5 공개</td>
+          <td>7월 8일 Cursor 기반 훈련 코딩 특화 모델 공개. 저비용·빠른 응답 설계. Opus 4.8은 구조화 창의 업무 대안으로 병존</td>
+          <td><span class="tag">모델출시</span></td>
+        </tr>
+        <tr>
+          <td>Claude Cowork 모바일·웹 출시</td>
+          <td>7월 7일 Max 구독자 베타 시작. 기기 오프라인 중에도 에이전트 태스크 지속 실행. 일정·파일·이메일 자율 처리</td>
+          <td><span class="tag p">에이전트 플랫폼</span></td>
+        </tr>
+        <tr>
+          <td>OpenAI ChatGPT Work 론칭</td>
+          <td>Claude Cowork 정면 대응. Pro·Enterprise·Edu 순차 롤아웃. Slack·Salesforce 통합. GPT-5.6 기반 오피스 에이전트</td>
+          <td><span class="tag p">에이전트 플랫폼</span></td>
+        </tr>
+        <tr>
+          <td>중국 AI 에이전트 규제 발효</td>
+          <td>7월 15일 CAC·NDRC·MIIT 공동 규정 시행. 의료·교통·공공안전 분야 에이전트 필수 등록·적합성 테스트·리콜 조항 포함</td>
+          <td><span class="tag r">규제</span></td>
+        </tr>
+        <tr>
+          <td>하이퍼스케일러 AI 투자 $700B+</td>
+          <td>Amazon·Microsoft·Google·Meta·Oracle 5사 합산 2026년 AI 인프라 투자 최대 $725B. 전년 대비 약 2배 증가</td>
+          <td><span class="tag y">인프라 투자</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 모델 출시 & 연구 -->
+  <div class="section-label"><span class="sdot"></span> 모델 출시 &amp; 연구</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">⚡</div>
+        <h3>OpenAI GPT-5.6 Sol · Terra · Luna 전면 GA</h3>
+      </div>
+      <div class="card-body">
+        OpenAI가 7월 9일 <strong>GPT-5.6</strong> 3종 라인업을 ChatGPT 기본 모델 및 API로 전면 공개했다. 6월 26일 20개 파트너사 제한 공개 이후 미 상무부 심사를 거쳐 일반 출시가 완료됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li><strong>Sol</strong> — 플래그십. 고도 추론·에이전트·과학 특화. 입력 $5/M · 출력 $30/M</li>
+          <li><strong>Terra</strong> — 균형형. GPT-5.5 성능, 비용 절반. 입력 $2.5/M · 출력 $15/M</li>
+          <li><strong>Luna</strong> — 경량·고속. 가장 저렴. 입력 $1/M · 출력 $6/M</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">💡</span>
+          <span>7월 9일은 역사상 가장 많은 프런티어 AI 모델이 동시 출시된 날로 기록 (GPT-5.6 + Grok 4.5 + Muse Spark 1.1)</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">OpenAI</span>
+        <span class="tag y">GPT-5.6</span>
+        <span class="tag">Sol / Terra / Luna</span>
+        <span class="tag">2026-07-09</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1a00;">🤖</div>
+        <h3>xAI Grok 4.5 — 코딩 특화 공개 플래그십</h3>
+      </div>
+      <div class="card-body">
+        xAI가 7월 8일 <strong>Grok 4.5</strong>를 공개했다. Cursor 기반 훈련 방식을 채택한 코딩 특화 모델로 저비용·빠른 응답을 강점으로 내세운다. xAI는 Grok 4.5를 공개 플래그십으로 포지셔닝했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Cursor 기반 훈련 — 코드 생성·디버깅 최적화</li>
+          <li class="y">구조화 창의 업무는 Claude Opus 4.8 대안 권고</li>
+          <li>멀티모달 이해 태스크는 Gemini 3.1 Pro 대안 권고</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">xAI</span>
+        <span class="tag y">Grok 4.5</span>
+        <span class="tag">코딩 특화</span>
+        <span class="tag">2026-07-08</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#251e32;">🧠</div>
+        <h3>Meta Muse Spark 1.1 — 멀티모달·에이전트 특화</h3>
+      </div>
+      <div class="card-body">
+        Meta Superintelligence Labs가 <strong>Muse Spark 1.1</strong>을 공개했다. 에이전트 워크플로우·도구 사용·컴퓨터 제어·멀티모달 이해에 탁월하며, <strong>100만 토큰 컨텍스트 윈도우</strong>를 제공한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">Gemini 3.1 Pro, Opus 4.8, GPT-5.5 복수 벤치마크 초과</li>
+          <li>멀티모달 에이전트 + 컴퓨터 사용 특화 설계</li>
+          <li>1M 토큰 컨텍스트로 대규모 문서 처리 가능</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Meta</span>
+        <span class="tag p">Muse Spark 1.1</span>
+        <span class="tag g">멀티모달</span>
+        <span class="tag">에이전트</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🔬</div>
+        <h3>NVIDIA Nemotron-TwoTower — 오픈웨이트 확산 LLM</h3>
+      </div>
+      <div class="card-body">
+        NVIDIA가 오픈웨이트 확산(Diffusion) 언어 모델 <strong>Nemotron-Labs-TwoTower</strong>를 공개했다. 기존 LLM 대비 <strong>2.42배 높은 처리량</strong>을 달성하며 기준 품질의 98.7%를 유지한다. 추론 비용 최소화에 새로운 방향을 제시한다.
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">💡</span>
+          <span>확산 기반 LLM: 자동회귀(AR) 방식 대신 확산 프로세스로 토큰 병렬 생성 — 처리량 2.4배 개선</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">NVIDIA</span>
+        <span class="tag g">오픈웨이트</span>
+        <span class="tag">확산 LLM</span>
+        <span class="tag p">고효율 추론</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🔍</div>
+        <h3>LLM-as-a-Verifier — 에이전트 태스크 검증 프레임워크</h3>
+      </div>
+      <div class="card-body">
+        추가 훈련 없이 에이전트 태스크에 세부 피드백을 제공하는 <strong>LLM-as-a-Verifier</strong> 범용 검증 프레임워크가 발표됐다. 이산 점수 대신 스코어링 토큰 로짓(logits) 기반 연속 점수를 활용해 더 정밀한 평가가 가능하다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>추가 훈련 불필요 — 기존 LLM으로 즉시 적용</li>
+          <li class="g">연속 점수(Continuous Score)로 세밀한 태스크 평가</li>
+          <li>에이전트 루프 안정성 및 자기 수정 능력 향상</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">AI 연구</span>
+        <span class="tag p">에이전트 검증</span>
+        <span class="tag">LLM-as-a-Verifier</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">📉</div>
+        <h3>Gemini 3.5 Pro — 두 번째 GA 데드라인 미충족</h3>
+      </div>
+      <div class="card-body">
+        Google의 <strong>Gemini 3.5 Pro</strong>가 6월 I/O 약속과 6월 30일 GA 목표를 연이어 지키지 못했다. 7월 현재도 Vertex AI 기업 고객 한정 프리뷰 상태이며, 공개 벤치마크와 확정 가격 모두 미공개다.
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">⏳</span>
+          <span>Alphabet, Vertex 엔터프라이즈 고객에 GA 알림 이메일 발송 → 7월 중 일반 제공 전망, 구체 일정 미확정</span>
+        </div>
+        <div class="alert g" style="margin-top:8px;">
+          <span class="ai">✅</span>
+          <span>Google DeepMind Nano Banana 2 Lite (경량 이미지 생성 모델) 는 이번 주 정상 출시</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">Google</span>
+        <span class="tag y">Gemini 3.5 Pro</span>
+        <span class="tag r">GA 지연</span>
+        <span class="tag">Vertex AI</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 기업 동향 & 에이전트 플랫폼 -->
+  <div class="section-label"><span class="sdot p"></span> 기업 동향 &amp; 에이전트 플랫폼</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🚀</div>
+        <h3>Claude Cowork — 모바일·웹 정식 출시</h3>
+      </div>
+      <div class="card-body">
+        Anthropic이 7월 7일 <strong>Claude Cowork</strong>를 모바일·웹으로 확장해 Max 구독자 베타를 시작했다. 에이전트 태스크(이메일·캘린더·파일)가 사용자 기기 오프라인 상태에서도 클라우드에서 계속 실행된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">기기 종료 후에도 예약 작업 자동 실행</li>
+          <li>한 기기에서 시작 → 다른 기기에서 결과 확인</li>
+          <li>Claude Enterprise 관리자 분석·모델 권한 제어 강화</li>
+          <li class="p">지출 알림·모델별 접근 권한 관리 기능 신규 추가</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag p">Claude Cowork</span>
+        <span class="tag">Anthropic</span>
+        <span class="tag g">에이전트 플랫폼</span>
+        <span class="tag">2026-07-07</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">💼</div>
+        <h3>OpenAI ChatGPT Work — Claude Cowork 정면 대응</h3>
+      </div>
+      <div class="card-body">
+        OpenAI가 GPT-5.6 출시와 동시에 오피스 에이전트 <strong>ChatGPT Work</strong>를 론칭했다. Slack·Salesforce 통합도 함께 발표됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>Pro · Enterprise · Edu 사용자부터 순차 롤아웃</li>
+          <li>Slack 슬래시봇 + Salesforce CRM 통합</li>
+          <li class="g">이메일·캘린더·문서 자율 처리, GPT-5.6 기반</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">📌</span>
+          <span>7월 둘째 주 기준: 에이전트 플랫폼 시장이 Anthropic vs OpenAI 양강 구도로 급격히 재편</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag p">ChatGPT Work</span>
+        <span class="tag">OpenAI</span>
+        <span class="tag">에이전트 플랫폼</span>
+        <span class="tag">Slack / Salesforce</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🏗️</div>
+        <h3>Meta 텍사스 데이터센터 투자 $1.5B → $10B+ 급확대</h3>
+      </div>
+      <div class="card-body">
+        Meta가 텍사스 엘패소 AI 데이터센터 투자액을 <strong>$1.5B에서 $10B 이상</strong>으로 대폭 늘렸다. 2028년 완공 시 1기가와트(GW) 용량의 대형 시설이 된다. 2026년 자본지출 최대 $1,350억 전망의 일환이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>완공 목표: 2028년, 용량: 1GW</li>
+          <li class="r">내부 구조조정 — 700명 초기 감원 병행</li>
+          <li class="y">2026년 전체 자본지출 최대 $1,350억 전망</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">인프라 투자</span>
+        <span class="tag">Meta</span>
+        <span class="tag">데이터센터</span>
+        <span class="tag">텍사스 엘패소</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책·규제 -->
+  <div class="section-label"><span class="sdot r"></span> 정책 &amp; 규제</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1a00;">🇨🇳</div>
+        <h3>중국 AI 에이전트 규제 — 7월 15일 발효</h3>
+      </div>
+      <div class="card-body">
+        중국 CAC·NDRC·MIIT 3개 부처가 공동으로 <em>「지능형 에이전트 표준화 응용 및 혁신 발전 실시 의견」</em>을 제정했다. 7월 15일 발효되며 민감 분야 에이전트 사업자의 의무를 구체화한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">의료·교통·미디어·공공안전 분야: 필수 사전 등록</li>
+          <li class="r">적합성 테스트 통과 전 서비스 불가</li>
+          <li>제품 리콜 조항 포함 — 결함 발견 시 강제 회수 가능</li>
+          <li class="y">글로벌 AI 에이전트 최초 국가 수준 규제 체계</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">중국 규제</span>
+        <span class="tag">에이전트 AI</span>
+        <span class="tag">CAC / NDRC / MIIT</span>
+        <span class="tag r">2026-07-15</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🏛️</div>
+        <h3>미국 AI AGENT Act 초안 — 에이전트 등록제 도입 추진</h3>
+      </div>
+      <div class="card-body">
+        상원 Mark Warner 의원이 <strong>AI AGENT Act</strong>(Artificial Intelligence Access, Gatekeeper Exchange, and Nondiscriminatory Transfer Act) 초안을 공개했다. 대형 플랫폼 인터페이스에 접근하는 "수탁 사용자 에이전트" 사업자의 FTC 사전 등록 의무화가 핵심이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>FTC 등록 완료 후 플랫폼 API 접근 허용 원칙</li>
+          <li class="y">Claude Cowork·ChatGPT Work 등 신규 에이전트 플랫폼에 직접 영향</li>
+          <li>에이전트가 사용자 대신 수행하는 행위에 대한 투명성 요구</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">미국 입법</span>
+        <span class="tag">AI AGENT Act</span>
+        <span class="tag">에이전트 규제</span>
+        <span class="tag">FTC 등록</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1a00;">🇪🇺</div>
+        <h3>EU AI Act — 3주 후 8월 2일 전면 시행</h3>
+      </div>
+      <div class="card-body">
+        EU AI Act의 전면 적용이 3주 앞으로 다가왔다. 투명성 의무·고위험 AI 분류·금지 AI 시스템 규정이 동시 발효된다. GPT-5.6·Claude Sonnet 5 등 GPAI(범용 AI) 모델 개발사는 시스템 카드·학습 데이터 요약 의무를 이행해야 한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">8월 2일 발효 — 위반 시 전 세계 연매출 최대 3% 과징금</li>
+          <li>7월 EU AI Office, 기업 컴플라이언스 최종 가이드 배포</li>
+        </ul>
+        <div class="alert r" style="margin-top:10px;">
+          <span class="ai">⚠️</span>
+          <span>EU + 미국 주 법률 + 중국 에이전트 규정 동시 진행 — 글로벌 AI 기업 다중 컴플라이언스 부담 최고조</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag r">EU AI Act</span>
+        <span class="tag">규제</span>
+        <span class="tag y">8월 2일 시행</span>
+        <span class="tag">GPAI 의무</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 산업 동향 & 인프라 -->
+  <div class="section-label"><span class="sdot y"></span> 산업 동향 &amp; 인프라</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">💰</div>
+        <h3>하이퍼스케일러 5사 AI 인프라 투자 최대 $725B</h3>
+      </div>
+      <div class="card-body">
+        Amazon·Microsoft·Google·Meta·Oracle 5개 하이퍼스케일러의 2026년 AI 인프라 투자 합산액이 <strong>$660B~$725B</strong>으로 추산된다. 2025년 대비 약 2배이며, 약 75%(~$450B)가 GPU·전용 AI칩·데이터센터에 집중된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="y">글로벌 AI 반도체 시장 2026년 $1.3조 달성 전망 (BofA)</li>
+          <li>NVIDIA, AI칩 시장 70~80% 점유율 유지</li>
+          <li>데이터센터 GPU 리드타임 36~52주로 연장</li>
+          <li class="r">HBM 공급 병목 지속 — SK하이닉스·삼성 증설 경쟁</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">AI 인프라 투자</span>
+        <span class="tag">하이퍼스케일러</span>
+        <span class="tag r">GPU 공급 부족</span>
+        <span class="tag">반도체 $1.3조</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">📊</div>
+        <h3>2026년 — '에이전트 AI의 해' 선언, 추론 비용 급락</h3>
+      </div>
+      <div class="card-body">
+        7월을 기점으로 업계는 2026년을 공식적으로 <strong>에이전트 AI의 원년</strong>으로 평가하고 있다. Claude Cowork·ChatGPT Work 동시 출시로 B2B 에이전트 시장이 본격화됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">12개월 전 대비 최상위 모델 가격·성능비 약 3배 개선</li>
+          <li>긴 컨텍스트(Long Context) 처리 비용 대폭 감소</li>
+          <li class="g">온디바이스 AI — 노트북·스마트폰 구동 경량 모델 확산</li>
+          <li>추론 강화 모드(Reasoning Mode) — 할루시네이션 감소 효과 확인</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">에이전트 AI</span>
+        <span class="tag g">비용 압축</span>
+        <span class="tag">온디바이스 AI</span>
+        <span class="tag y">2026 트렌드</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ AI 안전 & 글로벌 동향 -->
+  <div class="section-label"><span class="sdot g"></span> AI 안전 &amp; 글로벌 동향</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0e1e10;">🧬</div>
+        <h3>물리법칙 준수 AI 알고리즘 — 과학 연구 적용 확대</h3>
+      </div>
+      <div class="card-body">
+        AI 모델이 복잡한 데이터셋 처리 시 물리법칙을 자동 준수하도록 강제하는 알고리즘이 발표됐다. 유전체학·재료과학·기후 모델링·크로마틴 생물학에 바로 적용 가능한 범용 프레임워크다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">발표 학술지: Transactions on Machine Learning Research</li>
+          <li>학회: <strong>NeurIPS 2026</strong> 발표 예정</li>
+          <li>유전체학·재료과학·기후 모델링 즉시 적용 가능</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">과학 AI</span>
+        <span class="tag">물리법칙 준수</span>
+        <span class="tag">NeurIPS 2026</span>
+        <span class="tag p">기초 연구</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🔐</div>
+        <h3>NIST AI 에이전트 표준화 이니셔티브 — 초안 기업 검토 단계</h3>
+      </div>
+      <div class="card-body">
+        미국 NIST가 2026년 2월 착수한 <strong>자율 AI 에이전트 표준화 이니셔티브</strong>가 중간 단계에 접어들었다. 인간 지속 감독 없이 실세계 행동을 취하는 시스템 대상 탐지·보고 요구사항 초안이 기업 검토 단계에 있다.
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">📋</span>
+          <span>에이전트 AI 배포 기업은 NIST 초안을 선제적으로 검토하고 로깅·감사 체계를 점검해야 하는 시점</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">NIST</span>
+        <span class="tag y">에이전트 표준</span>
+        <span class="tag r">AI 안전</span>
+        <span class="tag">미국 표준화</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🌍</div>
+        <h3>UN AI for Good 서밋 종료 — 글로벌 AI 거버넌스 합의</h3>
+      </div>
+      <div class="card-body">
+        7월 7~10일 제네바 <strong>ITU AI for Good 서밋</strong>이 종료됐다. 7월 2일 출범한 AI for Good 글로벌 위원회의 첫 공식 회의로, 개발도상국 AI 접근성 확대와 글로벌 AI 안전 기준 공조에 대한 선언이 채택됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">Benioff·Kagame 공동 의장 하 첫 공식 회의 완료</li>
+          <li>Jensen Huang·Andy Jassy·Brad Smith 등 40+ 위원 참여</li>
+          <li>AI 글로벌 공익 활용 로드맵 초안 도출</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag p">글로벌 거버넌스</span>
+        <span class="tag">UN·ITU</span>
+        <span class="tag">AI for Good</span>
+        <span class="tag">제네바 서밋</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources">
+    <h2>📎 Sources</h2>
+    <ul>
+      <li><a href="https://companiesautomation.com/en/blog/ai-business-radar-2026-07-09" target="_blank">Companies Automation — AI Business Radar July 9, 2026: GPT-5.6 and Grok 4.5</a></li>
+      <li><a href="https://www.buildfastwithai.com/blogs/ai-news-today-july-9-2026" target="_blank">BuildFastWithAI — AI News Today July 9, 2026: 15 Biggest Stories</a></li>
+      <li><a href="https://llm-stats.com/llm-updates" target="_blank">LLM Stats — AI Updates Today (July 2026) – Latest AI Model Releases</a></li>
+      <li><a href="https://macwww.com/blog/articles/2026-july-ai-model-battle-gpt-56-claude-sonnet-5-grok-45-strongest-ai-remote-mac.html" target="_blank">MacWww — July 2026 AI Model Battle: GPT-5.6 vs Claude Sonnet 5 vs Grok 4.5</a></li>
+      <li><a href="https://www.fingerlakes1.com/2026/07/09/claude-cowork-ai-agent-launches-as-anthropic-expands-ai-assistant-to-cloud-and-mobile/" target="_blank">Fingerlakes1 — Claude Cowork AI Agent Launches as Anthropic Expands to Cloud and Mobile</a></li>
+      <li><a href="https://memeburn.com/claude-cowork-mobile-launch/" target="_blank">Memeburn — Claude Cowork Goes Mobile: Anthropic's Biggest Move</a></li>
+      <li><a href="https://www.tipranks.com/news/openai-launches-super-app-in-direct-strike-at-anthropics-claude-cowork" target="_blank">TipRanks — OpenAI Launches Super App in Direct Strike at Anthropic's Claude Cowork</a></li>
+      <li><a href="https://www.technology.org/2026/07/10/openai-chatgpt-work-gpt-5-6-agent-launch/" target="_blank">Technology.org — OpenAI's ChatGPT Work Takes Aim at Claude Cowork</a></li>
+      <li><a href="https://www.rimonlaw.com/china-ai-law-brief/" target="_blank">Rimon Law — China AI Regulatory Developments: July 2026 Analysis</a></li>
+      <li><a href="https://www.cio.com/article/4191009/how-the-senates-ai-agent-act-could-reshape-enterprise-ai-governance.html" target="_blank">CIO — How the Senate's AI AGENT Act Could Reshape Enterprise AI Governance</a></li>
+      <li><a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" target="_blank">European Union — EU AI Act: Shaping Europe's Digital Future</a></li>
+      <li><a href="https://intellectia.ai/blog/ai-infrastructure-investment-boom-2026" target="_blank">Intellectia AI — The $700 Billion AI Infrastructure Boom: Hyperscaler Investments 2026</a></li>
+      <li><a href="https://www.aiapps.com/blog/july-ai-mega-update-major-breakthroughs-launches/" target="_blank">AIApps — July 2026 AI Mega-Update: Every Major Breakthrough & Launch</a></li>
+      <li><a href="https://www.intoai.pub/p/this-week-in-ai-research-1-8-july" target="_blank">IntoAI — This Week In AI Research (1–8 July 2026)</a></li>
+      <li><a href="https://aigovernance.com/news/ai-governance-weekly-july-3-2026" target="_blank">AI Governance Institute — AI Governance Weekly July 3, 2026</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  자동 생성 · 2026-07-13 KST · AI 핵심뉴스 주간 리포트
+</footer>
+
+</body>
+</html>

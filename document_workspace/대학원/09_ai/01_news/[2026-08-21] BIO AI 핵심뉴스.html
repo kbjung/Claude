@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[2026-08-21] BIO AI 핵심뉴스</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #7ee787;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --tag-bg: rgba(88,166,255,0.12);
+      --tag-border: rgba(88,166,255,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: 5%;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(210,168,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .header-left { flex: 1; min-width: 0; }
+    .header-date-badge {
+      flex-shrink: 0;
+      align-self: center;
+      background: rgba(126,231,135,0.08);
+      border: 1px solid rgba(126,231,135,0.25);
+      color: var(--accent2);
+      font-size: 0.88rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .header-badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .header-date {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (min-width: 620px) {
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-num {
+      font-size: 27px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-count {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .news-grid, .news-grid-2, .news-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 620px) {
+      .news-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .news-card.full { grid-column: 1 / -1; }
+
+    @media (max-width: 619px) {
+      .news-grid, .news-grid-2, .news-grid-3 { grid-template-columns: 1fr; }
+      .news-card.full { grid-column: 1; }
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .news-card.blue::before   { background: linear-gradient(90deg, var(--accent), var(--accent4)); }
+    .news-card.green::before  { background: linear-gradient(90deg, var(--accent2), #3fb950); }
+    .news-card.orange::before { background: linear-gradient(90deg, var(--accent5), #e3b341); }
+    .news-card.red::before    { background: linear-gradient(90deg, var(--accent3), #f0883e); }
+    .news-card.purple::before { background: linear-gradient(90deg, var(--accent4), var(--accent)); }
+
+    .news-card:hover {
+      border-color: #444c56;
+      transform: translateY(-2px);
+    }
+    .news-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .news-emoji {
+      font-size: 25px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .news-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+    .news-card-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .news-card-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .tag.blue   { background: rgba(88,166,255,0.12);  border: 1px solid rgba(88,166,255,0.25);  color: var(--accent); }
+    .tag.green  { background: rgba(126,231,135,0.1);  border: 1px solid rgba(126,231,135,0.25); color: var(--accent2); }
+    .tag.orange { background: rgba(255,166,87,0.1);   border: 1px solid rgba(255,166,87,0.25);  color: var(--accent5); }
+    .tag.red    { background: rgba(247,129,102,0.1);  border: 1px solid rgba(247,129,102,0.25); color: var(--accent3); }
+    .tag.purple { background: rgba(210,168,255,0.1);  border: 1px solid rgba(210,168,255,0.25); color: var(--accent4); }
+
+    .news-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .news-card-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .news-card-meta a:hover { text-decoration: underline; }
+    .meta-dot { color: var(--border); }
+
+    .paper-info {
+      background: rgba(88,166,255,0.05);
+      border: 1px solid rgba(88,166,255,0.15);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .paper-info strong { color: var(--accent); font-weight: 600; }
+
+    .blist { list-style: none; display: flex; flex-direction: column; gap: 6px; margin: 6px 0 2px; }
+    .blist li { font-size: 14px; color: var(--text-secondary); padding-left: 16px; position: relative; line-height: 1.65; }
+    .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 13px; }
+    .blist li.green::before  { color: var(--accent2); }
+    .blist li.orange::before { color: var(--accent5); }
+    .blist li.red::before    { color: var(--accent3); }
+    .blist li.purple::before { color: var(--accent4); }
+    .blist li strong { color: var(--text-primary); font-weight: 600; }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(210,168,255,0.04) 100%);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .highlight-box-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .highlight-table th {
+      text-align: left;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .highlight-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(48,54,61,0.5);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .highlight-table td:first-child {
+      color: var(--text-primary);
+      font-weight: 600;
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table td:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table tr:last-child td { border-bottom: none; }
+
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-top: 40px;
+    }
+    .sources-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sources-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sources-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .sources-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .sources-list a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 { font-size: 24px; }
+      .header-inner { flex-direction: column; }
+      .header-date-badge { align-self: flex-start; }
+      .container { padding: 24px 16px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">BIO AI</span>
+        <span class="header-date">2026년 8월 21일 (금)</span>
+      </div>
+      <h1>🧬 BIO AI <span>핵심뉴스</span></h1>
+      <p class="header-subtitle">펩타이드·단백질 AI 논문 · 신약개발 플랫폼 · 빅파마 M&A · 국내 동향</p>
+    </div>
+    <div class="header-date-badge">2026-08-21</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 통계 요약 -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent4);">2</div>
+      <div class="stat-label">펩타이드·단백질 AI</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent2);">2</div>
+      <div class="stat-label">AI 신약 플랫폼·투자</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent5);">2</div>
+      <div class="stat-label">빅파마 AI 파트너십·M&A</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent3);">2</div>
+      <div class="stat-label">국내 K-바이오</div>
+    </div>
+  </div>
+
+  <!-- 주요 이슈 요약 -->
+  <div class="highlight-box">
+    <div class="highlight-box-title">⚡ 이번 주 주요 이슈 요약 (2026.08.15 – 08.21)</div>
+    <table class="highlight-table">
+      <thead>
+        <tr>
+          <th>이슈</th>
+          <th>영역</th>
+          <th>하이라이트</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GenBio AI 'AIDO Cell'</td>
+          <td>DNA~세포 전 계층 가상세포 월드모델 공개</td>
+          <td style="color:var(--accent2);">공동창업자 David Baker(노벨상)</td>
+          <td>2026-08-18</td>
+        </tr>
+        <tr>
+          <td>BioMarin × Alesta</td>
+          <td>경구용 저포스파타제증(HPP) 치료제 ALE1 확보 인수</td>
+          <td style="color:var(--accent3);">$275M+마일스톤 $215M</td>
+          <td>2026-08-19</td>
+        </tr>
+        <tr>
+          <td>Fulcrum × Slate Medicines</td>
+          <td>편두통 치료제(SLTE-1009) 올스톡 합병</td>
+          <td style="color:var(--accent5);">$245M 사모 조달</td>
+          <td>2026-08-17</td>
+        </tr>
+        <tr>
+          <td>연세대 K-NIBRT</td>
+          <td>'AI 기반 단백질 신약개발' 전 주기 실무교육과정 개강</td>
+          <td style="color:var(--accent4);">8주 프로젝트 기반 실습</td>
+          <td>2026-08-19</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 펩타이드·단백질 AI 연구 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(210,168,255,0.1);">🔬</div>
+    <span class="section-title">펩타이드 · 단백질 AI 연구</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card purple">
+      <div class="news-card-top">
+        <span class="news-emoji">🧩</span>
+        <span class="news-card-title">GIST, 알파폴드3 '내부 표현 정보' 활용한 신약 결합력 예측 AI '알파DTA' 개발 — 44개 단백질 계열 중 32개서 기존 모델 압도</span>
+      </div>
+      <div class="paper-info">
+        <strong>논문:</strong> "AlphaDTA: integrating AlphaFold3 embeddings and 3D complex structures for drug–target binding affinity prediction." <em>Journal of Cheminformatics</em>, 2026년 7월 21일 온라인 게재.<br>
+        <strong>저자 소속:</strong> 광주과학기술원(GIST) AI학과 — 이현주 교수(지도), 정민재 석사과정생(제1저자), 박세진 박사(공동연구)
+      </div>
+      <div class="news-card-body">
+        GIST 이현주 교수 연구팀이 구글 딥마인드 알파폴드3의 최종 3차원 구조뿐 아니라 계산 과정에서 생성되는 '내부 표현 정보'까지 함께 분석해, 실험 구조 데이터가 부족한 단백질에서도 약물 결합력을 예측하는 AI 모델을 개발했다.
+        <ul class="blist">
+          <li class="purple">단백질·약물 각각의 특징과 상호작용을 담은 내부 표현 정보 + 3차원 구조를 하나의 모델로 결합</li>
+          <li>실험 구조 없이도 기존 구조 기반 모델과 대등한 성능, 구성정보 기반 모델보다는 높은 성능 확인</li>
+          <li class="green">서로 다른 44개 단백질 계열 검증에서 <strong>32개 계열이 기존 최고 성능 모델보다 우수</strong> — 약물 재창출 연구에도 활용 가능</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag purple">AlphaDTA</span>
+        <span class="tag purple">GIST</span>
+        <span class="tag blue">AlphaFold3 임베딩</span>
+        <span class="tag green">결합친화도 예측</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-07-21 (논문 게재) · 2026-08-06 (보도)</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.hellodd.com/news/articleView.html?idxno=112738" target="_blank">헬로디디</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <span class="news-emoji">🧬</span>
+        <span class="news-card-title">NVIDIA·옥스퍼드·Mila·서울대, 원자 단위 단백질 바인더 설계 프레임워크 'Proteina-Complexa' — ICLR 2026 오럴 발표</span>
+      </div>
+      <div class="paper-info">
+        <strong>논문:</strong> "Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute." arXiv:2603.27950, ICLR 2026 Oral.<br>
+        <strong>저자 소속:</strong> NVIDIA, University of Oxford, Mila(퀘벡 AI연구소), 서울대학교 공동연구
+      </div>
+      <div class="news-card-body">
+        생성형 사전학습과 추론 시점 연산(test-time compute)을 결합해 전원자(all-atom) 단백질 바인더를 설계하는 프레임워크가 ICLR 2026 오럴 세션에서 발표됐다.
+        <ul class="blist">
+          <li class="blue">플로우 매칭 기반 잠재 단백질 생성 아키텍처를 바인더 설계로 확장, 생성 모델과 할루시네이션 기반 설계 방식을 하나로 통합</li>
+          <li>단량체 컴퓨터 예측 구조의 도메인 간 상호작용을 활용해 대규모 합성 바인더-타깃 쌍 데이터셋 'Teddymer' 구축·사전학습</li>
+          <li class="purple">추론 시점 최적화로 생성형 사전학습의 강점과 기존 할루시네이션 방식의 정확도를 동시에 확보</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag blue">Proteina-Complexa</span>
+        <span class="tag blue">단백질 바인더 설계</span>
+        <span class="tag purple">서울대</span>
+        <span class="tag green">ICLR 2026</span>
+      </div>
+      <div class="news-card-meta">
+        <span>ICLR 2026 (Oral)</span>
+        <span class="meta-dot">·</span>
+        <a href="https://arxiv.org/abs/2603.27950" target="_blank">arXiv</a>
+        <span class="meta-dot">·</span>
+        <a href="https://research.nvidia.com/labs/lpr/publication/complexa2026/" target="_blank">NVIDIA Research</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② AI 신약개발 플랫폼·투자 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(126,231,135,0.1);">🚀</div>
+    <span class="section-title">AI 신약개발 플랫폼 · 투자 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <span class="news-emoji">🧫</span>
+        <span class="news-card-title">GenBio AI, DNA~세포 전 계층 시뮬레이션하는 '가상세포 월드모델' AIDO Cell 공개 — 공동창업자 데이비드 베이커(노벨화학상)</span>
+      </div>
+      <div class="news-card-body">
+        팔로알토 소재 스타트업 <strong>GenBio AI</strong>(공동창업자 David Baker·Eric Xing 등)가 8월 18일 세포 전체를 시뮬레이션하는 가상세포 월드모델 <strong>AIDO Cell</strong>을 공개했다.
+        <ul class="blist">
+          <li class="green">DNA·RNA·단백질·세포 수준을 하나의 시뮬레이션으로 연결하는 <strong>멀티스케일·상태유지(stateful)</strong> 모델 — 한 계층의 유전자 변형·약물 처리가 다른 계층까지 전파</li>
+          <li>이전 개입으로 인한 변화를 유지해, 순차적 개입(perturbation) 시나리오까지 모델링 가능</li>
+          <li class="blue">현재 백혈병 유래 K562, 간암 유래 HepG2 등 대표 불멸화 세포주 2종 지원</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag green">GenBio AI</span>
+        <span class="tag green">AIDO Cell</span>
+        <span class="tag blue">Virtual Cell</span>
+        <span class="tag purple">David Baker</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-18</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.statnews.com/2026/08/18/david-baker-genbio-ai-new-virtual-model-unveiled-aido-cell/" target="_blank">STAT News</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.synbiobeta.com/read/genbio-ai-builds-first-world-model-of-the-human-cell" target="_blank">SynBioBeta</a>
+      </div>
+    </div>
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <span class="news-emoji">⚗️</span>
+        <span class="news-card-title">Deep Origin, AI+물리 기반 도킹 플랫폼 'Balto' 성능 공개 — DPP4 타깃서 기존 대비 363배 enrichment factor</span>
+      </div>
+      <div class="news-card-body">
+        물리 기반 AI와 양자화학을 결합한 신약개발 스타트업 <strong>Deep Origin</strong>이 8월 19일 도킹·화학물성 예측 플랫폼 <strong>Balto</strong>의 성능 검증 결과를 공개했다.
+        <ul class="blist">
+          <li class="green">10만 개 무작위 약물유사분자 풀에서 실험적으로 검증된 DPP4 바인더 2,830개를 재발굴 — <strong>enrichment factor 363배</strong> 달성</li>
+          <li>오픈소스·상용 도구 대비 최대 10배 높은 enrichment factor로 필요 실험 횟수 대폭 절감 주장</li>
+          <li class="blue">대화형 인터페이스로 단백질 구조 로드 → 도킹 → 포즈·점수 분석 → 물성 예측까지 비전문가도 접근 가능</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag green">Deep Origin</span>
+        <span class="tag green">Balto</span>
+        <span class="tag blue">물리 기반 도킹 AI</span>
+        <span class="tag orange">Enrichment Factor</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-19</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.hpcwire.com/aiwire/2026/08/19/deep-origin-claims-breakthrough-in-ai-drug-discovery-platform/" target="_blank">HPCwire (AIwire)</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 빅파마·빅테크 AI 파트너십·M&A 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(255,166,87,0.1);">🏢</div>
+    <span class="section-title">빅파마 · 빅테크 AI 파트너십 · M&A 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <span class="news-emoji">🤝</span>
+        <span class="news-card-title">BioMarin, 희귀 골질환 경구용 신약 'ALE1' 확보 위해 Alesta Therapeutics 인수 — 최대 $490M 규모</span>
+      </div>
+      <div class="news-card-body">
+        <strong>BioMarin Pharmaceutical</strong>이 8월 19일 저포스파타제증(HPP·희귀 유전성 골질환) 치료 후보물질 ALE1을 보유한 네덜란드 바이오텍 <strong>Alesta Therapeutics</strong> 인수 계약을 발표했다.
+        <ul class="blist">
+          <li class="orange">선지급 <strong>$275M</strong> + 마일스톤 최대 <strong>$215M</strong>, 총 거래규모 최대 $490M — 현금 보유분으로 조달</li>
+          <li>ALE1은 무기 피로인산염(pyrophosphate) 조절 표적을 억제하는 임상 초기 단계 경구제 — <strong>HPP 최초 경구치료제</strong> 가능성</li>
+          <li class="blue">인수 종결 직전 ALE1 외 자산은 신설 스핀아웃 법인으로 이전, 기존 Alesta 임직원은 BioMarin에 편입되지 않음 — 2026년 3분기 종결 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag orange">BioMarin</span>
+        <span class="tag orange">Alesta Therapeutics</span>
+        <span class="tag blue">ALE1</span>
+        <span class="tag purple">희귀질환 M&A</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-19</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.biomarin.com/news/press-releases/biomarin-to-acquire-alesta-therapeutics-to-gain-ale1-a-potential-first-oral-therapy-for-hypophosphatasia-adding-an-important-clinical-program-to-biomarins-pipeline/" target="_blank">BioMarin</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.cnbc.com/2026/08/19/biomarin-to-acquire-alesta-therapeutics-for-275-million.html" target="_blank">CNBC</a>
+      </div>
+    </div>
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <span class="news-emoji">💊</span>
+        <span class="news-card-title">Fulcrum Therapeutics × Slate Medicines, 편두통 신약 개발 위해 올스톡 합병 — $245M 사모 조달 동시 진행</span>
+      </div>
+      <div class="news-card-body">
+        <strong>Fulcrum Therapeutics</strong>가 8월 17일 <strong>Slate Medicines</strong>와 전액 주식교환 방식 합병 계약을 발표, 합병법인은 'Slate Medicines, Inc.'(나스닥 SLTE)로 재상장한다.
+        <ul class="blist">
+          <li class="orange">Frazier Life Sciences 주도로 Forbion·RA Capital·Deep Track Capital 등이 참여하는 <strong>$245M 사모 조달</strong> 동시 확보</li>
+          <li>교환비율 산정 기준 Slate $350M·Fulcrum $31.3M — 합병 후 지분 Slate측 주주 95%, Fulcrum측 5%</li>
+          <li class="blue">Slate의 선도물질 <strong>SLTE-1009</strong>(PACAP·VIP 타깃)가 임상 1상 진입 예정, 2027년 중반 안전성·PK 데이터 확보 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag orange">Fulcrum Therapeutics</span>
+        <span class="tag orange">Slate Medicines</span>
+        <span class="tag blue">SLTE-1009</span>
+        <span class="tag purple">올스톡 합병</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-17</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.globenewswire.com/news-release/2026/08/17/3345962/0/en/fulcrum-therapeutics-and-slate-medicines-announce-merger-agreement-to-advance-next-generation-migraine-therapies.html" target="_blank">GlobeNewswire</a>
+        <span class="meta-dot">·</span>
+        <a href="https://ir.fulcrumtx.com/news-releases/news-release-details/fulcrum-therapeutics-and-slate-medicines-announce-merger" target="_blank">Fulcrum IR</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 국내 K-바이오 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(247,129,102,0.1);">🇰🇷</div>
+    <span class="section-title">국내 K-바이오 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <span class="news-emoji">🎓</span>
+        <span class="news-card-title">연세대 K-NIBRT, 'AI 기반 단백질 신약개발 전 주기 실무교육과정' 개강 — 표적 발굴부터 검증까지 프로젝트 기반 실전 학습</span>
+      </div>
+      <div class="news-card-body">
+        연세대학교 K-NIBRT사업단이 8주간의 AI 신약개발 실무 인력 양성 교육과정에 들어갔다고 8월 19일 밝혔다.
+        <ul class="blist">
+          <li class="blue">이론 암기 대신 표적 발굴 → 약물 설계 → 검증까지 교육생이 직접 수행하는 <strong>프로젝트 기반 실전 학습</strong>으로 구성</li>
+          <li>한국제약바이오협회 온라인 플랫폼(LAIDD)으로 이론 선행학습 후 실제 신약개발 과제로 실습 진행</li>
+          <li class="green">아일랜드 국립바이오공정연구교육원(NIBRT)과의 파트너십 기반 — 취업준비생부터 재직자·경력복귀 인력까지 맞춤형 프로그램 운영</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag blue">연세대 K-NIBRT</span>
+        <span class="tag blue">AI 신약개발 인재양성</span>
+        <span class="tag green">NIBRT</span>
+        <span class="tag purple">LAIDD</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-19</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.fnnews.com/news/202608191527574770" target="_blank">파이낸셜뉴스</a>
+      </div>
+    </div>
+
+    <div class="news-card red">
+      <div class="news-card-top">
+        <span class="news-emoji">🧪</span>
+        <span class="news-card-title">파로스아이바이오 × 잭투스온코, 중기부 AI 신약개발 국책과제 선정 — '케미버스' 활용 IRP2 저해제 항암 후보물질 공동 발굴</span>
+      </div>
+      <div class="news-card-body">
+        AI 신약개발기업 <strong>파로스아이바이오</strong>가 잭투스온코와 함께 중소벤처기업부 '2026년 제약바이오벤처 협업기반 기술개발사업'의 AI 후보물질 탐색 부문에 선정됐다고 8월 6일 밝혔다.
+        <ul class="blist">
+          <li class="red">총 연구비 10억원 규모(파로스아이바이오 4억원 지원) — 24개월간 계열 내 최초(First-in-Class) IRP2 저해제 항암 후보물질 발굴</li>
+          <li>자체 AI 플랫폼 <strong>'케미버스(Chemiverse)'</strong>로 후보물질 설계·최적화, 잭투스온코는 화합물 합성·생물학적 검증 담당 — 'AI-Wet Lab' 피드백 체계 적용</li>
+          <li class="blue">대장암 적응증으로 우선 개발 후 폐암·유방암 등 고형암으로 확대 검토, 신상준 연세대 의대 교수팀과 기존 공동연구 확대 사례</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag red">파로스아이바이오</span>
+        <span class="tag red">중기부 국책과제</span>
+        <span class="tag blue">케미버스</span>
+        <span class="tag purple">IRP2 저해제</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-06</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.edaily.co.kr/News/Read?newsId=03109446645544696&mediaCodeNo=257" target="_blank">이데일리</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources-section">
+    <div class="sources-title">📚 주요 출처</div>
+    <ul class="sources-list">
+      <li><a href="https://www.hellodd.com/news/articleView.html?idxno=112738" target="_blank">헬로디디 — "단백질 구조 몰라도 척척"···GIST, 신약 후보 예측 AI 개발 (2026-08-06)</a></li>
+      <li><a href="https://arxiv.org/abs/2603.27950" target="_blank">arXiv — Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute (NVIDIA·Oxford·Mila·서울대)</a></li>
+      <li><a href="https://www.statnews.com/2026/08/18/david-baker-genbio-ai-new-virtual-model-unveiled-aido-cell/" target="_blank">STAT News — David Baker's GenBio AI Unveils Virtual Model of Entire Cell System (2026-08-18)</a></li>
+      <li><a href="https://www.hpcwire.com/aiwire/2026/08/19/deep-origin-claims-breakthrough-in-ai-drug-discovery-platform/" target="_blank">HPCwire — Deep Origin Claims Breakthrough in AI Drug Discovery Platform (2026-08-19)</a></li>
+      <li><a href="https://www.biomarin.com/news/press-releases/biomarin-to-acquire-alesta-therapeutics-to-gain-ale1-a-potential-first-oral-therapy-for-hypophosphatasia-adding-an-important-clinical-program-to-biomarins-pipeline/" target="_blank">BioMarin — BioMarin to Acquire Alesta Therapeutics (2026-08-19)</a></li>
+      <li><a href="https://www.globenewswire.com/news-release/2026/08/17/3345962/0/en/fulcrum-therapeutics-and-slate-medicines-announce-merger-agreement-to-advance-next-generation-migraine-therapies.html" target="_blank">GlobeNewswire — Fulcrum Therapeutics and Slate Medicines Announce Merger Agreement (2026-08-17)</a></li>
+      <li><a href="https://www.fnnews.com/news/202608191527574770" target="_blank">파이낸셜뉴스 — 신약 발굴부터 설계까지… 연세대 K-NIBRT 'AI 신약개발' 실전 인재 키운다 (2026-08-19)</a></li>
+      <li><a href="https://www.edaily.co.kr/News/Read?newsId=03109446645544696&mediaCodeNo=257" target="_blank">이데일리 — 파로스아이바이오, AI 신약개발 국책과제 잇단 선정 (2026-08-06)</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  🧬 BIO AI 핵심뉴스 | 2026-08-21 | 자동 수집 · AI 분석 정리
+</footer>
+
+</body>
+</html>

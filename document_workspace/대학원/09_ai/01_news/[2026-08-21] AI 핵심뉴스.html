@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-08-21] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #0d1b2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 5%;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-left { flex: 1; min-width: 0; }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .header-badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent1);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .header-date { color: var(--text-muted); font-size: 14px; }
+  header h1 {
+    font-size: 2.1rem; font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.9rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+  .section-label {
+    font-size: 0.83rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+  .grid, .grid-wide, .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.95rem; color: #cdd9e5; line-height: 1.68; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.79rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.94rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.85rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.94rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert.g { background: #0e1e10; border: 1px solid rgba(63,185,80,0.3); color: #b8e5be; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+  .summary-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(188,140,255,0.04) 100%);
+    border: 1px solid rgba(88,166,255,0.22);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 30px;
+  }
+  .summary-box-title {
+    font-size: 0.92rem; font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: #cdd9e5;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .summary-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.86rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.90rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+  footer { text-align: center; color: var(--text-muted); font-size: 0.84rem; padding: 16px 0 32px; }
+  @media (min-width: 620px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid-4, .grid, .grid-wide { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid, .grid-wide { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 1280px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-4, .grid-wide { grid-template-columns: repeat(4, 1fr); }
+    main { max-width: 1440px; }
+    .header-inner { max-width: 1440px; }
+  }
+  @media (min-width: 1700px) {
+    main { max-width: 1800px; }
+    .header-inner { max-width: 1800px; }
+  }
+  @media (max-width: 480px) {
+    header { padding: 20px 0 16px; }
+    .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .summary-box { padding: 16px; overflow-x: auto; }
+    .summary-table td:first-child { white-space: normal; }
+    .summary-table td:last-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">AI</span>
+        <span class="header-date">2026년 8월 21일 (금) KST · 자동 생성</span>
+      </div>
+      <h1><span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">모델 출시·업데이트 · Anthropic 매출·IPO · API 보안 취약점 · 정책·규제 동향 · 국내 인프라·투자</p>
+    </div>
+    <div class="date-badge">2026.08.21.금 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <div class="summary-box">
+    <div class="summary-box-title">⚡ 이번 주 주요 이슈 요약 (2026.08.15 ~ 08.21)</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>이슈</th>
+          <th>영역</th>
+          <th>하이라이트</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Anthropic 연매출 런레이트 65조 돌파</td>
+          <td>IPO 준비 임박</td>
+          <td style="color:var(--accent2);">2조달러 밸류·역대 최대 IPO 전망</td>
+          <td>2026-08-17</td>
+        </tr>
+        <tr>
+          <td>OpenAI Astra, 수학 난제 10건 해결</td>
+          <td>에르되시 문제·비소피 군</td>
+          <td style="color:var(--accent5);">컴퓨팅 비용 2,000달러</td>
+          <td>2026-08-01~02</td>
+        </tr>
+        <tr>
+          <td>API 추론 트레이스 유출 취약점</td>
+          <td>OpenAI·Anthropic·Google 공통</td>
+          <td style="color:var(--accent4);">31만 5천건 복호화</td>
+          <td>2026-08-12</td>
+        </tr>
+        <tr>
+          <td>엔비디아, OpenAI 데이터센터 지원</td>
+          <td>오하이오 'PORTS-Pike' 캠퍼스</td>
+          <td style="color:var(--accent1);">최대 1,050억달러</td>
+          <td>2026-08-17</td>
+        </tr>
+        <tr>
+          <td>ChatGPT for Teens 글로벌 출시</td>
+          <td>13~17세 안전 강화판</td>
+          <td style="color:var(--accent3);">미성년 자동 전환</td>
+          <td>2026-08-18</td>
+        </tr>
+        <tr>
+          <td>국가 AI 컴퓨팅센터 해남 착공</td>
+          <td>국내 AI 인프라</td>
+          <td style="color:var(--accent2);">2조4천억 투입·GPU 1.5만장</td>
+          <td>2026-08-03</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 모델 출시 & 업데이트 -->
+  <div class="section-label"><span class="sdot"></span> 모델 출시 &amp; 업데이트</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">➗</div>
+        <h3>OpenAI Astra, 10년 넘게 미해결이던 수학·이론컴퓨터과학 난제 10건 해결</h3>
+      </div>
+      <div class="card-body">
+        OpenAI가 8월 1~2일 차세대 모델 <strong>Astra</strong>의 사전공개 성격으로, 10년 이상 미해결이던 수학·이론컴퓨터과학 문제 10건에 대한 새 결과와 기계검증 가능한 증명을 공개했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="p">에르되시(Erdős) 문제 카탈로그 중 다색 램지수 문제(#183) 등 3건 포함, 극단 그래프이론 반례로 2건 추가 해결</li>
+          <li>1999년 그로모프가 소피성(soficity) 개념을 제시한 이후 27년간 미해결이던 "비소피 군(non-sofic group)" 명시적 구성에 최초 성공</li>
+          <li class="y">Lean 4 기계검증 증명·249쪽 논문집 공개, 컴퓨팅 비용은 약 2,000달러 — 아직 동료심사(peer review) 이전 단계</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag p">OpenAI</span>
+        <span class="tag">Astra</span>
+        <span class="tag">에르되시 문제</span>
+        <span class="tag">2026-08-01~02</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">⚙️</div>
+        <h3>Z.ai GLM-5.3 — 베이스 모델 재학습 없이 코딩·사이버 역량 급상승</h3>
+      </div>
+      <div class="card-body">
+        중국 Z.ai가 8월 14일, GLM-5.2와 동일한 743B 베이스 모델에 후속 학습(post-training)만 확대해 만든 <strong>GLM-5.3</strong>을 출시했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">Terminal-Bench 3.0 점수가 4.6→28.3으로 급상승, 오픈웨이트 모델 중 최강 장기 코딩 성능 주장</li>
+          <li class="y">CyberGym 사이버보안 벤치마크 84.5% 달성 — 개발진 예상보다 빠른 역량 향상으로 추가 안전성 검증 진행</li>
+          <li>100만 토큰 컨텍스트·12.8만 토큰 출력 지원, 가중치는 안전성 검증 후 약 2주 뒤 공개 예정</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">GLM-5.3</span>
+        <span class="tag">Z.ai</span>
+        <span class="tag y">오픈웨이트</span>
+        <span class="tag">2026-08-14</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🚀</div>
+        <h3>구글 Gemini 3.7 Flash — 이전 모델 출시 3주 만에 후속작</h3>
+      </div>
+      <div class="card-body">
+        구글이 8월 13일, Gemini 3.6 Flash 출시 불과 3주 만에 코딩·에이전트 특화 후속 모델 <strong>Gemini 3.7 Flash</strong>를 공개했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>처음부터 재학습하지 않고 알고리즘 개선과 사용자 피드백으로 기존 모델을 대체하는 방식 채택</li>
+          <li class="g">자체 평가 기준 DeepSWE v1.1 벤치마크 65.3% — 이전 버전(49.0%) 대비 16.3%p 상승</li>
+          <li class="y">연말까지 입력 100만 토큰당 $0.75·출력 $3.75로 반값 프로모션, 2027년부터 정가(각 2배) 전환 예정</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Gemini 3.7 Flash</span>
+        <span class="tag">구글</span>
+        <span class="tag">2026-08-13</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 기업 동향 & 리더십 -->
+  <div class="section-label"><span class="sdot p"></span> 기업 동향 &amp; 리더십</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1b2f22;">📈</div>
+        <h3>Anthropic 연매출 런레이트 65조원 돌파 — 사상 최대 규모 IPO 임박</h3>
+      </div>
+      <div class="card-body">
+        Anthropic의 연환산 매출(run rate)이 7월 말 기준 650억 달러를 돌파, 지난해 말 대비 7배 이상 성장했다. 2분기 실적만 115억 달러로 전년 동기 대비 14배 이상 늘었다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">비공개로 IPO를 신청한 상태로 이르면 올가을 상장 가능성, 목표 밸류에이션은 2조 달러 이상 — 6월 스페이스X가 세운 1조 7,700억 달러 기록 경신 가능성</li>
+          <li class="y">같은 기간 OpenAI의 연환산 매출은 약 400억 달러로 Anthropic의 약 60% 수준</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">Anthropic</span>
+        <span class="tag">IPO</span>
+        <span class="tag">매출 65조</span>
+        <span class="tag">2026-08-17</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d2207;">🧒</div>
+        <h3>OpenAI, 'ChatGPT for Teens' 글로벌 출시 — 미성년 자동 전환</h3>
+      </div>
+      <div class="card-body">
+        OpenAI가 8월 18일부터 13~17세 전용 <strong>ChatGPT for Teens</strong>를 순차 출시했다. 만 18세 미만으로 신고했거나 연령예측 시스템이 미성년으로 추정한 계정은 자동 전환된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">자살·자해, 로맨틱·성적 대화 등 민감 주제에 대한 콘텐츠 제한 강화, 정서적 의존을 유발하는 표현 금지</li>
+          <li>숙제 리마인더·퀴즈·학습 시각화 등 Study Mode 연계 교육 기능 확대, 글로벌 전면 적용은 약 2주 내 완료 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">OpenAI</span>
+        <span class="tag">ChatGPT for Teens</span>
+        <span class="tag">2026-08-18</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">💾</div>
+        <h3>엔비디아, OpenAI 오하이오 데이터센터에 최대 1,050억달러 지원</h3>
+      </div>
+      <div class="card-body">
+        엔비디아가 8월 17일, OpenAI가 20년간 임차할 오하이오주 'PORTS-Pike' 데이터센터 캠퍼스 건설에 최대 1,050억 달러 규모의 신용공여·투자를 제공하기로 했다고 발표했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">소프트뱅크 계열 SB에너지에 15억 달러 직접 투자, 시설은 초기 4.25GW에서 최대 8GW까지 확장 가능</li>
+          <li>엔비디아 GPU만 약 150만 개 독점 사용, 2028년까지 첫 800MW 가동 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">엔비디아</span>
+        <span class="tag">OpenAI</span>
+        <span class="tag">오하이오 데이터센터</span>
+        <span class="tag">2026-08-17</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ AI 안전 & 보안 -->
+  <div class="section-label"><span class="sdot r"></span> AI 안전 &amp; 보안</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#2d1a1a;">🔓</div>
+        <h3>OpenAI·Anthropic·Google API 공통 취약점 — 추론 과정 31만건 유출</h3>
+      </div>
+      <div class="card-body">
+        독일 <strong>ELLIS Institute</strong>와 <strong>Max Planck Institute</strong> 공동 연구진이 OpenAI·Anthropic·Google이 API 세션 간 숨겨진 추론(reasoning) 내용을 암호화할 때 공용 전역 키(global key)를 사용한 취약점을 발견, 논문 「Stealing Reasoning Traces from Proprietary LLM APIs」로 공개했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">세 회사 API에서 추론 블록 31만 5,320건을 복호화하고 공개 로그에서 API 키·비밀번호 등 실제 자격증명 182건을 확보</li>
+          <li>모델 증류용 추론 탈취, 타 사용자 비공개 데이터 추출, 안전장치 우회 유해 콘텐츠 복원, 추론 블록 내 프롬프트 인젝션 은닉 등 4가지 악용 경로를 실증</li>
+          <li class="y">공개 시점 기준 주요 추출 공격은 재현 불가로 조치됐으나, 3사 모두 세션 간 추론 재사용·모델 전환 시 처리 방식을 수정</li>
+        </ul>
+        <div class="alert r" style="margin-top:10px;">
+          <span class="ai">⚠️</span>
+          <span>주요 프론티어 모델 3사가 동일한 구조적 취약점을 공유했다는 점에서 업계 전반의 API 보안 설계 재점검 필요성이 제기됨</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag r">API 보안</span>
+        <span class="tag">추론 유출</span>
+        <span class="tag">ELLIS Institute</span>
+        <span class="tag">Max Planck Institute</span>
+        <span class="tag">2026-08-12</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">🇨🇳</div>
+        <h3>중국, AI 에이전트 대상 세계 첫 국가 단위 규제 시행</h3>
+      </div>
+      <div class="card-body">
+        중국의 「AI 에이전트 실시 의견(Implementation Opinions on Intelligent Agents)」이 7월 15일부로 시행에 들어갔다. AI 에이전트를 별도 규제 범주로 다룬 세계 최초의 국가 정책 문서로 평가된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="y">자율적으로 행동을 실행하는 에이전트형 AI를 기존 생성형 AI 규제와 구분해 별도 관리 체계 적용</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">중국</span>
+        <span class="tag">AI 에이전트 규제</span>
+        <span class="tag">2026-07-15</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 정책 & 규제 -->
+  <div class="section-label"><span class="sdot y"></span> 정책 &amp; 규제</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">🇪🇺</div>
+        <h3>EU AI Act 투명성 의무 8월 2일 발효 — 집행 본격화</h3>
+      </div>
+      <div class="card-body">
+        유럽연합 집행위원회 AI Office와 각국 당국이 8월 2일부터 AI Act 투명성 규정 집행에 들어갔다. 위반 시 최대 1,500만 유로 또는 전세계 매출 3% 중 높은 금액의 과징금이 부과된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">비동의 성적 콘텐츠·아동성착취물(CSAM) 생성 등 신규 금지행위 조항도 함께 적용</li>
+          <li class="y">신용평가·보험료 산정 등 고위험 시스템 규정은 단독형 2027년 12월, 제품 내장형 2028년 8월로 적용 시점 연기</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag y">EU AI Act</span>
+        <span class="tag">투명성 의무</span>
+        <span class="tag">2026-08-02</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🏛️</div>
+        <h3>미국, 프론티어 AI 안전테스트 프레임워크 이어 정책 협의 지속</h3>
+      </div>
+      <div class="card-body">
+        지난주 확정된 백악관 자발적 안전테스트 프레임워크에 이어, EU·중국 등 각국이 잇달아 AI 규제를 구체화하면서 프론티어 모델을 둘러싼 국가별 규제 격차가 이번 주 더욱 뚜렷해졌다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">EU는 투명성·고위험 규제, 중국은 에이전트 전용 규제로 각각 접근 방식 차별화</li>
+          <li>오픈웨이트 모델의 규제 사각지대 논란은 여전히 진행 중</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">글로벌 AI 규제</span>
+        <span class="tag g">규제 격차</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ 국내 동향 -->
+  <div class="section-label"><span class="sdot g"></span> 국내 동향</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🏗️</div>
+        <h3>국가 AI 컴퓨팅센터 해남 착공 — 아시아 AI 허브 목표</h3>
+      </div>
+      <div class="card-body">
+        8월 3일 전남 해남 솔라시도에서 '국가 AI 컴퓨팅센터' 착공식이 열렸다. 총사업비 2조 4,065억 원을 투입해 2028년 가동을 목표로 한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">2028년까지 고성능 GPU 1만 5,000장 확보, 삼성SDS·네이버클라우드·카카오·KT·삼성전자 컨소시엄 참여</li>
+          <li>정부 출자금 4,000억 원(29%)·민간 투자 71%의 민관 협력 모델, 해남을 아시아 AI 인프라 허브로 육성한다는 구상</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">국가 AI 컴퓨팅센터</span>
+        <span class="tag">해남</span>
+        <span class="tag">2026-08-03</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1b2f22;">💰</div>
+        <h3>상반기 벤처투자 8.9조원 '역대 최대' — AI·반도체·로봇이 견인</h3>
+      </div>
+      <div class="card-body">
+        중소벤처기업부 집계 결과 2026년 상반기 신규 벤처투자가 전년 동기 대비 54.3% 증가한 8조 8,676억 원을 기록, 2022년 상반기(7조 6,442억 원) 기록을 넘어섰다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">리벨리온·홀리데이로보틱스 등 AI반도체·로봇 기업이 잇달아 1,000억 원 이상 투자 유치, 무게중심이 플랫폼에서 딥테크로 이동</li>
+          <li>신규 벤처펀드 결성액도 33.0% 증가한 8조 4,366억 원으로 역대 상반기 2위 기록</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">벤처투자</span>
+        <span class="tag">8.9조</span>
+        <span class="tag">딥테크</span>
+        <span class="tag">2026-08-19</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">📱</div>
+        <h3>'모두의 AI' 사업 — 통신3사·카카오 컨소시엄 참여, 네이버는 불참</h3>
+      </div>
+      <div class="card-body">
+        정부가 국민 누구나 비용·이용량 제한 없이 쓸 수 있는 AI 챗봇·공공 AI 에이전트를 구축하는 '모두의 AI' 사업에 SK텔레콤·KT·LG유플러스·카카오가 각각 컨소시엄을 꾸려 참여했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="p">네이버는 이번 사업에는 참여하지 않고 검색·광고·커머스와 AI Factory·AIDC를 연결하는 자체 풀스택 AI 전략에 집중</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag p">모두의 AI</span>
+        <span class="tag">통신3사</span>
+        <span class="tag">카카오</span>
+        <span class="tag">2026-08월</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://llm-stats.com/ai-news" target="_blank">LLM News Today (August 2026) — AI Model Releases — llm-stats.com</a></li>
+      <li><a href="https://the-decoder.com/openai-announces-its-next-major-model-astra-by-dropping-ten-previously-unsolved-math-solutions/" target="_blank">OpenAI announces its "next major model" Astra by dropping ten previously unsolved math solutions — The Decoder</a></li>
+      <li><a href="https://www.quantamagazine.org/why-the-legendary-erdos-problems-are-falling-to-ai-20260803/" target="_blank">Why the Legendary Erdős Problems Are Falling to AI — Quanta Magazine</a></li>
+      <li><a href="https://siliconangle.com/2026/08/14/z-ai-debuts-glm-5-3-long-horizon-coding-cybersecurity-upgrades/" target="_blank">Z.ai debuts GLM-5.3 with long-horizon coding, cybersecurity upgrades — SiliconANGLE</a></li>
+      <li><a href="https://9to5google.com/2026/08/13/gemini-3-7-flash-launch/" target="_blank">Gemini 3.7 Flash launches three weeks after last model — 9to5Google</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-08-17/anthropic-revenue-run-rate-surpasses-65-billion-ahead-of-ipo" target="_blank">Anthropic's Annualized Revenue Tops $65 Billion Before IPO — Bloomberg</a></li>
+      <li><a href="https://www.axios.com/2026/08/17/anthropic-revenue-run-rate-ipo-openai" target="_blank">Anthropic's revenue run rate reportedly surpasses $65 billion pre-IPO — Axios</a></li>
+      <li><a href="https://www.cnbc.com/2026/08/18/openai-chatgpt-for-teens-safety.html" target="_blank">OpenAI rolls out ChatGPT for Teens experience with 'stronger built-in safety protections' — CNBC</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-08-17/nvidia-to-invest-up-to-105-billion-for-openai-data-center-in-ohio" target="_blank">Nvidia Will Back First Phase of OpenAI Ohio Project With as Much as $105 Billion — Bloomberg</a></li>
+      <li><a href="https://www.cnbc.com/2026/08/17/nvidia-financing-open-ai-data-center-ohio.html" target="_blank">Nvidia backing $105 billion in financing for OpenAI data center in Ohio — CNBC</a></li>
+      <li><a href="https://thehackernews.com/2026/08/openai-anthropic-google-api-flaw-let.html" target="_blank">OpenAI, Anthropic, Google API Flaw Let Weaker AI Models Decode Stronger Models' Reasoning — The Hacker News</a></li>
+      <li><a href="https://www.tftc.io/ai-reasoning-traces-stolen-anthropic-openai-google-global-key" target="_blank">AI Reasoning Traces Stolen From Anthropic, OpenAI, Google — TFTC</a></li>
+      <li><a href="https://ec.europa.eu/commission/presscorner/detail/en/ip_26_1714" target="_blank">Commission starts enforcing AI Act rules and new transparency requirements on 2 August — European Commission</a></li>
+      <li><a href="https://www.hklaw.com/en/insights/publications/2026/04/us-companies-face-eu-ai-acts-possible-august-2026-compliance-deadline" target="_blank">U.S. Companies Face EU AI Act's Possible August 2026 Compliance Deadline — Holland & Knight</a></li>
+      <li><a href="https://eveaicore.com/blog/ai-regulation-2026-what-changed" target="_blank">AI Regulation in 2026: What Just Changed - and What It Means for Every AI Team</a></li>
+      <li><a href="https://www.ajunews.com/view/20260803070137878" target="_blank">국가 AI 컴퓨팅센터 해남서 착공…AI 인프라 아시아 허브 구축 — 아주경제</a></li>
+      <li><a href="https://www.newspim.com/news/view/20260803001139" target="_blank">해남서 국가AI컴퓨팅센터 첫 삽...정부·민간 2조 4000억 투입 — 뉴스핌</a></li>
+      <li><a href="https://biz.heraldcorp.com/article/10844689" target="_blank">상반기 벤처투자 8.9조 '역대 최대' 기록…AI·반도체 투자 활기 — 헤럴드경제</a></li>
+      <li><a href="https://www.hankyung.com/article/2026081904951" target="_blank">AI·반도체에 8.9조 뭉칫돈…상반기 벤처투자 역대 최대 — 한국경제</a></li>
+      <li><a href="https://www.joongangenews.com/news/articleView.html?idxno=540808" target="_blank">'전 국민 무료 AI' 누가 만드나…SKT·KT·LGU+·카카오 출격, 네이버는 불참 — 중앙이코노미뉴스</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>자동 생성 · 2026년 8월 21일 (금) KST · Claude Sonnet 5</footer>
+
+</body>
+</html>

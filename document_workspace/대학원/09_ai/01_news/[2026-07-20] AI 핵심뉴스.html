@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[2026-07-20] AI 핵심뉴스</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent1: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d29922;
+    --accent4: #f85149;
+    --accent5: #bc8cff;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #0d1b2e 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: 5%;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .header-left { flex: 1; min-width: 0; }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .header-badge {
+    background: rgba(88,166,255,0.12);
+    border: 1px solid rgba(88,166,255,0.3);
+    color: var(--accent1);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .header-date { color: var(--text-muted); font-size: 14px; }
+  header h1 {
+    font-size: 2.1rem; font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+  .date-badge {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.28);
+    color: var(--accent1);
+    font-size: 0.9rem; font-weight: 700;
+    padding: 7px 16px; border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 30px 22px 60px; }
+  .section-label {
+    font-size: 0.83rem; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent1); flex-shrink: 0; }
+  .sdot.g { background: var(--accent2); }
+  .sdot.y { background: var(--accent3); }
+  .sdot.r { background: var(--accent4); }
+  .sdot.p { background: var(--accent5); }
+  .grid, .grid-wide, .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .card:hover { border-color: #484f58; transform: translateY(-2px); }
+  .card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+  .card-head h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .card-body { font-size: 0.95rem; color: #cdd9e5; line-height: 1.68; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .tag {
+    font-size: 0.79rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 11px;
+    background: #1f3248; color: var(--accent1);
+    border: 1px solid rgba(88,166,255,0.2);
+    display: inline-block; white-space: nowrap;
+  }
+  .tag.g { background: #1b2f22; color: var(--accent2); border-color: rgba(63,185,80,0.22); }
+  .tag.y { background: #2d2207; color: var(--accent3); border-color: rgba(210,153,34,0.22); }
+  .tag.r { background: #2d1a1a; color: var(--accent4); border-color: rgba(248,81,73,0.22); }
+  .tag.p { background: #231b36; color: var(--accent5); border-color: rgba(188,140,255,0.22); }
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .blist li { font-size: 0.94rem; color: #cdd9e5; padding-left: 14px; position: relative; }
+  .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent1); font-size: 0.85rem; }
+  .blist li.g::before { color: var(--accent2); }
+  .blist li.y::before { color: var(--accent3); }
+  .blist li.r::before { color: var(--accent4); }
+  .alert { border-radius: 10px; padding: 13px 16px; font-size: 0.94rem; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; margin-top: 2px; }
+  .alert.r { background: #200e0e; border: 1px solid rgba(248,81,73,0.3); color: #f1c4c4; }
+  .alert.y { background: #1e1500; border: 1px solid rgba(210,153,34,0.3); color: #e8d5a0; }
+  .alert.g { background: #0e1e10; border: 1px solid rgba(63,185,80,0.3); color: #b8e5be; }
+  .alert .ai { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+  .summary-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(188,140,255,0.04) 100%);
+    border: 1px solid rgba(88,166,255,0.22);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 30px;
+  }
+  .summary-box-title {
+    font-size: 0.92rem; font-weight: 700;
+    color: var(--accent1);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 7px 12px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(48,54,61,0.5);
+    color: #cdd9e5;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .summary-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table td:last-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sources { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { font-size: 0.86rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .sources ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .sources li { font-size: 0.90rem; }
+  .sources a { color: var(--accent1); text-decoration: none; opacity: 0.85; }
+  .sources a:hover { opacity: 1; text-decoration: underline; }
+  footer { text-align: center; color: var(--text-muted); font-size: 0.84rem; padding: 16px 0 32px; }
+  @media (min-width: 620px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid-4, .grid, .grid-wide { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid, .grid-wide { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 1280px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3, .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid-4, .grid-wide { grid-template-columns: repeat(4, 1fr); }
+    main { max-width: 1440px; }
+    .header-inner { max-width: 1440px; }
+  }
+  @media (min-width: 1700px) {
+    main { max-width: 1800px; }
+    .header-inner { max-width: 1800px; }
+  }
+  @media (max-width: 480px) {
+    header { padding: 20px 0 16px; }
+    .header-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    main { padding: 18px 12px 40px; }
+    .grid, .grid-wide, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .summary-box { padding: 16px; overflow-x: auto; }
+    .summary-table td:first-child { white-space: normal; }
+    .summary-table td:last-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">AI</span>
+        <span class="header-date">2026년 7월 20일 (월) KST · 자동 생성</span>
+      </div>
+      <h1><span>AI 핵심뉴스</span></h1>
+      <p class="header-subtitle">Gemini 3.5 Pro 7/17 출시 · Claude Fable 5 무료 제공 종료 · Anthropic-Samsung 커스텀 칩 협상 · OpenAI 정부 지분 5% 제안 · 뉴욕주 하이퍼스케일 데이터센터 동결 · EU AI Act 8월 전면 시행</p>
+    </div>
+    <div class="date-badge">2026.07.20.월 (주간)</div>
+  </div>
+</header>
+
+<main>
+
+  <div class="summary-box">
+    <div class="summary-box-title">🔑 이번 주 핵심 요약 (2026.07.14 ~ 07.20)</div>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>주체 / 이벤트</th>
+          <th>핵심 내용</th>
+          <th>분류</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Google Gemini 3.5 Pro 출시</td>
+          <td>7월 17일 기존 베이스 모델 전면 폐기 후 재설계 완료. 2M 토큰 컨텍스트·Deep Think 추론 모드. 세 번의 GA 지연 끝에 출시</td>
+          <td><span class="tag">모델출시</span></td>
+        </tr>
+        <tr>
+          <td>Claude Fable 5 포함 제공 종료</td>
+          <td>Anthropic, Max·Team Premium 플랜 Fable 5 무료 제공(50% 한도)을 7/19로 종료. 이후 유료 크레딧 전환</td>
+          <td><span class="tag p">Anthropic</span></td>
+        </tr>
+        <tr>
+          <td>Anthropic-Samsung 커스텀 칩 협상</td>
+          <td>Claude 전용 AI 칩 제조를 위해 삼성과 초기 협상 개시. 아마존·구글·엔비디아 칩 의존도 탈피 목적</td>
+          <td><span class="tag y">반도체</span></td>
+        </tr>
+        <tr>
+          <td>OpenAI 정부 지분 5% 제안</td>
+          <td>미국 정부에 $426억 상당 지분 5% 제공 제안. 알래스카 영구기금 모델 참고한 AI 주식 공공 펀드 구상 포함</td>
+          <td><span class="tag r">정책</span></td>
+        </tr>
+        <tr>
+          <td>뉴욕주 데이터센터 1년 동결</td>
+          <td>Hochul 주지사, 50MW 이상 하이퍼스케일 데이터센터 신규 허가 1년 중단. 미국 최초 주 단위 동결 조치</td>
+          <td><span class="tag r">규제</span></td>
+        </tr>
+        <tr>
+          <td>EU AI Act 8월 2일 전면 발효</td>
+          <td>GPAI 투명성 의무·고위험 AI 분류·금지 AI 규정 동시 발효. 위반 시 전 세계 연매출 최대 3% 과징금</td>
+          <td><span class="tag r">규제</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 모델 출시 & 연구 -->
+  <div class="section-label"><span class="sdot"></span> 모델 출시 &amp; 연구</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">🔵</div>
+        <h3>Google Gemini 3.5 Pro — 세 번의 지연 끝에 7월 17일 출시</h3>
+      </div>
+      <div class="card-body">
+        Google이 <strong>Gemini 3.5 Pro</strong>를 7월 17일 출시했다. I/O 약속, 6월 30일, 그리고 기업 고객 프리뷰 단계를 연이어 거치며 세 차례 지연된 끝에 공개됐다. 원본 베이스 모델을 전면 폐기하고 재설계(Full Rebuild)한 것이 핵심이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">2M(200만) 토큰 컨텍스트 윈도우 (Gemini 2.5 Pro의 2배)</li>
+          <li><strong>Deep Think</strong> 단계별 추론 모드 탑재</li>
+          <li>재귀적 도구 호출·SVG 생성 구조적 결함 해결 후 재훈련</li>
+          <li class="y">상하이 AI 서밋 일정에 맞춰 GPT-5.6·Grok 4.5 대응 발표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Google</span>
+        <span class="tag g">Gemini 3.5 Pro</span>
+        <span class="tag">2M 컨텍스트</span>
+        <span class="tag">Deep Think</span>
+        <span class="tag">2026-07-17</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🤖</div>
+        <h3>Claude Fable 5 무료 제공 7/19 종료 — 유료 크레딧 전환</h3>
+      </div>
+      <div class="card-body">
+        Anthropic이 <strong>Claude Fable 5</strong>의 Max·Team Premium 플랜 포함 제공(주간 사용 한도 50%)을 7월 19일 23:59 PT에 종료했다. 6월 12일 미국 정부 수출 통제로 일시 중단됐다가 7월 1일 재배포된 이후 두 차례 연장됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>7월 1일 재배포 후 → 7월 7일 → 7월 19일까지 포함 기간 2회 연장</li>
+          <li class="r">7월 20일부터 유료 크레딧($10/M 입력 · $50/M 출력) 적용</li>
+          <li class="y">OpenAI GPT-5.6 Sol 출시 대응으로 무료 제공 연장 결정</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">💡</span>
+          <span>Fable 5는 기존 90% 입력 토큰 할인(프롬프트 캐싱)이 적용되어 실질 비용은 $1/M 수준</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag p">Claude Fable 5</span>
+        <span class="tag">Anthropic</span>
+        <span class="tag r">포함 제공 종료</span>
+        <span class="tag">2026-07-19</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🏗️</div>
+        <h3>Microsoft Foundry Agent Service — 멀티에이전트 오케스트레이션 GA</h3>
+      </div>
+      <div class="card-body">
+        Microsoft가 <strong>Foundry Agent Service</strong>를 정식 출시(GA)했다. 엔터프라이즈 AI 에이전트 팀을 구성·운영하는 통합 스택으로, Microsoft 365·Teams와 깊이 통합된다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>샌드박스 세션 + 파일시스템 상태 관리</li>
+          <li><strong>Toolboxes</strong> — 관리형 도구·스킬 모음</li>
+          <li>Voice Live: 실시간 음성 에이전트 지원</li>
+          <li class="g">멀티에이전트 오케스트레이션 패턴 내장, M365 통합</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Microsoft</span>
+        <span class="tag p">Foundry Agent Service</span>
+        <span class="tag g">GA 출시</span>
+        <span class="tag">멀티에이전트</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② 기업 동향 & 전략 -->
+  <div class="section-label"><span class="sdot p"></span> 기업 동향 &amp; 전략</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#231b36;">🔧</div>
+        <h3>Anthropic, 삼성과 Claude 전용 커스텀 AI 칩 협상 개시</h3>
+      </div>
+      <div class="card-body">
+        Anthropic이 <strong>삼성전자</strong>와 Claude 전용 AI 칩 제조를 위한 초기 협상을 시작했다. Anthropic은 지금까지 Amazon·Google·NVIDIA 임대 칩에만 의존해왔으나, 최대 모델 운영 비용 급등이 자체 실리콘 검토로 이어졌다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>협상 초기 단계 — 칩 용도·아키텍처·사양 미확정</li>
+          <li class="y">10월 IPO 준비와 병행 — 장기 컴퓨트 조달 독립성 확보 포석</li>
+          <li>삼성은 GAA 공정(3nm·2nm)으로 TSMC 추격 중</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">📌</span>
+          <span>Google TPU·Amazon Trainium에 이어 Anthropic도 자체 칩 노선 — AI 랩의 반도체 독립 경쟁 가속</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag p">Anthropic</span>
+        <span class="tag">삼성전자</span>
+        <span class="tag y">커스텀 AI 칩</span>
+        <span class="tag">IPO 준비</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🏛️</div>
+        <h3>OpenAI, 미국 정부에 지분 5%(~$426억) 제안</h3>
+      </div>
+      <div class="card-body">
+        OpenAI가 미국 정부에 회사 지분 <strong>5%</strong>(~$426억)를 제공하는 방안을 제안했다. Trump 대통령·Lutnick 상무장관·Bessent 재무장관과 협의가 진행됐다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>알래스카 영구기금 모델 참고한 'AI 공공 주식 펀드' 구상 포함</li>
+          <li>OpenAI 현재 기업가치 $8,520억 기준 5% ≒ $426억</li>
+          <li class="y">6월 IPO 비공개 신청 후 SpaceX 상장 부진으로 2027년 연기 검토</li>
+          <li class="g">Anthropic도 10월 IPO 준비 중 — AI 주요 2사 동시 상장 레이스</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">OpenAI</span>
+        <span class="tag r">정부 지분 제안</span>
+        <span class="tag y">IPO</span>
+        <span class="tag">$8520억 밸류</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">☁️</div>
+        <h3>Google Cloud Next '26 — Gemini Enterprise 에이전트 포트폴리오 대거 공개</h3>
+      </div>
+      <div class="card-body">
+        Google Cloud Next '26에서 <strong>Gemini Enterprise</strong> 포트폴리오가 확대됐다. 단일 챗봇 판매에서 '에이전트 플리트(Fleet) 구축·오케스트레이션·거버넌스' 통합 플랫폼으로 전략을 전환했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">에이전트 팀 구성·멀티스텝 워크플로우·IT 제어 통합</li>
+          <li>엔터프라이즈 데이터 연결 및 거버넌스 레이어 강화</li>
+          <li class="y">Google, Meta의 Gemini 모델 추가 컴퓨트 요청 거절 — 칩 병목 심화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag">Google Cloud</span>
+        <span class="tag g">Gemini Enterprise</span>
+        <span class="tag p">에이전트 플리트</span>
+        <span class="tag">Cloud Next '26</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 정책·규제 -->
+  <div class="section-label"><span class="sdot r"></span> 정책 &amp; 규제</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1a00;">🗽</div>
+        <h3>뉴욕주 하이퍼스케일 데이터센터 신규 허가 1년 동결</h3>
+      </div>
+      <div class="card-body">
+        Kathy Hochul 뉴욕 주지사가 <strong>50MW 이상 하이퍼스케일 데이터센터</strong> 신규 허가를 1년간 중단하는 행정명령에 서명했다. 미국 최초 주 단위 데이터센터 동결 조치다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">에너지 과부하·환경 영향 우려가 주된 이유</li>
+          <li>50MW 이상 전력 소비 시설 대상 — 대부분 AI 훈련 데이터센터 해당</li>
+          <li class="y">1년 유예 기간 동안 에너지·환경 기준 재정비 예정</li>
+        </ul>
+        <div class="alert r" style="margin-top:10px;">
+          <span class="ai">⚠️</span>
+          <span>Amazon·Microsoft·Google 등 뉴욕 지역 데이터센터 확장 계획 차질 불가피</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag r">뉴욕주 규제</span>
+        <span class="tag">데이터센터 동결</span>
+        <span class="tag r">미국 최초</span>
+        <span class="tag">50MW 이상</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1a00;">🇪🇺</div>
+        <h3>EU AI Act 8월 2일 전면 발효 — GPAI 투명성 의무 시작</h3>
+      </div>
+      <div class="card-body">
+        EU AI Act의 범용 AI(GPAI) 투명성 규정·고위험 AI 분류·금지 AI 조항이 <strong>8월 2일</strong> 동시 발효된다. 7월 EU AI Office가 기업 컴플라이언스 최종 가이드를 배포했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">GPAI 개발사 — 시스템 카드·학습 데이터 요약 의무 이행 필요</li>
+          <li>위반 시 전 세계 연매출 최대 <strong>3%</strong> 과징금</li>
+          <li class="y">EU, 6월 말 AI 규제 간소화 결정 — 중소기업 부담 일부 완화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">EU AI Act</span>
+        <span class="tag">GPAI 의무</span>
+        <span class="tag y">8월 2일 발효</span>
+        <span class="tag r">3% 과징금</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1a00;">⚖️</div>
+        <h3>EU, 구글에 Android·검색 경쟁사 개방 명령 (DMA)</h3>
+      </div>
+      <div class="card-body">
+        EU가 <strong>디지털시장법(DMA)</strong>에 따라 Google에 Android와 검색을 경쟁사에 개방할 것을 명령했다. AI 어시스턴트·검색 분야에서 Gemini 독점 구조가 해체될 수 있는 역사적 결정이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>이행 시한: 2027년 초부터 단계적 적용</li>
+          <li class="r">미이행 시 전 세계 연매출 최대 <strong>10%</strong> 벌금</li>
+          <li>AI 검색·어시스턴트 시장 경쟁 구도 재편 예상</li>
+          <li class="y">Meta도 DSA 위반 — 자동재생·무한스크롤 비활성화 명령</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag r">EU DMA</span>
+        <span class="tag">Google</span>
+        <span class="tag">Android 개방</span>
+        <span class="tag r">10% 벌금</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 산업 트렌드 & 인프라 -->
+  <div class="section-label"><span class="sdot y"></span> 산업 트렌드 &amp; 인프라</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">🔗</div>
+        <h3>엔터프라이즈 콘텐츠가 에이전트 AI 최대 병목 — 96% 인지, 36%만 해결</h3>
+      </div>
+      <div class="card-body">
+        2026년 7월 기준 업계 조사에서 에이전트 AI 도입 기업의 <strong>96%</strong>가 엔터프라이즈 콘텐츠 접근성을 핵심 병목으로 인식하지만, 실제 해결한 비율은 <strong>36%</strong>에 불과했다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="r">AI 실패 원인 = 모델 약점이 아닌 레거시 워크플로우 연결 부재</li>
+          <li>수십 년 된 엔터프라이즈 데이터를 에이전트가 신뢰·활용 가능하게 만드는 것이 핵심</li>
+          <li class="g">Google·Microsoft 모두 엔터프라이즈 지식 그래프 통합에 집중</li>
+        </ul>
+        <div class="alert y" style="margin-top:10px;">
+          <span class="ai">💡</span>
+          <span>2026 에이전트 AI의 진짜 병목은 '모델 성능'이 아닌 '기업 내부 데이터 접근성'</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag y">엔터프라이즈 AI</span>
+        <span class="tag">에이전트 병목</span>
+        <span class="tag r">96% vs 36%</span>
+        <span class="tag">기업 데이터</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1e1500;">💻</div>
+        <h3>AI 가격 전쟁 지속 — Luna $1/M으로 온디바이스 AI 전환 가속</h3>
+      </div>
+      <div class="card-body">
+        GPT-5.6 Luna($1/M 입력)·Grok 4.5·Muse Spark 1.1 동시 출시로 시작된 AI 가격 전쟁이 7월에도 지속되고 있다. 저비용·고성능 모델 확산이 온디바이스 AI 채택을 가속하고 있다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">12개월 전 대비 최상위 모델 가격·성능비 약 3배 개선</li>
+          <li>노트북·스마트폰 구동 경량 모델 확산 — 클라우드 의존 감소</li>
+          <li class="y">NVIDIA AI칩 리드타임 36~52주 — 공급 병목 지속</li>
+          <li>HBM 공급 병목 — SK하이닉스·삼성 증설 경쟁 심화</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">가격 경쟁</span>
+        <span class="tag">온디바이스 AI</span>
+        <span class="tag r">GPU 공급 부족</span>
+        <span class="tag y">HBM 병목</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ AI 연구 & 안전 -->
+  <div class="section-label"><span class="sdot g"></span> AI 연구 &amp; 안전</div>
+  <div class="grid-3">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#0e1e10;">🔬</div>
+        <h3>DebunkBot — AI 기반 음모론 신뢰도 20% 감소 연구</h3>
+      </div>
+      <div class="card-body">
+        <strong>MIT·코넬·아메리칸 대학교</strong> 공동 연구팀이 개발한 <strong>DebunkBot</strong>이 음모론 신뢰도를 평균 <strong>20%</strong> 낮추는 효과를 실험에서 확인했다. 단순 사실 제시가 아닌 증거 기반 개인화 대화 방식이 핵심이다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>개인화 대화 — 참여자의 기존 믿음과 논리를 파악 후 맞춤 반론 제시</li>
+          <li class="g">1회 대화만으로도 음모론 신뢰도 20% 감소 효과 확인</li>
+          <li>AI 기반 허위정보 대응의 새로운 방향 제시</li>
+        </ul>
+        <div class="alert g" style="margin-top:10px;">
+          <span class="ai">🏛️</span>
+          <span>소속: MIT / Cornell University / American University (공동 연구)</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag g">AI 연구</span>
+        <span class="tag">DebunkBot</span>
+        <span class="tag p">MIT·코넬·아메리칸대</span>
+        <span class="tag">허위정보 대응</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#1a2535;">🔐</div>
+        <h3>AI 자기검증(Self-Verification) — 에이전트 오류 누적 문제 해결 핵심</h3>
+      </div>
+      <div class="card-body">
+        멀티스텝 에이전트 워크플로우에서 오류가 누적되는 문제가 에이전트 AI 확장의 최대 장애물로 부상했다. 내부 피드백 루프 기반 <strong>자기검증(Self-Verification)</strong> 방식이 핵심 해결책으로 떠오르고 있다.
+        <ul class="blist" style="margin-top:8px;">
+          <li>에이전트가 단계별로 자신의 출력을 검증·교정하는 구조</li>
+          <li class="g">LLM-as-a-Verifier 프레임워크: 연속 점수 기반 세밀한 평가</li>
+          <li>추가 훈련 없이 기존 LLM으로 즉시 적용 가능</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">AI 연구</span>
+        <span class="tag p">에이전트 검증</span>
+        <span class="tag">자기검증</span>
+        <span class="tag">할루시네이션 감소</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon" style="background:#182a1e;">⚛️</div>
+        <h3>Google REPLIQA — 생명과학·양자 AI 융합 연구에 $1,000만 투자</h3>
+      </div>
+      <div class="card-body">
+        Google이 <strong>REPLIQA</strong>(Research Program at the Intersection of Life Sciences &amp; Quantum AI) 프로그램을 론칭했다. 5개 대학에 $1,000만을 지원해 양자 과학과 AI를 생명과학에 접목하는 연구를 추진한다.
+        <ul class="blist" style="margin-top:8px;">
+          <li class="g">양자 AI + 생명과학 융합 — 신약 발견·단백질 연구 적용 목표</li>
+          <li>5개 주요 대학 공동 연구 지원</li>
+          <li>유전체학·재료과학·기후 모델링 순차 적용 계획</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag g">양자 AI</span>
+        <span class="tag">Google REPLIQA</span>
+        <span class="tag g">생명과학 융합</span>
+        <span class="tag">$1000만 투자</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources">
+    <h2>📎 Sources</h2>
+    <ul>
+      <li><a href="https://www.buildfastwithai.com/blogs/ai-news-today-july-14-2026" target="_blank">BuildFastWithAI — AI News Today July 14, 2026: 15 Biggest Stories</a></li>
+      <li><a href="https://llm-stats.com/llm-updates" target="_blank">LLM Stats — AI Updates Today (July 2026) – Latest AI Model Releases</a></li>
+      <li><a href="https://techstartups.com/2026/07/14/top-tech-news-today-july-14-2026-amazon-cloudflare-google-ibm-nvidia-samsung-xai-more/" target="_blank">TechStartups — Top Tech News Today, July 14, 2026</a></li>
+      <li><a href="https://www.techtimes.com/articles/320308/20260713/gemini-35-pro-targets-july-17-after-full-rebuild-every-spec-remains-unconfirmed.htm" target="_blank">TechTimes — Gemini 3.5 Pro Targets July 17 After Full Rebuild</a></li>
+      <li><a href="https://centraljersey.com/2026/07/17/google-gemini-3-5-pro-launch-what-to-expect/" target="_blank">Central Jersey — Google Gemini 3.5 Pro: What to Expect From Today's Big AI Launch</a></li>
+      <li><a href="https://www.anthropic.com/news/redeploying-fable-5" target="_blank">Anthropic — Redeploying Claude Fable 5</a></li>
+      <li><a href="https://vantagepoint.io/blog/ai/claude-fable-5-included-access-july-19" target="_blank">VantagePoint — Claude Fable 5: Included Access Extended Through July 19</a></li>
+      <li><a href="https://techcrunch.com/2026/07/02/anthropic-is-discussing-a-new-custom-chip-with-samsung/" target="_blank">TechCrunch — Anthropic is discussing a new custom chip with Samsung</a></li>
+      <li><a href="https://siliconangle.com/2026/07/03/openai-offers-feds-stake-anthropic-gets-ai-model-jail-meta-wants-neocloud/" target="_blank">SiliconANGLE — OpenAI offers feds a stake, Anthropic gets out of AI model jail</a></li>
+      <li><a href="https://thehill.com/policy/technology/5966562-new-york-ai-data-center-moratorium/" target="_blank">The Hill — Kathy Hochul halts large data center permits in New York</a></li>
+      <li><a href="https://library.mikesailab.com/news/world-news/tech-policy-regulation/july-2026/tech-policy-regulation-watch-07-16-26/" target="_blank">AI Automation Library — Tech Policy &amp; Regulation Watch · July 2026</a></li>
+      <li><a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" target="_blank">European Union — EU AI Act: Shaping Europe's Digital Future</a></li>
+      <li><a href="https://virtualizationreview.com/articles/2026/07/14/enterprise-content-emerges-as-agentic-ai-bottleneck-report-says.aspx" target="_blank">Virtualization Review — Enterprise Content Emerges as Agentic AI Bottleneck</a></li>
+      <li><a href="https://ai-weekly.ai/newsletter-07-14-2026/" target="_blank">AI-Weekly — Issue 225 · July 14, 2026</a></li>
+      <li><a href="https://aipster.com/news/ai-news-2026-07-14/" target="_blank">AIpster — AI News Roundup — July 14, 2026</a></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  자동 생성 · 2026-07-20 KST · AI 핵심뉴스 주간 리포트
+</footer>
+
+</body>
+</html>

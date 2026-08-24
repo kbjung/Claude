@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>외부교육·세미나 이수현황</title>
+<style>
+:root{
+  --bg:#f7f8fa; --card:#fff; --line:#e2e6ec; --text:#1f2937; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff6ff; --warn:#b45309; --warn-soft:#fffbeb;
+  --green:#047857; --green-soft:#ecfdf5; --red:#b91c1c; --red-soft:#fef2f2;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--text);
+     font-family:'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif;line-height:1.7;}
+.wrap{max-width:960px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+      border-radius:14px;padding:36px 40px 48px;}
+h1{font-size:24px;margin:0 0 18px;letter-spacing:-0.5px;padding-bottom:14px;
+   border-bottom:3px solid var(--accent);}
+h2{font-size:18px;margin:34px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--accent);
+   display:inline-block;}
+h3{font-size:15.5px;margin:24px 0 8px;color:#111827;padding-left:9px;border-left:3px solid var(--accent);}
+h4{font-size:14.5px;margin:18px 0 6px;color:#374151;}
+
+/* 표 — CLAUDE.md 체크리스트 반영 */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px;}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+th{background:#f3f5f8;font-weight:600;white-space:nowrap;}
+td.tight{white-space:nowrap;width:1%;}
+
+/* 인라인 배지 — 한국어 4자 이상도 잘리지 않게 */
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;
+       font-weight:700;white-space:nowrap;}
+.b-ok{background:var(--green-soft);color:var(--green);border:1px solid #b8e6cf;}
+.b-warn{background:var(--warn-soft);color:var(--warn);border:1px solid #f0d9a8;}
+.b-red{background:var(--red-soft);color:var(--red);border:1px solid #f3c2c2;}
+.b-info{background:var(--accent-soft);color:var(--accent);border:1px solid #bfd6fb;}
+
+/* 강조 박스 */
+blockquote,.box-note{margin:14px 0;padding:12px 18px;background:var(--warn-soft);
+       border-left:3px solid var(--warn);border-radius:6px;font-size:13.5px;}
+.box-ok{margin:14px 0;padding:12px 18px;background:var(--green-soft);
+       border-left:3px solid var(--green);border-radius:6px;font-size:13.5px;}
+blockquote p,.box-note p,.box-ok p{margin:5px 0;}
+blockquote table,.box-note table,.box-ok table{font-size:12.5px;}
+
+code{background:#f3f5f8;padding:2px 6px;border-radius:4px;font-size:12.8px;
+     font-family:'D2Coding','Consolas','Malgun Gothic',monospace;}
+pre{background:#1f2937;color:#e5e7eb;padding:16px 18px;border-radius:9px;overflow:auto;
+    font-size:13px;line-height:1.7;}
+pre code{background:none;color:inherit;padding:0;}
+hr{border:none;border-top:1px solid var(--line);margin:30px 0;}
+p,li{font-size:14px;}
+a{color:var(--accent);text-decoration:none;font-weight:600;}
+a:hover{text-decoration:underline;}
+del,s{color:var(--muted);}
+img{max-width:100%;height:auto;}
+figure.figure-keep{margin:16px 0;}
+figure.figure-keep img{display:block;width:100%;}
+
+/* 복사 버튼 블록 */
+.block{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:16px 0;background:#fcfcfd;}
+.bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+       padding:10px 14px;background:#f3f5f8;border-bottom:1px solid var(--line);}
+.btitle{font-size:13.5px;font-weight:700;}
+.copybtn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:7px;
+         padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+         white-space:nowrap;transition:.15s;}
+.copybtn:hover{filter:brightness(1.08);}
+.copybtn.done{background:var(--green);border-color:var(--green);}
+.copybtn.fail{background:var(--red);border-color:var(--red);}
+pre.copytext{margin:0;padding:16px 18px;background:#fff;color:var(--text);font-size:13px;
+     line-height:1.8;white-space:pre-wrap;word-break:break-word;font-family:inherit;}
+
+/* 담당자 입력 필드 */
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0 6px;}
+.fld label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.fld input{width:100%;padding:8px 11px;border:1px solid var(--line);border-radius:7px;
+           font-size:14px;font-family:inherit;}
+.fld input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+
+/* 펩타이드 작업용액 계산기 */
+.calc{margin:16px 0;padding:20px;border:1px solid #bfd6fb;background:#f8fbff;border-radius:12px;}
+.calc h4{margin:0 0 5px;padding:0;border:0;color:#17324d;font-size:16px;}
+.calc .hint{margin:0 0 15px;color:var(--muted);font-size:13px;}
+.calc-grid{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px;}
+.calc-field label{display:block;margin-bottom:4px;color:var(--muted);font-size:12.5px;font-weight:700;}
+.calc-field input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;font:14px inherit;}
+.calc-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.field-reset{margin-top:4px;border:1px solid #c7d2e0;background:#fff;color:#526579;border-radius:5px;padding:3px 7px;font:11.5px inherit;cursor:pointer;}
+.field-reset:hover{background:#f3f7fb;color:var(--accent);}
+.calc-results{margin:18px 0 0;border-collapse:separate;border-spacing:0;border:1px solid #c8d8ec;border-radius:9px;overflow:hidden;}
+.calc-results th{background:#eaf2fc;white-space:normal;}
+.calc-results td{background:#fff;font-variant-numeric:tabular-nums;}
+.calc .formula{margin:14px 0 0;color:#4b5563;font-size:12.5px;}
+.calc .error{margin-top:10px;color:var(--red);font-size:13px;font-weight:700;}
+.calc .default{display:block;margin-top:3px;color:#64748b;font-size:11.5px;font-weight:500;}
+.calc-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px;}
+.calc-reset{border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:7px;padding:7px 12px;font:700 13px inherit;cursor:pointer;}
+.calc-reset:hover{background:var(--accent-soft);}
+.calc-action-note{color:var(--muted);font-size:12.5px;}
+.prep-summary{margin:16px 0 8px;border:1px solid #8fb0d3;border-radius:9px;overflow:hidden;}
+.prep-summary th{background:#173f6a;color:#fff;white-space:normal;}
+.prep-summary td{background:#fff;font-variant-numeric:tabular-nums;}
+.prep-summary tr.highlight td{background:#f0f7ff;}
+.prep-summary .mix{font-weight:700;color:#173f6a;}
+.calc .status{margin:12px 0 0;padding:10px 12px;border-radius:7px;background:#eef7ef;color:#176b2b;font-size:13px;}
+.calc .status.warn{background:var(--warn-soft);color:var(--warn);border-left:3px solid var(--warn);}
+
+footer{max-width:960px;margin:14px auto 0;color:var(--muted);font-size:12.5px;text-align:center;}
+
+@media (max-width:768px){
+  body{padding:18px 10px 40px;}
+  .wrap{padding:20px 16px 30px;}
+  table{font-size:12px;} th,td{padding:6px 7px;}
+  .bhead{flex-direction:column;align-items:stretch;} .copybtn{width:100%;}
+  .calc-grid{grid-template-columns:repeat(2,minmax(130px,1fr));}
+  .prep-summary{font-size:11.5px;} .prep-summary th,.prep-summary td{padding:6px 7px;}
+}
+@media print{
+  figure.figure-keep{break-inside:avoid-page;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>외부교육·세미나 이수현황</h1>
+<blockquote>
+<p>목적: AI×바이오 분야 역량 강화(스펙) + 현재 연구과제(01_연구과제) 실무 적용 + 장기 창업 무기 확보<br />
+새 교육 자료를 받으면 이 표에 한 줄 추가 후 해당 기관 폴더(<code>01_LAIDD/</code> 등) 아래에 교육별 하위 폴더로 자료 저장</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>교육명</th>
+<th>기관</th>
+<th>형태</th>
+<th>일자</th>
+<th>이수여부</th>
+<th>핵심 키워드</th>
+<th>활용 메모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 신약개발 따라잡기 특별 세미나 : K-Fold 입문 특강</td>
+<td>LAIDD</td>
+<td>특별세미나</td>
+<td>2026.9.1(화) 14:00-16:00</td>
+<td><span class="badge b-info">예정</span></td>
+<td>하이퍼랩(HyperLab) 구조예측(K-Fold), AI 신약개발 실습</td>
+<td>오프라인 한국제약바이오협회 4층 강당 / 온라인 병행. 준비물: 노트북 필수, 하이퍼랩 사전가입(완료). 구글 캘린더 등록 완료. 자료 폴더 <code>01_LAIDD/01_AI신약개발따라잡기_K-Fold입문특강/</code>, 하이퍼랩 사용법은 <code>.../03_하이퍼랩_사용법/</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>기록 방법</h2>
+<ul>
+<li>신청/수강 예정 단계 → <code>99_관심교육_후보/</code>에 안내자료만 저장, 이 표에는 아직 추가하지 않음</li>
+<li>수강 확정 → 위 표에 행 추가, 기관 폴더(<code>01_LAIDD/</code> 등) 아래에 <code>[번호]_[교육명]/</code> 하위 폴더 생성</li>
+<li>일정이 확정된 교육은 구글 캘린더에도 등록 (아래 참고)</li>
+<li>이수 완료 → <code>이수여부</code> 칸을 <code><span class="badge b-ok">이수완료</span></code>로 변경</li>
+</ul>
+<h2>폴더 구조</h2>
+<pre><code>12_외부교육_세미나/
+├── 00_교육이수현황.md                              ← 이 파일 (트래커)
+├── 01_LAIDD/                                       ← LAIDD 플랫폼 (기관 단위 폴더, 추가 교육 시 02_, 03_...로 누적)
+│   ├── 00_LAIDD_공통교재/                          ← 특정 교육 회차에 종속되지 않는 일반 교재
+│   │   ├── 01_안내자료/                            ← 다운로드 출처 스샷
+│   │   ├── 02_교재원본/                            ← 교재 PDF 원본 2건 (AI 신약개발 교재 / 데이터·AI 기반 약물표적 발굴 교재)
+│   │   └── 03_한글번역본/                          ← 교재1(AI 신약개발) 영한 대역 학습본(html) + 원본 페이지 이미지(images/)
+│   └── 01_AI신약개발따라잡기_K-Fold입문특강/          ← 이번에 신청한 교육
+│       ├── 01_안내자료/                             ← 포스터·공지 스샷
+│       ├── 02_강의자료_학습정리/                     ← 강의 PDF 원본 + 정리노트(md/html)
+│       └── 03_하이퍼랩_사용법/                       ← 실습 플랫폼 하이퍼랩(HyperLab) 사용자가이드 정리본
+└── 99_관심교육_후보/                                ← 신청 전 관심 교육 정보 모음 (03_수업의 &quot;후보 과목&quot; 폴더와 동일 패턴)
+</code></pre>
+<blockquote>
+<p>2026.08.22: LAIDD 공통교재 중 첫 번째 교재("초보자를 위한 AI 신약개발", 150p, 영문)를 개인 학습용으로 영한 대역 학습본으로 변환 — 원본 페이지 이미지(왼쪽) + 한글 번역(오른쪽) 병렬 배치 html, 챕터 이동·페이지 점프 네비게이션 포함. <code>01_LAIDD/00_LAIDD_공통교재/03_한글번역본/</code>에 저장. 원문 PDF의 폰트 인코딩 손상으로 텍스트 추출이 불완전했던 일부 슬라이드는 원본 이미지를 직접 대조해 번역함 (상세 방법론은 새로 만든 스킬 문서 참고)</p>
+<p>2026.08.22: LAIDD와 K-Fold가 별개 교육이 아니라 <strong>LAIDD 플랫폼에서 진행하는 하나의 교육</strong>("AI 신약개발 따라잡기 특별 세미나 : K-Fold 입문 특강")임을 확인 → 통합 후, LAIDD에서 향후 다른 교육도 들을 수 있어 <code>01_LAIDD/</code> 기관 폴더 아래에 교육별 하위 폴더(<code>01_AI신약개발따라잡기_K-Fold입문특강/</code>)를 두는 구조로 재조정</p>
+</blockquote>
+<h2>구글 캘린더 등록 현황</h2>
+<table>
+<thead>
+<tr>
+<th>교육명</th>
+<th>일정</th>
+<th>캘린더 등록</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 신약개발 따라잡기 특별 세미나 : K-Fold 입문 특강</td>
+<td>2026.9.1(화) 14:00-16:00</td>
+<td><span class="badge b-ok">등록완료</span> (kbjoong11@gmail.com, 팝업 알림 1일 전·1시간 전)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<footer>00_교육이수현황</footer>
+<script>
+var FIELDS=[['f_name','[[NAME]]','[  성명  ]'],
+            ['f_phone','[[PHONE]]','[  전화  ]'],
+            ['f_email','[[EMAIL]]','[  이메일  ]']];
+function fillAll(){
+  document.querySelectorAll('pre.copytext[data-tpl]').forEach(function(el){
+    var t=el.getAttribute('data-tpl');
+    FIELDS.forEach(function(a){
+      var i=document.getElementById(a[0]);
+      var v=(i&&i.value.trim())?i.value.trim():a[2];
+      t=t.split(a[1]).join(v);
+    });
+    el.textContent=t;
+  });
+}
+FIELDS.forEach(function(a){
+  var i=document.getElementById(a[0]);
+  if(i) i.addEventListener('input',fillAll);
+});
+fillAll();
+
+function flash(b,ok){
+  var o=b.getAttribute('data-label')||b.textContent;
+  b.setAttribute('data-label',o);
+  b.classList.add(ok?'done':'fail');
+  b.textContent=ok?'✔ 복사됨':'✕ 복사 실패';
+  setTimeout(function(){b.classList.remove('done','fail');b.textContent=o;},1700);
+}
+function copyText(text,btn){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-2000px'; ta.style.left='0';
+  document.body.appendChild(ta);
+  ta.select(); ta.setSelectionRange(0,ta.value.length);
+  var ok=false; try{ok=document.execCommand('copy');}catch(e){ok=false;}
+  document.body.removeChild(ta);
+  if(ok){flash(btn,true);return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){flash(btn,true);},function(){flash(btn,false);});
+  } else {flash(btn,false);}
+}
+document.querySelectorAll('.copybtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var el=document.getElementById(b.dataset.target);
+    if(el) copyText(el.textContent,b);
+  });
+});
+
+function fmtCalc(value, digits){
+  if(!isFinite(value)) return '—';
+  return Number(value.toFixed(digits === undefined ? 1 : digits)).toLocaleString('ko-KR');
+}
+function readCalc(id){
+  var el=document.getElementById(id);
+  return el ? Number(el.value) : NaN;
+}
+function updatePeptideCalc(){
+  if(!document.getElementById('pc_animals')) return;
+  var n=readCalc('pc_animals'), dose=readCalc('pc_dose'), active=readCalc('pc_active'),
+      stock=readCalc('pc_stock'), glycerol=readCalc('pc_glycerol'), over=readCalc('pc_over'),
+      aliquot=readCalc('pc_aliquot');
+  var err='', status='', corrected=false;
+  var working=active/dose*1000;
+  var nominal=n*dose;
+  var prep=nominal*(1+over/100);
+  var activeTotal=working*prep/1000;
+  var minStock=working/(1-glycerol/100);
+  var effectiveStock=Math.max(stock,minStock);
+  var stockVol=activeTotal/effectiveStock*1000;
+  var glycerolVol=prep*glycerol/100;
+  var dpbsVol=prep-stockVol-glycerolVol;
+  var reconstitution=aliquot/effectiveStock*1000;
+  var reconstitutionInput=aliquot/stock*1000;
+  var minoxPrep=n*dose*(1+over/100);
+  var maxGlycerol=Math.max(0,100*(1-working/stock));
+  if([n,dose,active,stock,glycerol,over,aliquot].some(function(v){return !isFinite(v) || v < 0;})) err='0 이상의 숫자를 입력하세요.';
+  else if(dose===0 || stock===0) err='도포부피와 보관용액 농도는 0보다 커야 합니다.';
+  else if(glycerol>=100) err='glycerol 비율은 100% 미만으로 입력하세요.';
+  else if(stock < minStock - 0.0001){
+    corrected=true;
+    status='입력한 보관용액 '+fmtCalc(stock,2)+' μM은 작업용액 '+fmtCalc(working,2)+' μM와 glycerol '+fmtCalc(glycerol,1)+'%를 함께 유지하기에 부족합니다. 아래 합성량은 필요한 최소 '+fmtCalc(minStock,2)+' μM 보관용액으로 자동 보정했습니다. 입력 농도를 그대로 사용하려면 glycerol은 최대 '+fmtCalc(maxGlycerol,1)+'%까지로 낮춰야 합니다.';
+  } else {
+    status='입력한 보관용액 농도로 glycerol '+fmtCalc(glycerol,1)+'% 작업용액을 제조할 수 있습니다.';
+  }
+  var out={
+    pc_working:fmtCalc(working,2)+' μM', pc_nominal:fmtCalc(nominal,1)+' μL',
+    pc_prep:fmtCalc(prep,1)+' μL', pc_active_total:fmtCalc(activeTotal,2)+' nmol',
+    pc_stock_vol:fmtCalc(stockVol,1)+' μL', pc_glycerol_vol:fmtCalc(glycerolVol,1)+' μL',
+    pc_dpbs_vol:fmtCalc(Math.max(0,dpbsVol),1)+' μL',
+    pc_reconstitution:fmtCalc(reconstitution,1)+' μL', pc_reconstitution_input:fmtCalc(reconstitutionInput,1)+' μL', pc_min_stock:fmtCalc(minStock,2)+' μM',
+    pc_effective_stock:fmtCalc(effectiveStock,2)+' μM', pc_minox_prep:fmtCalc(minoxPrep,1)+' μL',
+    pc_minox_nominal:fmtCalc(n*dose,1)+' μL', pc_sum_n:n+'마리', pc_sample_sum_n:n+'마리',
+    pc_sum_dose:fmtCalc(dose,1)+' μL', pc_sample_sum_dose:fmtCalc(dose,1)+' μL', pc_sum_prep:fmtCalc(prep,1)+' μL',
+    pc_sum_mix:fmtCalc(stockVol,1)+' μL 보관용액 + '+fmtCalc(glycerolVol,1)+' μL glycerol + '+fmtCalc(Math.max(0,dpbsVol),1)+' μL DPBS',
+    pc_minox_sum_n:n+'마리', pc_minox_sum_dose:fmtCalc(dose,1)+' μL',
+    pc_minox_sum_mix:'5% 원액 '+fmtCalc(minoxPrep,1)+' μL', pc_aliquot_sum:fmtCalc(aliquot,1)+' nmol',
+    pc_stock_sum:fmtCalc(stock,1)+' μM', pc_reconstitution_input_summary:fmtCalc(reconstitutionInput,1)+' μL DPBS'
+  };
+  Object.keys(out).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=err?'—':out[id];});
+  var error=document.getElementById('pc_error'); if(error) error.textContent=err;
+  var st=document.getElementById('pc_status'); if(st){st.textContent=err?'':status;st.className='status'+(corrected?' warn':'');}
+}
+document.querySelectorAll('.peptide-calc input').forEach(function(i){i.addEventListener('input',updatePeptideCalc);});
+var resetCalc=document.getElementById('pc_reset');
+if(resetCalc) resetCalc.addEventListener('click',function(){
+  document.querySelectorAll('.peptide-calc input[data-default]').forEach(function(i){i.value=i.dataset.default;});
+  updatePeptideCalc();
+});
+document.querySelectorAll('.field-reset').forEach(function(b){b.addEventListener('click',function(){
+  var i=document.getElementById(b.getAttribute('data-reset-target'));
+  if(i){i.value=i.dataset.default;updatePeptideCalc();}
+});});
+updatePeptideCalc();
+</script>
+</body>
+</html>
