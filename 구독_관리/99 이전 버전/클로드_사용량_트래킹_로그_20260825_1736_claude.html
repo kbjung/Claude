@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클로드 사용량 트래킹 로그</title>
+<style>
+:root{
+  --bg:#f7f8fa; --card:#fff; --line:#e2e6ec; --text:#1f2937; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff6ff; --warn:#b45309; --warn-soft:#fffbeb;
+  --green:#047857; --green-soft:#ecfdf5; --red:#b91c1c; --red-soft:#fef2f2;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:32px 20px 64px;background:var(--bg);color:var(--text);
+     font-family:'Pretendard','Malgun Gothic','Apple SD Gothic Neo',sans-serif;line-height:1.7;}
+.wrap{max-width:960px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+      border-radius:14px;padding:36px 40px 48px;}
+h1{font-size:24px;margin:0 0 18px;letter-spacing:-0.5px;padding-bottom:14px;
+   border-bottom:3px solid var(--accent);}
+h2{font-size:18px;margin:34px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--accent);
+   display:inline-block;}
+h3{font-size:15.5px;margin:24px 0 8px;color:#111827;padding-left:9px;border-left:3px solid var(--accent);}
+h4{font-size:14.5px;margin:18px 0 6px;color:#374151;}
+
+/* 표 — CLAUDE.md 체크리스트 반영 */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px;}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+th{background:#f3f5f8;font-weight:600;white-space:nowrap;}
+td.tight{white-space:nowrap;width:1%;}
+
+/* 인라인 배지 — 한국어 4자 이상도 잘리지 않게 */
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;
+       font-weight:700;white-space:nowrap;}
+.b-ok{background:var(--green-soft);color:var(--green);border:1px solid #b8e6cf;}
+.b-warn{background:var(--warn-soft);color:var(--warn);border:1px solid #f0d9a8;}
+.b-red{background:var(--red-soft);color:var(--red);border:1px solid #f3c2c2;}
+.b-info{background:var(--accent-soft);color:var(--accent);border:1px solid #bfd6fb;}
+
+/* 강조 박스 */
+blockquote,.box-note{margin:14px 0;padding:12px 18px;background:var(--warn-soft);
+       border-left:3px solid var(--warn);border-radius:6px;font-size:13.5px;}
+.box-ok{margin:14px 0;padding:12px 18px;background:var(--green-soft);
+       border-left:3px solid var(--green);border-radius:6px;font-size:13.5px;}
+blockquote p,.box-note p,.box-ok p{margin:5px 0;}
+blockquote table,.box-note table,.box-ok table{font-size:12.5px;}
+
+code{background:#f3f5f8;padding:2px 6px;border-radius:4px;font-size:12.8px;
+     font-family:'D2Coding','Consolas','Malgun Gothic',monospace;}
+pre{background:#1f2937;color:#e5e7eb;padding:16px 18px;border-radius:9px;overflow:auto;
+    font-size:13px;line-height:1.7;}
+pre code{background:none;color:inherit;padding:0;}
+hr{border:none;border-top:1px solid var(--line);margin:30px 0;}
+p,li{font-size:14px;}
+a{color:var(--accent);text-decoration:none;font-weight:600;}
+a:hover{text-decoration:underline;}
+del,s{color:var(--muted);}
+img{max-width:100%;height:auto;}
+figure.figure-keep{margin:16px 0;}
+figure.figure-keep img{display:block;width:100%;}
+
+/* 복사 버튼 블록 */
+.block{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:16px 0;background:#fcfcfd;}
+.bhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+       padding:10px 14px;background:#f3f5f8;border-bottom:1px solid var(--line);}
+.btitle{font-size:13.5px;font-weight:700;}
+.copybtn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:7px;
+         padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+         white-space:nowrap;transition:.15s;}
+.copybtn:hover{filter:brightness(1.08);}
+.copybtn.done{background:var(--green);border-color:var(--green);}
+.copybtn.fail{background:var(--red);border-color:var(--red);}
+pre.copytext{margin:0;padding:16px 18px;background:#fff;color:var(--text);font-size:13px;
+     line-height:1.8;white-space:pre-wrap;word-break:break-word;font-family:inherit;}
+
+/* 담당자 입력 필드 */
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0 6px;}
+.fld label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.fld input{width:100%;padding:8px 11px;border:1px solid var(--line);border-radius:7px;
+           font-size:14px;font-family:inherit;}
+.fld input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+
+/* 펩타이드 작업용액 계산기 */
+.calc{margin:16px 0;padding:20px;border:1px solid #bfd6fb;background:#f8fbff;border-radius:12px;}
+.calc h4{margin:0 0 5px;padding:0;border:0;color:#17324d;font-size:16px;}
+.calc .hint{margin:0 0 15px;color:var(--muted);font-size:13px;}
+.calc-grid{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:12px;}
+.calc-field label{display:block;margin-bottom:4px;color:var(--muted);font-size:12.5px;font-weight:700;}
+.calc-field input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:#fff;font:14px inherit;}
+.calc-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.field-reset{margin-top:4px;border:1px solid #c7d2e0;background:#fff;color:#526579;border-radius:5px;padding:3px 7px;font:11.5px inherit;cursor:pointer;}
+.field-reset:hover{background:#f3f7fb;color:var(--accent);}
+.calc-results{margin:18px 0 0;border-collapse:separate;border-spacing:0;border:1px solid #c8d8ec;border-radius:9px;overflow:hidden;}
+.calc-results th{background:#eaf2fc;white-space:normal;}
+.calc-results td{background:#fff;font-variant-numeric:tabular-nums;}
+.calc .formula{margin:14px 0 0;color:#4b5563;font-size:12.5px;}
+.calc .error{margin-top:10px;color:var(--red);font-size:13px;font-weight:700;}
+.calc .default{display:block;margin-top:3px;color:#64748b;font-size:11.5px;font-weight:500;}
+.calc-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px;}
+.calc-reset{border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:7px;padding:7px 12px;font:700 13px inherit;cursor:pointer;}
+.calc-reset:hover{background:var(--accent-soft);}
+.calc-action-note{color:var(--muted);font-size:12.5px;}
+.prep-summary{margin:16px 0 8px;border:1px solid #8fb0d3;border-radius:9px;overflow:hidden;}
+.prep-summary th{background:#173f6a;color:#fff;white-space:normal;}
+.prep-summary td{background:#fff;font-variant-numeric:tabular-nums;}
+.prep-summary tr.highlight td{background:#f0f7ff;}
+.prep-summary .mix{font-weight:700;color:#173f6a;}
+.calc .status{margin:12px 0 0;padding:10px 12px;border-radius:7px;background:#eef7ef;color:#176b2b;font-size:13px;}
+.calc .status.warn{background:var(--warn-soft);color:var(--warn);border-left:3px solid var(--warn);}
+
+footer{max-width:960px;margin:14px auto 0;color:var(--muted);font-size:12.5px;text-align:center;}
+
+@media (max-width:768px){
+  body{padding:18px 10px 40px;}
+  .wrap{padding:20px 16px 30px;}
+  table{font-size:12px;} th,td{padding:6px 7px;}
+  .bhead{flex-direction:column;align-items:stretch;} .copybtn{width:100%;}
+  .calc-grid{grid-template-columns:repeat(2,minmax(130px,1fr));}
+  .prep-summary{font-size:11.5px;} .prep-summary th,.prep-summary td{padding:6px 7px;}
+}
+@media print{
+  figure.figure-keep{break-inside:avoid-page;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>클로드 사용량 트래킹 로그</h1>
+<blockquote>
+<p>매달 사용량 스크린샷을 확인하고 이 문서에 기록. 패턴 분석 후 요금제(Pro / Max 5x) 전환 판단에 활용.</p>
+</blockquote>
+<hr />
+<h2>📌 현재 구독 정보</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>현재 플랜</td>
+<td>Pro (2026.08.21 재구독, 연간)</td>
+</tr>
+<tr>
+<td>결제 수단</td>
+<td>하나BC 카드</td>
+</tr>
+<tr>
+<td>사용 크레딧(구 추가 사용량) 월 한도</td>
+<td>확인 필요</td>
+</tr>
+<tr>
+<td>자동 충전</td>
+<td>사용 크레딧 기능 <strong>켜짐</strong> (08.25 확인, US$0.00 사용, 매월 1일 재설정)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>참고: 요금제 구조</strong><br />
+- Pro: $20/월, 5시간 세션당 약 45메시지<br />
+- Max 5x: $100/월, 5시간 세션당 약 225메시지, Opus 주 15~35시간<br />
+- Max 20x: $200/월, 5시간 세션당 약 900메시지</p>
+<hr />
+<h2>📊 월별 사용량 기록</h2>
+<h3>2026년 4월 (Pro + 추가 사용량 구매)</h3>
+<table>
+<thead>
+<tr>
+<th>측정일</th>
+<th>추가 사용액</th>
+<th>잔액</th>
+<th>주요 원인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>04.25 (토)</td>
+<td>$24.54</td>
+<td>$88.45</td>
+<td>PPT 작업 (문서 다수 참조)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>월 요약:</strong> Pro $20 + 추가 $24.54 = <strong>$44.54</strong> (가벼운 달)</p>
+<hr />
+<h3>2026년 5월 (Pro + 추가 사용량 구매, 이후 Max 5x 전환)</h3>
+<table>
+<thead>
+<tr>
+<th>측정일</th>
+<th>누적 사용액</th>
+<th>잔액</th>
+<th>주요 원인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>05.01 (금)</td>
+<td>$56.82</td>
+<td>$56.17</td>
+<td>이노베어 발표 PPT (사업 로드맵+예산안)</td>
+</tr>
+<tr>
+<td>05.11 (월)</td>
+<td>$6.91</td>
+<td>$49.27</td>
+<td>논문 번역·요약 (Sonnet→Opus 수정)</td>
+</tr>
+<tr>
+<td>05.12 (화)</td>
+<td>$17.17</td>
+<td>$39.01</td>
+<td>다자료 보고서 작성·수정</td>
+</tr>
+<tr>
+<td>05.13 (수) 00:47</td>
+<td>$48.91</td>
+<td>$7.27</td>
+<td>보고서 수정</td>
+</tr>
+<tr>
+<td>05.13 (수) 23:11</td>
+<td>$52.65</td>
+<td>$3.53</td>
+<td>문서 작성</td>
+</tr>
+<tr>
+<td>05.14 (목) 07:17</td>
+<td>$55.40</td>
+<td>$0.78</td>
+<td>문서 편집</td>
+</tr>
+</tbody>
+</table>
+<p><strong>월 요약:</strong> 추가 사용량 $100 한도 초과 → <strong>Max 5x 전환 계기가 된 달</strong></p>
+<hr />
+<h3>2026년 8월 (Pro 재구독)</h3>
+<table>
+<thead>
+<tr>
+<th>측정일</th>
+<th>현재 세션</th>
+<th>주간 한도(전체 모델)</th>
+<th>사용 크레딧</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>08.21 1차</td>
+<td>72%</td>
+<td>12%</td>
+<td>$0 (꺼짐)</td>
+</tr>
+<tr>
+<td>08.21 2차</td>
+<td>77%</td>
+<td>13%</td>
+<td>$0 (꺼짐)</td>
+</tr>
+<tr>
+<td>08.25 (화) 17:36</td>
+<td>12% (리셋 직후)</td>
+<td>70%</td>
+<td>$0.00 / 0% (켜짐)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>작업 내역 (08.21):</strong><br />
+- BIO AI 핵심뉴스 웹리서치 8건 + HTML 문서 생성<br />
+- Deep Origin(Balto), K-NIBRT 교육과정 리서치<br />
+- GitBook MCP 연결 점검<br />
+- Cowork: PDF 150p 영한대역 문서에 보충설명 13곳 추가 (파일작업 68.7% 비중)</p>
+<p><strong>작업 내역 (08.25):</strong><br />
+- 프로젝트: 서울바이오허브-마루호 오픈이노베이션 프로그램 온라인 지원서 (PTB Bio) — 기간 08.25, 마감 08.28 14:00<br />
+- 사용자 수정본(1240판·1433판) 반영해 지원서 재작성 2회, 표기 통일(창업팀→피티비바이오, 전임상→비임상 등)<br />
+- 온라인 신청서 PDF 49개 필드 전수 대조 → 미체크 필수항목 2건 발견·반영, 홈페이지 별도 제출(첨부·협업제안서) 필요사실 확인<br />
+- 코덱스(Codex) 15차 크로스체크 반영 — 정부과제 수행부처, 논문 게재상태, 특허번호 오류 정정<br />
+- Layer1 코어팩트시트 갱신 + 문서 5종(MD/HTML/워드/코덱스프롬프트/할일정리) 18차 동기화 발행<br />
+- 코덱스 18차 크로스체크 프롬프트 준비 완료 (실행 대기)</p>
+<p><strong>월 요약:</strong> 재구독 첫날(08.21) 세션 70%대 소진에 이어, 08.25 기준 주간 한도(전체 모델)가 70%까지 누적 — 지원서·팩트체크 등 문서 작업 비중이 높은 달. 사용 크레딧 기능은 켜져 있으나 아직 소진액 $0</p>
+<hr />
+<h2>📈 요금제 판단 기준</h2>
+<table>
+<thead>
+<tr>
+<th>월 추가 지출 수준</th>
+<th>판단</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$20~40대</td>
+<td>Pro + 추가 구매 유지</td>
+</tr>
+<tr>
+<td>$60~80대</td>
+<td>Pro + 추가 구매 vs Max 5x 손익분기 구간</td>
+</tr>
+<tr>
+<td>$80 이상 반복</td>
+<td>Max 5x 전환 고려</td>
+</tr>
+<tr>
+<td>Opus를 매달 무겁게 쓴다면</td>
+<td>Max 5x가 유리</td>
+</tr>
+</tbody>
+</table>
+<p><strong>핵심 관찰 사항:</strong><br />
+- 채팅+파일업로드 방식이 Cowork보다 사용량이 빨리 참 (파일 전체가 매 턴 컨텍스트에 재포함되는 구조로 추정)<br />
+- 문서 다수 참조 + 반복 수정 작업(사업계획서, PPT)은 Cowork가 유리<br />
+- Opus는 구성설계·전략판단, Sonnet은 실행 작업으로 분담하면 비용 효율적</p>
+<hr />
+<h2>💳 크레딧 구매 실질 단가 (VAT 10% 가정, 할인 후 금액에 VAT 부과)</h2>
+<table>
+<thead>
+<tr>
+<th>구매액</th>
+<th>할인율</th>
+<th>실질 결제액</th>
+<th>실질 단가</th>
+<th>정가 대비 절감</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$50</td>
+<td>10%</td>
+<td>$49.5</td>
+<td>$0.99</td>
+<td>약 1%</td>
+</tr>
+<tr>
+<td>$100</td>
+<td>10%</td>
+<td>$99</td>
+<td>$0.99</td>
+<td>약 1%</td>
+</tr>
+<tr>
+<td>$250</td>
+<td>20%</td>
+<td>$220</td>
+<td>$0.88</td>
+<td>약 12%</td>
+</tr>
+<tr>
+<td>$1,000</td>
+<td>30%</td>
+<td>$770</td>
+<td>$0.77</td>
+<td>약 23%</td>
+</tr>
+</tbody>
+</table>
+<p>→ 월 평균 소진액이 안정적으로 $80~100 이상일 때 $250 이상 구매 고려</p>
+<hr />
+<h2>📝 다음 업데이트 시 확인할 것</h2>
+<ul>
+<li>[ ] 이번 달 추가 사용/크레딧 소진 스크린샷</li>
+<li>[ ] 특히 무겁게 사용한 작업 유형 (PPT/논문/보고서/이미지분석 등)</li>
+<li>[ ] 한도 초과 여부 및 횟수</li>
+<li>[ ] Opus vs Sonnet 사용 비중 체감</li>
+</ul>
+</div>
+<footer>클로드_사용량_트래킹_로그_20260825_1736_claude</footer>
+<script>
+var FIELDS=[['f_name','[[NAME]]','[  성명  ]'],
+            ['f_phone','[[PHONE]]','[  전화  ]'],
+            ['f_email','[[EMAIL]]','[  이메일  ]']];
+function fillAll(){
+  document.querySelectorAll('pre.copytext[data-tpl]').forEach(function(el){
+    var t=el.getAttribute('data-tpl');
+    FIELDS.forEach(function(a){
+      var i=document.getElementById(a[0]);
+      var v=(i&&i.value.trim())?i.value.trim():a[2];
+      t=t.split(a[1]).join(v);
+    });
+    el.textContent=t;
+  });
+}
+FIELDS.forEach(function(a){
+  var i=document.getElementById(a[0]);
+  if(i) i.addEventListener('input',fillAll);
+});
+fillAll();
+
+function flash(b,ok){
+  var o=b.getAttribute('data-label')||b.textContent;
+  b.setAttribute('data-label',o);
+  b.classList.add(ok?'done':'fail');
+  b.textContent=ok?'✔ 복사됨':'✕ 복사 실패';
+  setTimeout(function(){b.classList.remove('done','fail');b.textContent=o;},1700);
+}
+function copyText(text,btn){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.setAttribute('readonly','');
+  ta.style.position='fixed'; ta.style.top='-2000px'; ta.style.left='0';
+  document.body.appendChild(ta);
+  ta.select(); ta.setSelectionRange(0,ta.value.length);
+  var ok=false; try{ok=document.execCommand('copy');}catch(e){ok=false;}
+  document.body.removeChild(ta);
+  if(ok){flash(btn,true);return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){flash(btn,true);},function(){flash(btn,false);});
+  } else {flash(btn,false);}
+}
+document.querySelectorAll('.copybtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var el=document.getElementById(b.dataset.target);
+    if(el) copyText(el.textContent,b);
+  });
+});
+
+function fmtCalc(value, digits){
+  if(!isFinite(value)) return '—';
+  return Number(value.toFixed(digits === undefined ? 1 : digits)).toLocaleString('ko-KR');
+}
+function readCalc(id){
+  var el=document.getElementById(id);
+  return el ? Number(el.value) : NaN;
+}
+function updatePeptideCalc(){
+  if(!document.getElementById('pc_animals')) return;
+  var n=readCalc('pc_animals'), dose=readCalc('pc_dose'), active=readCalc('pc_active'),
+      stock=readCalc('pc_stock'), glycerol=readCalc('pc_glycerol'), over=readCalc('pc_over'),
+      aliquot=readCalc('pc_aliquot');
+  var err='', status='', corrected=false;
+  var working=active/dose*1000;
+  var nominal=n*dose;
+  var prep=nominal*(1+over/100);
+  var activeTotal=working*prep/1000;
+  var minStock=working/(1-glycerol/100);
+  var effectiveStock=Math.max(stock,minStock);
+  var stockVol=activeTotal/effectiveStock*1000;
+  var glycerolVol=prep*glycerol/100;
+  var dpbsVol=prep-stockVol-glycerolVol;
+  var reconstitution=aliquot/effectiveStock*1000;
+  var reconstitutionInput=aliquot/stock*1000;
+  var minoxPrep=n*dose*(1+over/100);
+  var maxGlycerol=Math.max(0,100*(1-working/stock));
+  if([n,dose,active,stock,glycerol,over,aliquot].some(function(v){return !isFinite(v) || v < 0;})) err='0 이상의 숫자를 입력하세요.';
+  else if(dose===0 || stock===0) err='도포부피와 보관용액 농도는 0보다 커야 합니다.';
+  else if(glycerol>=100) err='glycerol 비율은 100% 미만으로 입력하세요.';
+  else if(stock < minStock - 0.0001){
+    corrected=true;
+    status='입력한 보관용액 '+fmtCalc(stock,2)+' μM은 작업용액 '+fmtCalc(working,2)+' μM와 glycerol '+fmtCalc(glycerol,1)+'%를 함께 유지하기에 부족합니다. 아래 합성량은 필요한 최소 '+fmtCalc(minStock,2)+' μM 보관용액으로 자동 보정했습니다. 입력 농도를 그대로 사용하려면 glycerol은 최대 '+fmtCalc(maxGlycerol,1)+'%까지로 낮춰야 합니다.';
+  } else {
+    status='입력한 보관용액 농도로 glycerol '+fmtCalc(glycerol,1)+'% 작업용액을 제조할 수 있습니다.';
+  }
+  var out={
+    pc_working:fmtCalc(working,2)+' μM', pc_nominal:fmtCalc(nominal,1)+' μL',
+    pc_prep:fmtCalc(prep,1)+' μL', pc_active_total:fmtCalc(activeTotal,2)+' nmol',
+    pc_stock_vol:fmtCalc(stockVol,1)+' μL', pc_glycerol_vol:fmtCalc(glycerolVol,1)+' μL',
+    pc_dpbs_vol:fmtCalc(Math.max(0,dpbsVol),1)+' μL',
+    pc_reconstitution:fmtCalc(reconstitution,1)+' μL', pc_reconstitution_input:fmtCalc(reconstitutionInput,1)+' μL', pc_min_stock:fmtCalc(minStock,2)+' μM',
+    pc_effective_stock:fmtCalc(effectiveStock,2)+' μM', pc_minox_prep:fmtCalc(minoxPrep,1)+' μL',
+    pc_minox_nominal:fmtCalc(n*dose,1)+' μL', pc_sum_n:n+'마리', pc_sample_sum_n:n+'마리',
+    pc_sum_dose:fmtCalc(dose,1)+' μL', pc_sample_sum_dose:fmtCalc(dose,1)+' μL', pc_sum_prep:fmtCalc(prep,1)+' μL',
+    pc_sum_mix:fmtCalc(stockVol,1)+' μL 보관용액 + '+fmtCalc(glycerolVol,1)+' μL glycerol + '+fmtCalc(Math.max(0,dpbsVol),1)+' μL DPBS',
+    pc_minox_sum_n:n+'마리', pc_minox_sum_dose:fmtCalc(dose,1)+' μL',
+    pc_minox_sum_mix:'5% 원액 '+fmtCalc(minoxPrep,1)+' μL', pc_aliquot_sum:fmtCalc(aliquot,1)+' nmol',
+    pc_stock_sum:fmtCalc(stock,1)+' μM', pc_reconstitution_input_summary:fmtCalc(reconstitutionInput,1)+' μL DPBS'
+  };
+  Object.keys(out).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=err?'—':out[id];});
+  var error=document.getElementById('pc_error'); if(error) error.textContent=err;
+  var st=document.getElementById('pc_status'); if(st){st.textContent=err?'':status;st.className='status'+(corrected?' warn':'');}
+}
+document.querySelectorAll('.peptide-calc input').forEach(function(i){i.addEventListener('input',updatePeptideCalc);});
+var resetCalc=document.getElementById('pc_reset');
+if(resetCalc) resetCalc.addEventListener('click',function(){
+  document.querySelectorAll('.peptide-calc input[data-default]').forEach(function(i){i.value=i.dataset.default;});
+  updatePeptideCalc();
+});
+document.querySelectorAll('.field-reset').forEach(function(b){b.addEventListener('click',function(){
+  var i=document.getElementById(b.getAttribute('data-reset-target'));
+  if(i){i.value=i.dataset.default;updatePeptideCalc();}
+});});
+updatePeptideCalc();
+</script>
+</body>
+</html>

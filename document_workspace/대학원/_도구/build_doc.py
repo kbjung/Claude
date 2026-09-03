@@ -43,6 +43,52 @@ md 확장 문법
         | {{tight}}항목 | 내용 |
         → 해당 셀에 white-space:nowrap; width:1% 적용
 
+    6) 원문 발췌 박스 (RFP·지원서 등 원문 인용 문서용)
+        :::source (1) 원문 발췌: 소제목  {{new:신규 작성}}
+        ㅇ 항목 제목
+        - 세부 내용 1
+        - 세부 내용 2
+        :figure images/img01.png | 대체텍스트 | 캡션(출처 포함)
+        (라벨 없이 남은 줄은 그대로 문단으로 출력됨)
+        :::
+        → source-box(좌측 녹색 테두리) + source-label 로 렌더링.
+          ㅇ로 시작하는 줄은 o-item(굵게), -로 시작하는 줄은 dash-item으로 변환.
+          :figure 줄은 figure-box(이미지+캡션)로 변환. <, </u> 등 원문 raw HTML도 그대로 통과됨.
+          라벨(:::source 뒤 문구)이 없으면 라벨 span 없이 내용만 렌더링.
+
+        박스 밖 단독 이미지는  @figure images/img09.png | 대체텍스트 | 캡션  한 줄로 삽입.
+
+    7) 출처/근거 각주
+        @cite 출처: 문서명, PDF p.n 「...」 인용 근거 설명
+        → cite(회색 각주)로 렌더링. 보통 박스 바로 다음 줄에 사용.
+
+    8) 서식 안내·작성요령·확인필요 박스
+        :::guide [서식 안내문]
+        맑은고딕 12 / 줄간격 160
+        :::
+
+        :::instruction
+        ※ 작성요령: ...
+        :::
+
+        :::todo [확인 필요]
+        내용
+        :::
+
+        :::meta
+        **작성 방식:** 내용
+        **신청사업비:** 내용
+        :::
+        → guide=파란 점선 박스, instruction=회색 안내 박스, todo=노란 확인 박스,
+          meta=옅은 파란 안내 박스. [ ] 라벨은 선택. meta/여러 줄은 줄바꿈(<br>)으로 표시됨.
+
+    9) 신규작성·제이콥확인·원문그대로 태그  (배지의 확장판, 어디서나 사용 가능)
+        {{new:신규 작성}}  {{hold:제이콥 확인}}  {{verbatim:원문 그대로}}
+
+    10) 삭제 후보(취소선)
+        ~~삭제를 고려 중인 문장~~
+        → 취소선 + 회색(strike-remove)으로 표시(완전히 지우지 않고 표시만 할 때 사용)
+
 의존성
     pip install markdown --break-system-packages
     (없으면 스크립트가 자동 설치를 시도한다)
@@ -164,6 +210,28 @@ pre.copytext{margin:0;padding:16px 18px;background:#fff;color:var(--text);font-s
 .calc .status.warn{background:var(--warn-soft);color:var(--warn);border-left:3px solid var(--warn);}
 
 footer{max-width:960px;margin:14px auto 0;color:var(--muted);font-size:12.5px;text-align:center;}
+
+/* 원문 발췌 박스 (RFP·지원서 등 원문 인용 문서용) */
+.meta{background:#eef2f8;border:1px solid #c9d6ea;padding:12px 16px;border-radius:6px;font-size:14px;margin:12px 0;}
+.blue-guide{color:#1550c9;background:#eef4ff;border:1px dashed #a9c2ec;padding:8px 12px;margin:8px 0;font-size:13.5px;border-radius:4px;}
+.guide-label{font-weight:700;color:#1550c9;font-size:12px;}
+.instruction{color:#333;font-size:13.5px;background:#f4f4f4;padding:8px 12px;margin:8px 0;border-radius:4px;}
+.source-box{background:#fff;border:1px solid #d8d8d8;border-left:4px solid #6b8f1a;padding:10px 14px;margin:8px 0;font-size:14px;border-radius:4px;}
+.source-box p{margin:4px 0;}
+.source-label{font-weight:700;color:#6b8f1a;font-size:12px;}
+.cite{color:#888;font-size:12px;margin:6px 0 10px;}
+.todo{background:#fff6db;border:1px solid #ecd583;padding:10px 14px;margin:8px 0;border-radius:4px;font-size:14px;}
+.todo-label{font-weight:700;color:#a67c00;font-size:12px;}
+.o-item{font-weight:700;margin:12px 0 4px;}
+.dash-item{margin:3px 0;padding-left:14px;text-indent:-14px;}
+.strike-remove{text-decoration:line-through;color:#999;}
+.figure-box{text-align:center;margin:14px 0;padding:10px;background:#fff;border:1px solid #e0e0e0;border-radius:6px;}
+.figure-box img{max-width:100%;height:auto;border-radius:4px;}
+.figure-caption{font-size:12.5px;color:#666;margin-top:6px;}
+.tag-new,.tag-hold,.tag-verbatim{display:inline-block;font-size:11px;padding:2px 6px;border-radius:10px;margin-left:6px;font-weight:700;white-space:nowrap;}
+.tag-new{background:#ffe3e3;color:#a33;}
+.tag-hold{background:#fff0c2;color:#8a6300;}
+.tag-verbatim{background:#e8f0e0;color:#4a6b1a;}
 
 @media (max-width:768px){
   body{padding:18px 10px 40px;}
@@ -309,12 +377,26 @@ def build(md_path, out_path=None):
         return '\n@@COPYBLOCK%d@@\n' % (len(blocks) - 1)
     src = re.sub(r'```copy[ \t]*([^\n]*)\n(.*?)\n```', grab_copy, src, flags=re.S)
 
-    # 2) 강조 박스 :::ok / :::note
+    # 2) 강조 박스 :::ok / :::note / :::source / :::meta / :::guide / :::instruction / :::todo
     boxes = []
     def grab_box(m):
-        boxes.append((m.group(1), m.group(2)))
+        boxes.append((m.group(1), (m.group(2) or '').strip(), m.group(3)))
         return '\n@@BOX%d@@\n' % (len(boxes) - 1)
-    src = re.sub(r':::(ok|note)[ \t]*\n(.*?)\n:::', grab_box, src, flags=re.S)
+    src = re.sub(r':::(ok|note|source|meta|guide|instruction|todo)([ \t]+[^\n]*)?[ \t]*\n(.*?)\n:::',
+                 grab_box, src, flags=re.S)
+
+    # 2b) 출처/근거 각주  @cite 텍스트   /   박스 밖 단독 이미지  @figure 경로|대체텍스트|캡션
+    cites = []
+    def grab_cite(m):
+        cites.append(m.group(1).strip())
+        return '\n@@CITE%d@@\n' % (len(cites) - 1)
+    src = re.sub(r'^@cite[ \t]+(.+)$', grab_cite, src, flags=re.M)
+
+    figures = []
+    def grab_figure(m):
+        figures.append(m.group(1).strip())
+        return '\n@@FIGURE%d@@\n' % (len(figures) - 1)
+    src = re.sub(r'^@figure[ \t]+(.+)$', grab_figure, src, flags=re.M)
 
     has_fields = '<!-- fields -->' in src or '<!--fields-->' in src
     src = src.replace('<!-- fields -->', '@@FIELDS@@').replace('<!--fields-->', '@@FIELDS@@')
@@ -326,26 +408,101 @@ def build(md_path, out_path=None):
 
     # 4~5) 인라인 확장 문법 치환 — 본문과 강조 박스 내부에 동일하게 적용
     kind = {'ok': 'b-ok', 'warn': 'b-warn', 'red': 'b-red', 'info': 'b-info'}
+    tag_kind = {'new': 'tag-new', 'hold': 'tag-hold', 'verbatim': 'tag-verbatim'}
 
     def apply_inline(h):
         # 배지  {{ok:텍스트}}
         h = re.sub(r'\{\{(ok|warn|red|info):([^}]*)\}\}',
                    lambda m: '<span class="badge %s">%s</span>' % (kind[m.group(1)], m.group(2)), h)
+        # 원문 표시 태그  {{new:텍스트}} {{hold:텍스트}} {{verbatim:텍스트}}
+        h = re.sub(r'\{\{(new|hold|verbatim):([^}]*)\}\}',
+                   lambda m: '<span class="%s">%s</span>' % (tag_kind[m.group(1)], m.group(2)), h)
         # 표 첫 칸 좁게  {{tight}}
         h = h.replace('<td>{{tight}}', '<td class="tight">')
         h = h.replace('<th>{{tight}}', '<th class="tight">')
         h = re.sub(r'\{\{tight\}\}', '', h)
+        # 삭제 후보(취소선)  ~~텍스트~~
+        h = re.sub(r'~~(.+?)~~', r'<span class="strike-remove">\1</span>', h, flags=re.S)
         return h
 
     body = apply_inline(body)
 
-    # 6) 강조 박스 복원 (내부도 apply_inline 통과시킬 것)
-    for i, (k, inner) in enumerate(boxes):
-        cls = 'box-ok' if k == 'ok' else 'box-note'
-        inner_html = markdown.markdown(inner, extensions=['tables', 'fenced_code', 'nl2br'])
-        inner_html = apply_inline(inner_html)
-        rep = '<div class="%s">%s</div>' % (cls, inner_html)
+    def inline_md(text):
+        """한 줄짜리 텍스트에 굵게·기울임·링크 등 인라인 마크다운만 적용 (블록 <p> 래핑은 제거)."""
+        h = markdown.markdown(text, extensions=['nl2br'])
+        if h.startswith('<p>') and h.endswith('</p>') and h.count('<p>') == 1:
+            h = h[3:-4]
+        return h
+
+    def render_figure(spec):
+        """'경로 | 대체텍스트 | 캡션' → figure-box(이미지+캡션) HTML"""
+        parts = spec.split('|')
+        path = parts[0].strip()
+        alt = parts[1].strip() if len(parts) > 1 else ''
+        cap = inline_md(parts[2].strip()) if len(parts) > 2 else ''
+        return ('<div class="figure-box">\n<img src="%s" alt="%s">\n'
+                '<div class="figure-caption">%s</div>\n</div>'
+                % (path, htmllib.escape(alt, quote=True), cap))
+
+    def render_source_content(text):
+        """원문 발췌 박스 내부를 줄 단위로 처리: ㅇ→o-item, -→dash-item, :figure→그림,
+        <로 시작하는 줄(raw HTML)은 그대로 통과, 그 외는 일반 문단으로 출력."""
+        out = []
+        for raw in text.split('\n'):
+            line = raw.strip()
+            if not line:
+                continue
+            if line.startswith('@cite '):
+                out.append('<div class="cite">%s</div>' % inline_md(line[len('@cite '):]))
+            elif line.startswith('<'):
+                out.append(line)
+            elif line.startswith(':figure '):
+                out.append(render_figure(line[len(':figure '):]))
+            elif line.startswith('ㅇ '):
+                out.append('<div class="o-item">ㅇ %s</div>' % inline_md(line[2:]))
+            elif line.startswith('- '):
+                out.append('<div class="dash-item">- %s</div>' % inline_md(line[2:]))
+            else:
+                out.append(inline_md(line))
+        return '\n'.join(out)
+
+    # 6) 강조/안내 박스 복원 (내부도 apply_inline 통과시킬 것)
+    box_meta = {
+        'ok':          {'wrap': 'box-ok'},
+        'note':        {'wrap': 'box-note'},
+        'meta':        {'wrap': 'meta'},
+        'guide':       {'wrap': 'blue-guide',   'label_class': 'guide-label'},
+        'instruction': {'wrap': 'instruction'},
+        'todo':        {'wrap': 'todo',         'label_class': 'todo-label'},
+    }
+    for i, (k, label, inner) in enumerate(boxes):
+        if k == 'source':
+            content_html = render_source_content(inner)
+            has_block = content_html.lstrip().startswith(('<div', '<table'))
+            if label:
+                sep = '<br><br>\n' if has_block else ' '
+                rep = '<div class="source-box"><span class="source-label">%s</span>%s%s</div>' % (label, sep, content_html)
+            else:
+                rep = '<div class="source-box">%s</div>' % content_html
+        else:
+            conf = box_meta[k]
+            inner_html = markdown.markdown(inner.strip('\n'), extensions=['tables', 'fenced_code', 'nl2br'])
+            if inner_html.startswith('<p>') and inner_html.endswith('</p>') and inner_html.count('<p>') == 1:
+                inner_html = inner_html[3:-4]
+            label_html = ''
+            if conf.get('label_class') and label:
+                label_html = '<span class="%s">%s</span> ' % (conf['label_class'], label)
+            rep = '<div class="%s">%s%s</div>' % (conf['wrap'], label_html, inner_html)
+        rep = apply_inline(rep)
         body = body.replace('<p>@@BOX%d@@</p>' % i, rep).replace('@@BOX%d@@' % i, rep)
+
+    # 6b) 출처 각주 / 단독 이미지 복원
+    for i, text in enumerate(cites):
+        rep = apply_inline('<div class="cite">%s</div>' % inline_md(text))
+        body = body.replace('<p>@@CITE%d@@</p>' % i, rep).replace('@@CITE%d@@' % i, rep)
+    for i, spec in enumerate(figures):
+        rep = apply_inline(render_figure(spec))
+        body = body.replace('<p>@@FIGURE%d@@</p>' % i, rep).replace('@@FIGURE%d@@' % i, rep)
 
     # 7) 복사 블록 복원
     for i, (title, text) in enumerate(blocks):
@@ -429,9 +586,11 @@ def build(md_path, out_path=None):
         warn.append('fields 지시자가 있으나 입력칸이 생성되지 않음')
     if has_peptide_calc and 'pc_animals' not in out:
         warn.append('peptide-calculator 지시자가 있으나 계산기가 생성되지 않음')
+    n_source = sum(1 for k, _, _ in boxes if k == 'source')
     print('[build_doc] %s → %s' % (os.path.basename(md_path), os.path.basename(out_path)))
-    print('           표 %d · 복사블록 %d · 강조박스 %d · 배지 %d · %d bytes'
-          % (out.count('<table>'), len(blocks), len(boxes), out.count('class="badge'), len(out)))
+    print('           표 %d · 복사블록 %d · 강조/안내박스 %d(원문발췌 %d) · 각주 %d · 이미지 %d · 배지 %d · %d bytes'
+          % (out.count('<table>'), len(blocks), len(boxes), n_source, len(cites),
+             out.count('<img '), out.count('class="badge'), len(out)))
     for w in warn:
         print('  [경고] ' + w)
     return out_path

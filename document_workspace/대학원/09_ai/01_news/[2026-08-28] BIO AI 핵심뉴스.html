@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[2026-08-28] BIO AI 핵심뉴스</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #7ee787;
+      --accent3: #f78166;
+      --accent4: #d2a8ff;
+      --accent5: #ffa657;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --tag-bg: rgba(88,166,255,0.12);
+      --tag-border: rgba(88,166,255,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0 30px;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: 5%;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(210,168,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 30px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .header-left { flex: 1; min-width: 0; }
+    .header-date-badge {
+      flex-shrink: 0;
+      align-self: center;
+      background: rgba(126,231,135,0.08);
+      border: 1px solid rgba(126,231,135,0.25);
+      color: var(--accent2);
+      font-size: 0.88rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .header-badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .header-date {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (min-width: 620px) {
+      .stats-row { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-num {
+      font-size: 27px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .section-count {
+      margin-left: auto;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .news-grid, .news-grid-2, .news-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 620px) {
+      .news-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid-3 { grid-template-columns: repeat(2, 1fr); }
+      .news-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .news-card.full { grid-column: 1 / -1; }
+
+    @media (max-width: 619px) {
+      .news-grid, .news-grid-2, .news-grid-3 { grid-template-columns: 1fr; }
+      .news-card.full { grid-column: 1; }
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .news-card.blue::before   { background: linear-gradient(90deg, var(--accent), var(--accent4)); }
+    .news-card.green::before  { background: linear-gradient(90deg, var(--accent2), #3fb950); }
+    .news-card.orange::before { background: linear-gradient(90deg, var(--accent5), #e3b341); }
+    .news-card.red::before    { background: linear-gradient(90deg, var(--accent3), #f0883e); }
+    .news-card.purple::before { background: linear-gradient(90deg, var(--accent4), var(--accent)); }
+
+    .news-card:hover {
+      border-color: #444c56;
+      transform: translateY(-2px);
+    }
+    .news-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .news-emoji {
+      font-size: 25px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .news-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+    .news-card-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .news-card-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .tag.blue   { background: rgba(88,166,255,0.12);  border: 1px solid rgba(88,166,255,0.25);  color: var(--accent); }
+    .tag.green  { background: rgba(126,231,135,0.1);  border: 1px solid rgba(126,231,135,0.25); color: var(--accent2); }
+    .tag.orange { background: rgba(255,166,87,0.1);   border: 1px solid rgba(255,166,87,0.25);  color: var(--accent5); }
+    .tag.red    { background: rgba(247,129,102,0.1);  border: 1px solid rgba(247,129,102,0.25); color: var(--accent3); }
+    .tag.purple { background: rgba(210,168,255,0.1);  border: 1px solid rgba(210,168,255,0.25); color: var(--accent4); }
+
+    .news-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .news-card-meta a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .news-card-meta a:hover { text-decoration: underline; }
+    .meta-dot { color: var(--border); }
+
+    .paper-info {
+      background: rgba(88,166,255,0.05);
+      border: 1px solid rgba(88,166,255,0.15);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .paper-info strong { color: var(--accent); font-weight: 600; }
+
+    .blist { list-style: none; display: flex; flex-direction: column; gap: 6px; margin: 6px 0 2px; }
+    .blist li { font-size: 14px; color: var(--text-secondary); padding-left: 16px; position: relative; line-height: 1.65; }
+    .blist li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 13px; }
+    .blist li.green::before  { color: var(--accent2); }
+    .blist li.orange::before { color: var(--accent5); }
+    .blist li.red::before    { color: var(--accent3); }
+    .blist li.purple::before { color: var(--accent4); }
+    .blist li strong { color: var(--text-primary); font-weight: 600; }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(88,166,255,0.06) 0%, rgba(210,168,255,0.04) 100%);
+      border: 1px solid rgba(88,166,255,0.2);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+    .highlight-box-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .highlight-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .highlight-table th {
+      text-align: left;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .highlight-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(48,54,61,0.5);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    .highlight-table td:first-child {
+      color: var(--text-primary);
+      font-weight: 600;
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table td:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+    .highlight-table tr:last-child td { border-bottom: none; }
+
+    .sources-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-top: 40px;
+    }
+    .sources-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sources-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sources-list li {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .sources-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .sources-list a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 { font-size: 24px; }
+      .header-inner { flex-direction: column; }
+      .header-date-badge { align-self: flex-start; }
+      .container { padding: 24px 16px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-meta">
+        <span class="header-badge">BIO AI</span>
+        <span class="header-date">2026년 8월 28일 (금)</span>
+      </div>
+      <h1>🧬 BIO AI <span>핵심뉴스</span></h1>
+      <p class="header-subtitle">단백질·펩타이드 AI 설계 · AI 신약 플랫폼·투자 · 빅파마 AI 파트너십·M&A · 국내 K-바이오</p>
+    </div>
+    <div class="header-date-badge">2026-08-28</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 통계 요약 -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent4);">2</div>
+      <div class="stat-label">펩타이드·단백질 AI</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent2);">2</div>
+      <div class="stat-label">AI 신약 플랫폼·투자</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent5);">2</div>
+      <div class="stat-label">빅파마 AI 파트너십·M&A</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: var(--accent3);">2</div>
+      <div class="stat-label">국내 K-바이오</div>
+    </div>
+  </div>
+
+  <!-- 주요 이슈 요약 -->
+  <div class="highlight-box">
+    <div class="highlight-box-title">⚡ 이번 주 주요 이슈 요약 (2026.08.22 – 08.28)</div>
+    <table class="highlight-table">
+      <thead>
+        <tr>
+          <th>이슈</th>
+          <th>영역</th>
+          <th>하이라이트</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Anthropic 'Claude' 단백질 설계</td>
+          <td>단백질 바인더 15개 표적 중 14개 성공</td>
+          <td style="color:var(--accent4);">Science 기술보고서, 22~35% 적중률</td>
+          <td>2026-08-18</td>
+        </tr>
+        <tr>
+          <td>Novo Nordisk × AWS</td>
+          <td>AI 신약개발 전략적 파트너십·런던 혁신허브</td>
+          <td style="color:var(--accent2);">Amazon Bio Discovery·Bedrock AgentCore</td>
+          <td>2026-08-10</td>
+        </tr>
+        <tr>
+          <td>Werewolf × Ambros Therapeutics</td>
+          <td>올스톡 합병 + 사모 조달</td>
+          <td style="color:var(--accent5);">$150M 사모조달, 나스닥 AMBX</td>
+          <td>2026-08-21</td>
+        </tr>
+        <tr>
+          <td>대구 AIx바이오 혁신연구거점</td>
+          <td>과기정통부·경북대 합성신약 실증 사업단 출범</td>
+          <td style="color:var(--accent3);">2030년까지 총 540억원</td>
+          <td>2026-08-12</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 펩타이드·단백질 AI 연구 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(210,168,255,0.1);">🔬</div>
+    <span class="section-title">펩타이드 · 단백질 AI 연구</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card purple">
+      <div class="news-card-top">
+        <span class="news-emoji">🧬</span>
+        <span class="news-card-title">Anthropic, Claude가 자율적으로 단백질 바인더 설계 — 15개 표적 중 14개 성공, 적중률 최대 35%로 업계 평균의 2~3배</span>
+      </div>
+      <div class="paper-info">
+        <strong>보고서:</strong> "Autonomous de novo protein binder design with Claude." Anthropic Science, 2026년 8월 18일 공개.<br>
+        <strong>수행·검증:</strong> Anthropic(연구 총괄 Amir Shanehsazzadeh) — 설계 결과는 외부 기관 <strong>Adaptyv Bio</strong>·<strong>Twist Bioscience</strong>가 독립적으로 습식실험 검증
+      </div>
+      <div class="news-card-body">
+        Anthropic이 Claude Opus 4.8과 Mythos Preview 모델을 이용해 사람의 개입 없이 최대 48시간 동안 자율적으로 단백질 바인더를 설계·최적화하는 캠페인 결과를 공개했다.
+        <ul class="blist">
+          <li class="purple">15개 표적 단백질 중 <strong>14개에서 결합 성공</strong> — 개별 설계 적중률 22~35%(업계 평균 10~15%의 2배 이상)</li>
+          <li>휴미라의 표적인 TNFα 등 기존 전문가 그룹도 어려워한 난도 높은 표적에서 종간(인간·원숭이·마우스) 교차반응 바인더 설계 성공</li>
+          <li class="green">사람은 승인·인프라 모니터링만 수행 — 표적 연구부터 구조 생성, 서열 최적화, 후보 선별까지 전 과정을 Claude가 자율 수행</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag purple">Anthropic</span>
+        <span class="tag purple">Claude Opus 4.8</span>
+        <span class="tag blue">단백질 바인더 설계</span>
+        <span class="tag green">자율 AI 연구</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-18</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.anthropic.com/research/Claude-accelerates-protein-design" target="_blank">Anthropic</a>
+        <span class="meta-dot">·</span>
+        <a href="https://thenextweb.com/news/anthropic-claude-protein-design-chemistry" target="_blank">TheNextWeb</a>
+      </div>
+    </div>
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <span class="news-emoji">🧪</span>
+        <span class="news-card-title">워싱턴대 베이커 연구소, 단백질 설계 '실험 병목' 해소하는 고속 검증 워크플로우 SAPP·DMX 공개</span>
+      </div>
+      <div class="paper-info">
+        <strong>논문:</strong> "Accelerating protein design by scaling experimental characterization." <em>Nature Communications</em>, 2026년 8월 20일 게재.<br>
+        <strong>저자 소속:</strong> 워싱턴대(University of Washington) 생화학과·단백질설계연구소(IPD), HHMI(David Baker 등) — 스웨덴 카롤린스카 연구소(Karin Loré 등) 공동연구
+      </div>
+      <div class="news-card-body">
+        AI 기반 신규 단백질 설계 속도가 실험 검증 속도를 앞지르면서 병목이 된 문제를 해소하기 위해, 저비용·고속 실험 프로토콜 2종이 개발됐다.
+        <ul class="blist">
+          <li class="blue"><strong>SAPP</strong>(반자동 단백질 생산): 48시간 내 하루 수백 개 설계물의 밀리그램급 생산·수율·응집상태 표준 특성분석, DNA 올리고 몇 개 수준의 저비용 실현</li>
+          <li>형광단백질 재설계 스크리닝과 RSV 중화 신규 바인더 발굴로 플랫폼 성능 실증</li>
+          <li class="green"><strong>DMX</strong>(바코딩·디멀티플렉싱): 올리고 풀을 DNA 원료로 활용해 유전자 합성 비용을 5배 절감, 하루 수천 개 클론 확보</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag blue">SAPP·DMX</span>
+        <span class="tag blue">워싱턴대 IPD</span>
+        <span class="tag green">David Baker</span>
+        <span class="tag purple">고속 실험검증</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-20</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.nature.com/articles/s41467-026-76740-9" target="_blank">Nature Communications</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② AI 신약개발 플랫폼·투자 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(126,231,135,0.1);">🚀</div>
+    <span class="section-title">AI 신약개발 플랫폼 · 투자 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <span class="news-emoji">🧫</span>
+        <span class="news-card-title">Network Bio, 질환 특화 AI 모델 구축 위해 $50M 시드 조달 — Fortune 100 헬스케어사와 $30M+ 파트너십 동반 확보</span>
+      </div>
+      <div class="news-card-body">
+        팔로알토 소재 스타트업 <strong>Network Bio</strong>가 8월 19일 인체 생물학 데이터 기반 질환별 AI 모델 개발을 위한 $50M 규모 시드 파이낸싱을 발표하며 공식 출범했다.
+        <ul class="blist">
+          <li class="green">Section 32, Thiel Bio, Founders Fund, Breyer Capital 등 참여 — 진단·바이오마커 발굴·신약개발에 AI 적용 목표</li>
+          <li>매스제너럴브리검·펜실베이니아대·콜로라도대 앤슈츠 캠퍼스 등과 세계 최대 규모 환자 조직 학습 데이터셋 구축 협력</li>
+          <li class="blue">이름을 밝히지 않은 <strong>Fortune 100 헬스케어 기업</strong>과 $30M+ 규모 상업적 협력관계도 조기 확보</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag green">Network Bio</span>
+        <span class="tag green">질환특화 AI모델</span>
+        <span class="tag blue">$50M 시드</span>
+        <span class="tag purple">환자조직 데이터셋</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-19</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.synbiobeta.com/read/network-bio-launches-with-50-million-financing-and-world%E2%80%99s-largest-patient-tissue-training-dataset" target="_blank">SynBioBeta</a>
+        <span class="meta-dot">·</span>
+        <a href="https://pulse2.com/network-bio-launches-with-50-million-financing-and-30-million-ai-partnership-to-build-disease-specific-models/" target="_blank">Pulse2</a>
+      </div>
+    </div>
+
+    <div class="news-card green">
+      <div class="news-card-top">
+        <span class="news-emoji">☁️</span>
+        <span class="news-card-title">Novo Nordisk × AWS, AI 신약개발 전략적 파트너십 체결 — 런던 AI 공동혁신허브 신설, Amazon Bio Discovery 도입</span>
+      </div>
+      <div class="news-card-body">
+        <strong>노보 노디스크</strong>가 8월 10일 <strong>AWS</strong>를 전략적 클라우드·AI 파트너로 선정, 신약개발과 전사 기술 인프라 현대화를 가속화한다고 발표했다.
+        <ul class="blist">
+          <li class="green">과학자가 생물학적 AI 모델에 직접 접근해 후보물질을 설계·평가하는 <strong>Amazon Bio Discovery</strong>와, 다단계 워크플로우를 실행하는 <strong>Bedrock AgentCore</strong> 도입</li>
+          <li>런던에 AWS 엔지니어·AI 전문가와 노보 노디스크 R&D팀이 함께하는 AI 공동혁신허브 신설 — 신약 개발 기간 단축 목표</li>
+          <li class="blue">기존 Bedrock 기반 생성형 AI 도구를 이미 2만5천여 임직원이 챗봇·문서 작성 등 비규제 업무에 활용 중</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag green">Novo Nordisk</span>
+        <span class="tag green">AWS</span>
+        <span class="tag blue">Amazon Bio Discovery</span>
+        <span class="tag purple">Bedrock AgentCore</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-10</span>
+        <span class="meta-dot">·</span>
+        <a href="https://aws.amazon.com/blogs/industries/novo-nordisk-selects-aws-as-strategic-partner-to-accelerate-drug-discovery-with-ai/" target="_blank">AWS Blog</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.globenewswire.com/news-release/2026/08/10/3341794/0/en/novo-nordisk-and-aws-enter-strategic-partnership-to-accelerate-drug-discovery-through-ai.html" target="_blank">GlobeNewswire</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ③ 빅파마·빅테크 AI 파트너십·M&A 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(255,166,87,0.1);">🏢</div>
+    <span class="section-title">빅파마 · 빅테크 AI 파트너십 · M&A 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <span class="news-emoji">🤝</span>
+        <span class="news-card-title">룬드벡, EVERSANA와 AI 상업화 파트너십 미국 전 조직으로 확대 — 마케팅·의학정보·시장접근까지 AI 워크플로우 도입</span>
+      </div>
+      <div class="news-card-body">
+        덴마크 뇌질환 전문 제약사 <strong>Lundbeck</strong>이 8월 25일 상업화 서비스 기업 <strong>EVERSANA</strong>와의 AI 협력을 확대한다고 발표했다.
+        <ul class="blist">
+          <li class="orange">기존 협력에서 검증된 AI 워크플로우(전략수립·콘텐츠 제작·옴니채널 운영)를 미국 상업조직 전반으로 확장</li>
+          <li>의학·법무·규제 검토 절차는 유지하면서 EVERSANA의 'AI Agency' 플랫폼 활용 범위를 마케팅·의학커뮤니케이션·시장접근·미디어 운영까지 확대</li>
+          <li class="blue">신약 상업화 단계에서 AI를 활용한 확장형(scalable) 실행체계 구축이 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag orange">Lundbeck</span>
+        <span class="tag orange">EVERSANA</span>
+        <span class="tag blue">AI 상업화</span>
+        <span class="tag purple">AI Agency</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-25</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.eversana.com/2026/08/25/lundbeck-and-eversana-announce-strategic-partnership-to-advance-ai-powered-commercialization/" target="_blank">EVERSANA</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.prnewswire.com/news-releases/lundbeck-and-eversana-announce-strategic-partnership-to-advance-ai-powered-commercialization-302858538.html" target="_blank">PR Newswire</a>
+      </div>
+    </div>
+
+    <div class="news-card orange">
+      <div class="news-card-top">
+        <span class="news-emoji">💊</span>
+        <span class="news-card-title">Werewolf Therapeutics × Ambros Therapeutics, 올스톡 합병 발표 — $150M 사모조달 동시 확보, 희귀 통증질환(CRPS-1) 치료제 집중</span>
+      </div>
+      <div class="news-card-body">
+        <strong>Werewolf Therapeutics</strong>가 8월 21일 <strong>Ambros Therapeutics</strong>와 전액 주식교환 방식 합병 계약을 체결, 통합법인은 'Ambros Therapeutics'(나스닥 AMBX)로 재상장한다.
+        <ul class="blist">
+          <li class="orange">합병 전 기업가치 Ambros $500M·Werewolf $47.5M — RA Capital 주도 <strong>$150M 사모조달</strong> 동시 확보(투자자 지분 21.5%)</li>
+          <li>합병법인은 복합부위통증증후군1형(CRPS-1) 후기 임상단계 후보물질 <strong>네리드로네이트(neridronate)</strong> 개발에 집중</li>
+          <li class="blue">거래 종결은 2027년 1분기 목표, 발표 당일 Werewolf 주가 120%대 급등</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag orange">Werewolf Therapeutics</span>
+        <span class="tag orange">Ambros Therapeutics</span>
+        <span class="tag blue">올스톡 합병</span>
+        <span class="tag purple">CRPS-1</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-21</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.globenewswire.com/news-release/2026/08/21/3349041/0/en/werewolf-therapeutics-and-ambros-therapeutics-announce-merger-agreement-and-concurrent-oversubscribed-150-million-private-placement.html" target="_blank">GlobeNewswire</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ 국내 K-바이오 동향 -->
+  <div class="section-header">
+    <div class="section-icon" style="background: rgba(247,129,102,0.1);">🇰🇷</div>
+    <span class="section-title">국내 K-바이오 동향</span>
+    <span class="section-count">2건</span>
+  </div>
+  <div class="news-grid-2">
+
+    <div class="news-card blue">
+      <div class="news-card-top">
+        <span class="news-emoji">🎯</span>
+        <span class="news-card-title">아이디바인 × 지아이이노베이션, 면역항암제 임상성공확률 분석 AI 플랫폼 'GI-Orus' 구축 — 과기정통부 AI 동반성장 바우처 선정</span>
+      </div>
+      <div class="news-card-body">
+        AI 바이오제약 혁신 예측 솔루션 기업 <strong>아이디바인</strong>이 지아이이노베이션의 면역항암제 파이프라인 개발·허가 가능성을 분석하는 전용 플랫폼 'GI-Orus' 구축에 나섰다.
+        <ul class="blist">
+          <li class="blue">전 세계 특허·논문·임상시험·FDA 심사이력 등 <strong>11억9000만 건 이상</strong>의 바이오·의약 데이터 기반 자체 멀티모달 AI 모델 활용</li>
+          <li>신약 후보물질의 임상성공확률(PoS)을 정량화 — 자체 검증에서 <strong>80~90%</strong> 수준의 예측 정확도 확인</li>
+          <li class="green">과학기술정보통신부·정보통신산업진흥원(NIPA) 'AI 청년창업기업 동반성장 바우처 지원사업' 선정 후 공동 구축</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag blue">아이디바인</span>
+        <span class="tag blue">지아이이노베이션</span>
+        <span class="tag green">GI-Orus</span>
+        <span class="tag purple">임상성공확률(PoS)</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-04</span>
+        <span class="meta-dot">·</span>
+        <a href="https://biz.heraldcorp.com/article/10830466" target="_blank">헤럴드경제</a>
+        <span class="meta-dot">·</span>
+        <a href="https://edaily.co.kr/News/Read?mediaCodeNo=257&newsId=04851126645544040" target="_blank">이데일리</a>
+      </div>
+    </div>
+
+    <div class="news-card red">
+      <div class="news-card-top">
+        <span class="news-emoji">🏛️</span>
+        <span class="news-card-title">과기정통부, 대구에 'AIx바이오 혁신연구거점' 시범사업단 출범 — AI가 후보물질 제안, 자동화 실험실이 검증하는 순환형 신약개발 생태계</span>
+      </div>
+      <div class="news-card-body">
+        과학기술정보통신부가 8월 12일 대구에서 '합성신약 분야 AIx바이오 혁신연구거점 조성 시범사업단' 출범식을 열고 국가전략 프로젝트에 착수했다.
+        <ul class="blist">
+          <li class="red">경북대·경북대병원·대구경북첨단의료산업진흥재단·㈜유니바 컨소시엄이 사업 수행 — <strong>2030년까지 국비·시비 총 540억원</strong> 투입</li>
+          <li>AI가 후보물질·실험조건을 제안하면 자동화 실험 시스템이 검증하고, 그 결과를 다시 AI가 학습하는 <strong>순환형(closed-loop)</strong> 연구 구조</li>
+          <li class="blue">정부 '초혁신 경제 15대 프로젝트' 중 하나로 'AI 신약개발' 주도권 선점을 위한 거점 조성이 목표</li>
+        </ul>
+      </div>
+      <div class="tags">
+        <span class="tag red">과기정통부</span>
+        <span class="tag red">대구 AIx바이오</span>
+        <span class="tag blue">순환형 신약개발</span>
+        <span class="tag purple">경북대</span>
+      </div>
+      <div class="news-card-meta">
+        <span>2026-08-12</span>
+        <span class="meta-dot">·</span>
+        <a href="https://www.etnews.com/20260812000180" target="_blank">전자신문</a>
+        <span class="meta-dot">·</span>
+        <a href="https://www.imaeil.com/page/view/2026081214431969883" target="_blank">매일신문</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 출처 -->
+  <div class="sources-section">
+    <div class="sources-title">📚 주요 출처</div>
+    <ul class="sources-list">
+      <li><a href="https://www.anthropic.com/research/Claude-accelerates-protein-design" target="_blank">Anthropic — How Claude is accelerating protein design and analytical chemistry (2026-08-18)</a></li>
+      <li><a href="https://www.nature.com/articles/s41467-026-76740-9" target="_blank">Nature Communications — Accelerating protein design by scaling experimental characterization (2026-08-20)</a></li>
+      <li><a href="https://www.synbiobeta.com/read/network-bio-launches-with-50-million-financing-and-world%E2%80%99s-largest-patient-tissue-training-dataset" target="_blank">SynBioBeta — Network Bio Launches with $50 Million Financing (2026-08-19)</a></li>
+      <li><a href="https://aws.amazon.com/blogs/industries/novo-nordisk-selects-aws-as-strategic-partner-to-accelerate-drug-discovery-with-ai/" target="_blank">AWS — Novo Nordisk Selects AWS as Strategic Partner (2026-08-10)</a></li>
+      <li><a href="https://www.eversana.com/2026/08/25/lundbeck-and-eversana-announce-strategic-partnership-to-advance-ai-powered-commercialization/" target="_blank">EVERSANA — Lundbeck and EVERSANA Announce Strategic Partnership (2026-08-25)</a></li>
+      <li><a href="https://www.globenewswire.com/news-release/2026/08/21/3349041/0/en/werewolf-therapeutics-and-ambros-therapeutics-announce-merger-agreement-and-concurrent-oversubscribed-150-million-private-placement.html" target="_blank">GlobeNewswire — Werewolf Therapeutics and Ambros Therapeutics Announce Merger Agreement (2026-08-21)</a></li>
+      <li><a href="https://biz.heraldcorp.com/article/10830466" target="_blank">헤럴드경제 — 아이디바인·지아이이노베이션, 과기정통부 'AI 동반성장 바우처' 선정…'GI-Orus' 구축 (2026-08-04)</a></li>
+      <li><a href="https://www.etnews.com/20260812000180" target="_blank">전자신문 — AI 신약 개발 속도 앞당길 혁신연구거점, 대구에 문 연다 (2026-08-12)</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  🧬 BIO AI 핵심뉴스 | 2026-08-28 | 자동 수집 · AI 분석 정리
+</footer>
+
+</body>
+</html>
